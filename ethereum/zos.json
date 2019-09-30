@@ -1,0 +1,15 @@
+{
+  "zosversion": "2.2",
+  "contracts": {
+    "SimpleStorage": "SimpleStorage"
+  },
+  "dependencies": {},
+  "name": "zeptest",
+  "version": "1.0.0",
+  "compiler": {
+    "manager": "truffle",
+    "compilerSettings": {
+      "optimizer": {}
+    }
+  }
+}

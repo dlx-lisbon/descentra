@@ -1,0 +1,24 @@
+{
+    "name": "dlx",
+    "version": "0.1.0",
+    "description": "dlx",
+    "scripts": {
+        "test": "lerna run test",
+        "coverage": "lerna run coverage",
+        "lint": "lerna run lint"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/obernardovieira/dlx.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "Apache-2.0",
+    "bugs": {
+        "url": "https://github.com/obernardovieira/dlx/issues"
+    },
+    "homepage": "https://github.com/obernardovieira/dlx#readme",
+    "dependencies": {
+        "lerna": "3.16.4"
+    }
+}
