@@ -1,153 +1,165 @@
-import { fromConnection, fromInjected } from '@openzeppelin/network';
 import React, { Component } from 'react';
-import truffleContract from 'truffle-contract';
-import SimpleStorageContract from '../../contracts/SimpleStorage.json';
 
-interface IMainState {
-    storageValue: number;
-    inputStorageValue: string;
-    loggedIn: boolean;
-    web3: any;
-    accounts: string[];
-    contract: any;
-}
+
 /**
  * This is App.
  */
-class Main extends Component<{}, IMainState> {
-    /**
-     * @ignore
-     */
-    constructor(props: any) {
-        super(props);
-        /**
-         * @type {Object}
-         * @property {number} state.storageValue - this is the value stored
-         * @property {object} state.web3 - this is the web3 object
-         * @property {string[]} state.accounts - this is an array of accounts
-         * @property {object} state.contract - this is the contract object
-         * @property {object} state.inputStorageValue - variable to controled input
-         * @property {object} state.loggedIn - save user's state
-         */
-        this.state = {
-            accounts: undefined as any,
-            contract: undefined as any,
-            inputStorageValue: '',
-            loggedIn: false,
-            storageValue: 0,
-            web3: undefined as any,
-        };
-    }
-
-    /**
-     * @ignore
-     */
-    public async componentDidMount() {
-        const local = await fromConnection('http://127.0.0.1:8545');
-
-        // Get the contract instance.
-        const Contract = truffleContract(SimpleStorageContract);
-        Contract.setProvider(local.lib.currentProvider);
-        const instance = await Contract.deployed();
-
-        const storageValue = (await instance.get()).toNumber();
-
-        // Set web3, accounts, and contract to the state, and then proceed with an
-        // example of interacting with the contract's methods.
-        this.setState({ web3: local.lib, contract: instance, storageValue });
-    }
-
-    /**
-     * handle input changes.
-     */
-    public handleChangeInputStorageValue = (event: any) => {
-        this.setState({ inputStorageValue: event.target.value });
-    }
-
-    /**
-     * submit input changes
-     */
-    public handleSubmitInputStorageValue = (event: any) => {
-        new Promise<
-            { loggedIn: boolean, accounts: string[], contract: any, web3: any }
-        >(async (resolve: any, reject: any) => {
-            let web3;
-            let { accounts, contract } = this.state;
-            const { loggedIn, inputStorageValue } = this.state;
-
-            if (!loggedIn) {
-                try {
-                    const injected = await fromInjected();
-                    // Get network provider and web3 instance.
-
-                    web3 = injected.lib;
-                    // Use web3 to get the user's accounts.
-                    accounts = await web3.eth.getAccounts();
-
-                    // Get the contract instance.
-                    const Contract = truffleContract(SimpleStorageContract);
-                    Contract.setProvider(web3.currentProvider);
-                    contract = await Contract.deployed();
-                } catch (error) {
-                    // Catch any errors for any of the above operations.
-                    console.log('Failed to load web3, accounts, or contract. Check console for details.');
-                    console.log(error);
-                }
-            }
-            // Stores a given value, 5 by default.
-            await contract.set(inputStorageValue, { from: accounts[0] });
-            //
-            resolve({ loggedIn, accounts, contract, web3 });
-        }).then(({ loggedIn, accounts, contract, web3 }) => {
-            // Update state with the result.
-            const { inputStorageValue } = this.state;
-            if (!loggedIn) {
-                this.setState({
-                    accounts,
-                    contract,
-                    inputStorageValue: '',
-                    loggedIn: true,
-                    storageValue: parseInt(inputStorageValue, 10),
-                    web3,
-                });
-            }
-        });
-        event.preventDefault();
-    }
-
+class Main extends Component<{}, {}> {
     /**
      * @ignore
      */
     public render() {
-        const { web3, storageValue, inputStorageValue } = this.state;
-        if (!web3) {
-            return <div>Loading Web3, accounts, and contract...</div>;
-        }
         return (
-            <div className="App">
-                <h1>Good to Go!</h1>
-                <p>Your Truffle Box is installed and ready.</p>
-                <h2>Smart Contract Example</h2>
-                <p>
-                    If your contracts compiled and migrated successfully, below will show
-                    a stored value of 5 (by default).
-                </p>
-                <p>
-                    Try changing the value stored on
-                    {' '}
-                    <strong>line 37</strong>
-                    {' '}
-                    of App.js.
-                </p>
-                <div>
-                    The stored value is:
-                    {' '}
-                    {storageValue}
-                </div>
-                <form onSubmit={this.handleSubmitInputStorageValue}>
-                    <input type="text" value={inputStorageValue} onChange={this.handleChangeInputStorageValue} />
-                    <input type="submit" />
-                </form>
+            <div>
+                {/*<!-- Navigation -->*/}
+                <a className="menu-toggle rounded" href="#">
+                    <i className="fas fa-bars" />
+                </a>
+                <nav id="sidebar-wrapper">
+                    <ul className="sidebar-nav">
+                        <li className="sidebar-brand">
+                            <a className="js-scroll-trigger" href="#page-top">Start Bootstrap</a>
+                        </li>
+                        <li className="sidebar-nav-item">
+                            <a className="js-scroll-trigger" href="#page-top">Home</a>
+                        </li>
+                        <li className="sidebar-nav-item">
+                            <a className="js-scroll-trigger" href="#about">About</a>
+                        </li>
+                        <li className="sidebar-nav-item">
+                            <a className="js-scroll-trigger" href="#services">Services</a>
+                        </li>
+                        <li className="sidebar-nav-item">
+                            <a className="js-scroll-trigger" href="#portfolio">Portfolio</a>
+                        </li>
+                        <li className="sidebar-nav-item">
+                            <a className="js-scroll-trigger" href="#contact">Contact</a>
+                        </li>
+                    </ul>
+                </nav>
+
+                {/* <!-- Header --> */}
+                <header className="masthead d-flex">
+                    <div className="container text-center my-auto">
+                        <h1 className="mb-1">Stylish Portfolio</h1>
+                        <h3 className="mb-5">
+                            <em>A Free Bootstrap Theme by Start Bootstrap</em>
+                        </h3>
+                        <a className="btn btn-primary btn-xl js-scroll-trigger" href="#about">Find Out More</a>
+                    </div>
+                    <div className="overlay" />
+                </header>
+
+                {/* <!-- About --> */}
+                <section className="content-section bg-light" id="about">
+                    <div className="container text-center">
+                        <div className="row">
+                            <div className="col-lg-10 mx-auto">
+                                <h2>Stylish Portfolio is the perfect theme for your next project!</h2>
+                                <p className="lead mb-5">
+                                    This theme features a flexible,
+                                    UX friendly sidebar menu and stock photos from
+                                    our friends at
+                                    <a href="https://unsplash.com/">Unsplash</a>!</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* <!-- Portfolio --> */}
+                <section className="content-section" id="portfolio">
+                    <div className="container">
+                        <div className="content-section-heading text-center">
+                            <h3 className="text-secondary mb-0">Portfolio</h3>
+                            <h2 className="mb-5">Recent Projects</h2>
+                        </div>
+                        <div className="row no-gutters">
+                            <div className="col-lg-6">
+                                <a className="portfolio-item" href="#">
+                                    <span className="caption">
+                                        <span className="caption-content">
+                                            <h2>Stationary</h2>
+                                            <p className="mb-0">
+                                                A yellow pencil with envelopes on a clean, blue backdrop!
+                                            </p>
+                                        </span>
+                                    </span>
+                                    <img className="img-fluid" src="img/portfolio-1.jpg" alt="" />
+                                </a>
+                            </div>
+                            <div className="col-lg-6">
+                                <a className="portfolio-item" href="#">
+                                    <span className="caption">
+                                        <span className="caption-content">
+                                            <h2>Ice Cream</h2>
+                                            <p className="mb-0">
+                                                A dark blue background with a colored pencil, a clip, and a tiny ice
+                                                cream cone!
+                                            </p>
+                                        </span>
+                                    </span>
+                                    <img className="img-fluid" src="img/portfolio-2.jpg" alt="" />
+                                </a>
+                            </div>
+                            <div className="col-lg-6">
+                                <a className="portfolio-item" href="#">
+                                    <span className="caption">
+                                        <span className="caption-content">
+                                            <h2>Strawberries</h2>
+                                            <p className="mb-0">
+                                                Strawberries are such a tasty snack, especially with a little sugar on
+                                                top!
+                                            </p>
+                                        </span>
+                                    </span>
+                                    <img className="img-fluid" src="img/portfolio-3.jpg" alt="" />
+                                </a>
+                            </div>
+                            <div className="col-lg-6">
+                                <a className="portfolio-item" href="#">
+                                    <span className="caption">
+                                        <span className="caption-content">
+                                            <h2>Workspace</h2>
+                                            <p className="mb-0">
+                                                A yellow workspace with some scissors, pencils, and other objects.
+                                            </p>
+                                        </span>
+                                    </span>
+                                    <img className="img-fluid" src="img/portfolio-4.jpg" alt="" />
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* <!-- Footer --> */}
+                <footer className="footer text-center">
+                    <div className="container">
+                        <ul className="list-inline mb-5">
+                            <li className="list-inline-item">
+                                <a className="social-link rounded-circle text-white mr-3" href="#">
+                                    <i className="icon-social-facebook" />
+                                </a>
+                            </li>
+                            <li className="list-inline-item">
+                                <a className="social-link rounded-circle text-white mr-3" href="#">
+                                    <i className="icon-social-twitter" />
+                                </a>
+                            </li>
+                            <li className="list-inline-item">
+                                <a className="social-link rounded-circle text-white" href="#">
+                                    <i className="icon-social-github" />
+                                </a>
+                            </li>
+                        </ul>
+                        <p className="text-muted small mb-0">Copyright &copy; Your Website 2019</p>
+                    </div>
+                </footer>
+
+                {/* <!-- Scroll to Top Button--> */}
+                <a className="scroll-to-top rounded js-scroll-trigger" href="#page-top">
+                    <i className="fas fa-angle-up" />
+                </a>
             </div>
         );
     }
