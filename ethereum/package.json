@@ -1,12 +1,11 @@
 {
-    "name": "blockchain",
-    "version": "1.0.0",
-    "description": "",
+    "name": "dlx-ethereum",
+    "version": "0.0.1-apha",
+    "description": "This is the the contracts repository for dlx meetup!",
     "files": [
         "contracts"
     ],
     "scripts": {
-        "deploy:ganache": "zos push -n development --no-interactive && zos create SimpleStorage -n development --no-interactive --init setup --args 7",
         "start:ganache:dev": "ganache-cli -m \"width whip dream dress captain vessel mix drive oxygen broken soap bone\" -p 8545 -i 201906 --debug",
         "test": "scripts/test.sh",
         "test:ci": "CI=true scripts/test.sh",
@@ -16,8 +15,7 @@
         "lint:js": "eslint *.js .",
         "lint": "npm run lint:sol && npm run lint:js",
         "security": "docker run --rm --memory=3g -v $(pwd):/tmp -w \"/tmp/\" mythril/myth --truffle",
-        "docs": "soldoc docs/ contracts",
-        "watch": "node watcher.js"
+        "docs": "soldoc docs/ contracts"
     },
     "keywords": [],
     "author": "",
@@ -29,8 +27,6 @@
     },
     "devDependencies": {
         "chai": "4.2.0",
-        "zos": "2.4.2",
-        "zos-lib": "2.4.2",
         "bignumber.js": "9.0.0",
         "eslint": "6.5.0",
         "eslint-config-airbnb": "17.1.1",
@@ -40,7 +36,6 @@
         "eth-gas-reporter": "0.2.12",
         "ethlint": "1.2.5",
         "ganache-cli": "6.7.0",
-        "node-watch": "0.6.3",
         "soldoc": "0.1.1",
         "solidity-coverage": "0.6.7",
         "truffle": "5.0.38",
