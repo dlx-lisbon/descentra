@@ -1,6 +1,7 @@
 {
     "name": "dlx-ui",
     "version": "0.0.1-alpha",
+    "homepage": "./",
     "scripts": {
         "start": "react-scripts start",
         "build": "react-scripts build",
@@ -25,13 +26,13 @@
         "react-router-dom": "5.0.1",
         "react-scripts": "3.0.1",
         "truffle-contract": "4.0.31",
-        "typescript": "3.6.3",
+        "typescript": "3.4.5",
         "web3": "1.2.1"
     },
     "devDependencies": {
-        "@types/jest": "24.0.18",
         "@types/enzyme": "3.10.3",
         "@types/enzyme-adapter-react-16": "1.0.5",
+        "@types/jest": "24.0.18",
         "coveralls": "3.0.6",
         "enzyme": "3.10.0",
         "enzyme-adapter-react-16": "1.14.0",
