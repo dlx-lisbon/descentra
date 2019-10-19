@@ -3,7 +3,7 @@ import Countdown, { CountdownTimeDelta } from 'react-countdown-now';
 
 
 /**
- * This is App.
+ * Welcome to the main component.
  */
 class Main extends Component<{}, {}> {
     /**
@@ -27,16 +27,24 @@ class Main extends Component<{}, {}> {
                         renderer={this.renderCountdown}
                     />
 
-                    <button className="flex-c-m s1-txt2 size3 how-btn" data-toggle="modal" data-target="#subscribe">
+                    <button className="flex-c-m s1-txt2 size3 how-btn" onClick={this.redirectFollowLink}>
                         Follow us for update now!
                     </button>
                 </div>
 
                 <span className="s1-txt3 txt-center">
-                    @ 2017 Coming Soon Template. Designed by Colorlib
+                    @ 2019 Designed by Colorlib
                 </span>
             </div>
         );
+    }
+
+    /**
+     * redirect to follow url
+     */
+    private redirectFollowLink = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        // TODO: redirect
+        event.preventDefault();
     }
 
     /**
