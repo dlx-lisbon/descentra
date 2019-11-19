@@ -12,13 +12,13 @@ class SinglePostItem extends Component<{}, {}> {
                     <img className="post-img img-fluid" src="img/posts/p1.jpg" alt="" />
                 </figure>
                 <h3>
-                    <a href="blog-details.html">It's Hurricane Season But We Are Visiting Hilton Island</a>
+                    <a href="/meetup">It's Hurricane Season But We Are Visiting Hilton Island</a>
                 </h3>
                 <p>Lorem ipsum dolor sit amet, consectetur
                     adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore
                     magna aliqua. Ut enim ad minim veniam,
                     quis nostrud exercitation ullamco laboris nisi ut aliquip.</p>
-                <a href="blog-details.html" className="primary-btn text-uppercase mt-15">continue Reading</a>
+                <a href="/meetup" className="primary-btn text-uppercase mt-15">continue Reading</a>
                 <div className="post-box">
                     <div className="d-flex">
                         <div>
