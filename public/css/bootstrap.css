@@ -9234,8 +9234,8 @@ a.text-dark:hover {
 
 @media print {
     *,
-    ::after,
-    ::before {
+     ::after,
+     ::before {
         text-shadow: none !important;
         box-shadow: none !important
     }
@@ -9310,5 +9310,6 @@ a.text-dark:hover {
         border-color: #dee2e6
     }
 }
+
 
 /*# sourceMappingURL=bootstrap.min.css.map */
