@@ -2,8 +2,8 @@ import React, { Component, lazy, Suspense } from 'react';
 import { Route, Switch } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
 
-const Home = lazy(() => import('./Pages/Home/'));
-const Meetup = lazy(() => import('./Pages/Meetup/'));
+const Home = lazy(() => import('./routes/Home'));
+const Meetup = lazy(() => import('./routes/Meetup'));
 
 class App extends Component<{}, {}> {
     public render() {
