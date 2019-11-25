@@ -1,69 +1,61 @@
-import React, { Component } from 'react';
+import React from 'react';
 
+import {
+    Avatar,
+    Button,
+    FlexboxGrid,
+    Icon,
+    Panel,
+} from 'rsuite';
 
-class SinglePostItem extends Component<{}, {}> {
-    /**
-     * @ignore
-     */
-    public render() {
-        return (
-            <div className="single-post-item">
-                <figure>
-                    <img className="post-img img-fluid" src="img/posts/p1.jpg" alt="" />
-                </figure>
-                <h3>
-                    <a href="/meetup">It's Hurricane Season But We Are Visiting Hilton Island</a>
-                </h3>
-                <p>Lorem ipsum dolor sit amet, consectetur
-                    adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore
-                    magna aliqua. Ut enim ad minim veniam,
-                    quis nostrud exercitation ullamco laboris nisi ut aliquip.</p>
-                <a href="/meetup" className="primary-btn text-uppercase mt-15">continue Reading</a>
-                <div className="post-box">
-                    <div className="d-flex">
-                        <div>
-                            <a href="#">
-                                <img src="img/author/a1.png" alt="" />
-                            </a>
-                        </div>
-                        <div className="post-meta">
-                            <div className="meta-head">
-                                <a href="#">Marvel Maison</a>
-                            </div>
-                            <div className="meta-details">
-                                <ul>
-                                    <li>
-                                        <a href="#">
-                                            <span className="lnr lnr-calendar-full" />
-                                            13th Oct, 2018
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <span className="lnr lnr-picture" />
-                                            Image Post
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <span className="lnr lnr-coffee-cup" />
-                                            Food & Travel
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <span className="lnr lnr-bubble" />
-                                            03 Comments
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+const mainPanelStyle = {
+    display: 'inline-block',
+    margin: '50px 15%',
+    width: '700px',
+};
+const imagePostStyle = {
+    maxHeight: '240px',
+    objectFit: 'cover',
+    overflow: 'hidden',
+    width: '100%',
+};
+export default function SinglePostItem() {
+    return (
+        <>
+            <Panel shaded={true} bordered={true} bodyFill={true} style={mainPanelStyle}>
+                <div style={imagePostStyle as any}>
+                    <img src="/img/posts/p2.jpg" style={{ width: '100%' }} />
                 </div>
-            </div>
-        );
-    }
-}
+                <Panel header="Lorem ipsum dolor sit amet" >
+                    <div className="show-grid">
 
-export default SinglePostItem;
+                        <FlexboxGrid align="middle">
+                            <FlexboxGrid.Item colspan={3}>
+                                <div style={{ lineHeight: 0 }}>
+                                    <Avatar circle={true} src="/img/blog/c1.jpg" />
+                                </div>
+                            </FlexboxGrid.Item>
+                            <FlexboxGrid.Item colspan={18}>
+                                <div style={{ lineHeight: 1.5 }}>
+                                    <p><b>THE PUBLISHER NAME</b></p>
+                                    <p><Icon icon="calendar-check-o" /> 13TH OCT, 2019</p>
+                                </div>
+                            </FlexboxGrid.Item>
+                        </FlexboxGrid>
+                    </div>
+                    <p style={{ margin: '20px 0px' }}>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Morbi suscipit sollicitudin eros eu tempus. Vestibulum ante
+                        ipsum primis in faucibus orci luctus et ultrices posuere cubilia
+                        Curae; In hac habitasse platea dictumst. Mauris scelerisque
+                        pharetra orci, eu tempus purus malesuada nec. Integer elit
+                        nulla, convallis sit amet sapien non, convallis faucibus erat.
+                        Donec sit amet rhoncus eros, quis maximus libero. Cras at tellus in
+                        velit efficitur dictum in a massa. In vel mauris et urna volutpat cursus.
+                        </p>
+                    <Button>Continue reading</Button>
+                </Panel>
+            </Panel>
+        </>
+    );
+}
