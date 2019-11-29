@@ -11,12 +11,12 @@ import {
     Content,
     Footer,
     Header,
-    Icon,
     Nav,
     Navbar,
     Sidebar,
 } from 'rsuite';
-import News from './Components/Sidebar/News';
+import About from './Components/Sidebar/About';
+import Pool from './Components/Sidebar/Pool';
 
 const Home = lazy(() => import('./routes/Home'));
 const Meetup = lazy(() => import('./routes/Meetup'));
@@ -51,6 +51,7 @@ export default function App() {
                     <Navbar.Header>
                         <img
                             src="/img/clown-fish.svg"
+                            alt="some clown fish"
                             onClick={goToMain}
                             height={60}
                             style={{ padding: '5px 30px 5px 20px', cursor: 'pointer' }}
@@ -95,7 +96,8 @@ export default function App() {
                     </BrowserRouter>
                 </Content>
                 <Sidebar width={400}>
-                    <News />
+                    <About />
+                    <Pool />
                 </Sidebar>
             </Container>
             <Footer>Footer</Footer>

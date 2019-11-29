@@ -1,7 +1,15 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import Box from '3box';
-import { List, Form, FormGroup, ControlLabel, FormControl, ButtonToolbar, Button } from 'rsuite';
+import {
+    Button,
+    ButtonToolbar,
+    ControlLabel,
+    Form,
+    FormControl,
+    FormGroup,
+    List,
+} from 'rsuite';
 
 
 export default function Chat() {

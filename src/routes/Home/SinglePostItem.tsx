@@ -24,7 +24,7 @@ export default function SinglePostItem() {
         <>
             <Panel shaded={true} bordered={true} bodyFill={true} style={mainPanelStyle}>
                 <div style={imagePostStyle as any}>
-                    <img src="/img/posts/p2.jpg" style={{ width: '100%' }} />
+                    <img src="/img/posts/p2.jpg" alt="presenting" style={{ width: '100%' }} />
                 </div>
                 <Panel header="Lorem ipsum dolor sit amet" >
                     <div className="show-grid">

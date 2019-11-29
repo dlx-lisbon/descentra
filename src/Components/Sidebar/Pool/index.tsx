@@ -2,7 +2,7 @@ import React from 'react';
 import { Panel } from 'rsuite';
 
 
-export default function News() {
+export default function Pool() {
     return (
         <div style={{ margin: '50px 0px' }}>
             <Panel shaded={true} bordered={true} bodyFill={true} style={{ display: 'inline-block', width: 350 }}>
