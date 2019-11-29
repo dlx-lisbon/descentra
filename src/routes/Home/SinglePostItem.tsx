@@ -1,4 +1,6 @@
 import React from 'react';
+import styled from 'styled-components';
+
 
 import {
     Avatar,
@@ -10,22 +12,32 @@ import {
 
 const mainPanelStyle = {
     display: 'inline-block',
-    margin: '50px 15%',
+    margin: '50px auto',
     width: '700px',
 };
-const imagePostStyle = {
-    maxHeight: '240px',
-    objectFit: 'cover',
-    overflow: 'hidden',
-    width: '100%',
-};
+const ImagePost = styled.div`
+    max-height: 240px,
+    object-fit: cover,
+    overflow: hidden,
+    width: 100%,
+`;
+const PostContainer = styled.div`
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+`;
+
+
 export default function SinglePostItem() {
     return (
-        <>
+        <PostContainer>
             <Panel shaded={true} bordered={true} bodyFill={true} style={mainPanelStyle}>
-                <div style={imagePostStyle as any}>
+                <ImagePost>
                     <img src="/img/posts/p2.jpg" alt="presenting" style={{ width: '100%' }} />
-                </div>
+                </ImagePost>
                 <Panel header="Lorem ipsum dolor sit amet" >
                     <div className="show-grid">
 
@@ -56,6 +68,6 @@ export default function SinglePostItem() {
                     <Button>Continue reading</Button>
                 </Panel>
             </Panel>
-        </>
+        </PostContainer>
     );
 }

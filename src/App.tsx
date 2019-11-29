@@ -21,6 +21,7 @@ import Pool from './Components/Sidebar/Pool';
 const Home = lazy(() => import('./routes/Home'));
 const Meetup = lazy(() => import('./routes/Meetup'));
 const Chat = lazy(() => import('./routes/Chat'));
+const Profile = lazy(() => import('./routes/Profile'));
 
 
 export default function App() {
@@ -91,6 +92,7 @@ export default function App() {
                                 <Route exact={true} path="/" component={Home} />
                                 <Route path="/meetup" component={Meetup} />
                                 <Route path="/chat" component={Chat} />
+                                <Route path="/profile" component={Profile} />
                             </Switch>
                         </Suspense>
                     </BrowserRouter>
