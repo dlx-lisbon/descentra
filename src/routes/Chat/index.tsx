@@ -5,7 +5,8 @@ import { List, Form, FormGroup, ControlLabel, FormControl, ButtonToolbar, Button
 
 
 export default function Chat() {
-    const [loadingAccount, setLoadingAccount] = React.useState(true);
+    const [loadingAccount, setLoadingAccount] = React.useState(false);
+    const [connectedToChat, setConnectedToChat] = React.useState(false);
     const [profile, setProfile] = React.useState(undefined as any);
     const [chatMessages, setChatMessages] = React.useState([]);
     const [onlineUsers, setOnlineUsers] = React.useState([]);
@@ -41,16 +42,19 @@ export default function Chat() {
         setOnlineUsers(userList);
     };
 
-    useEffect(() => {
+    const connectToChat = (event: React.SyntheticEvent<Element, Event>) => {
         const fetchData = async () => {
+            setLoadingAccount(true);
             const box = await loadUserBox();
             setProfile(await box.public.all());
             const space = await loadSpace(box);
             await loadChat(space);
             setLoadingAccount(false);
+            setConnectedToChat(true);
         };
         fetchData();
-    }, []);
+        event.preventDefault();
+    };
 
     const welcomeMessage = () => {
         if (profile !== undefined) {
@@ -84,26 +88,46 @@ export default function Chat() {
         )
     );
 
+    const renderChat = () => {
+        if (loadingAccount) {
+            return 'Loading...';
+        }
+        if (connectedToChat) {
+            return (
+                <div>
+                    {welcomeMessage()}
+                    <br />
+                    <br />
+                    <List>{renderChatMessage()}</List>
+                    <Form>
+                        <FormGroup>
+                            <ControlLabel>Message</ControlLabel>
+                            <FormControl
+                                name="messageToSend"
+                                value={messageToSend}
+                                onChange={handleInputMessageToSend}
+                            />
+                        </FormGroup>
+                        <FormGroup>
+                            <ButtonToolbar>
+                                <Button appearance="primary" onClick={sendMessage}>Send</Button>
+                            </ButtonToolbar>
+                        </FormGroup>
+                    </Form>
+                    Online Users
+            <List>{renderOnlineUsers()}</List>
+                </div>
+            );
+        } else {
+            return (
+                <Button onClick={connectToChat}>Open Chat</Button>
+            );
+        }
+    };
 
     return (
-        <div>
-            {loadingAccount ? 'Loading...' : welcomeMessage()}
-            <br />
-            <br />
-            <List>{renderChatMessage()}</List>
-            <Form>
-                <FormGroup>
-                    <ControlLabel>Message</ControlLabel>
-                    <FormControl name="messageToSend" value={messageToSend} onChange={handleInputMessageToSend} />
-                </FormGroup>
-                <FormGroup>
-                    <ButtonToolbar>
-                        <Button appearance="primary" onClick={sendMessage}>Send</Button>
-                    </ButtonToolbar>
-                </FormGroup>
-            </Form>
-            Online Users
-            <List>{renderOnlineUsers()}</List>
+        <div style={{ margin: '5%' }}>
+            {renderChat()}
         </div>
     );
 }
