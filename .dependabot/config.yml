@@ -12,3 +12,10 @@ update_configs:
           dependency_name: "web3"
           dependency_name: "typescript"
           dependency_name: "react-scripts"
+    automerged_updates:
+      - match:
+          dependency_type: "development"
+          update_type: "all"
+      - match:
+          dependency_type: "production"
+          update_type: "semver:patch"
