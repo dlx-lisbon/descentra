@@ -28,6 +28,7 @@
         "react-bootstrap": "^1.0.0-beta.16",
         "react-countdown-now": "2.1.1",
         "react-dom": "16.10.1",
+        "react-emoji-render": "^1.1.0",
         "react-router-dom": "5.0.1",
         "react-window-size": "^1.2.2",
         "rsuite": "^4.1.1",
