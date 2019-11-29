@@ -1,4 +1,5 @@
 import React, { lazy, Suspense } from 'react';
+import Emoji from 'react-emoji-render';
 import { Route, Switch } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
 
@@ -23,18 +24,60 @@ const Chat = lazy(() => import('./routes/Chat'));
 
 
 export default function App() {
+    const goToChat = (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+        window.location.href = '/chat';
+        event.preventDefault();
+    };
+
+    const goToKudos = (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+        window.location.href = '/kudos';
+        event.preventDefault();
+    };
+
+    const goToProfile = (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+        window.location.href = '/profile';
+        event.preventDefault();
+    };
+
+    const goToMain = (event: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
+        window.location.href = '/';
+        event.preventDefault();
+    };
+
     return (
         <Container>
             <Header>
                 <Navbar>
                     <Navbar.Header>
-                        <img src="/img/clown-fish.svg" height={60} style={{ padding: '5px 30px 5px 20px' }} />
+                        <img
+                            src="/img/clown-fish.svg"
+                            onClick={goToMain}
+                            height={60}
+                            style={{ padding: '5px 30px 5px 20px', cursor: 'pointer' }}
+                        />
                         <span>Bem-vindo ao DLX</span>
                     </Navbar.Header>
                     <Navbar.Body>
                         <Nav pullRight={true} style={{ height: '60px' }}>
-                            <Nav.Item icon={<Icon icon="comments-o" />} >Chat</Nav.Item>
-                            <Avatar style={{ margin: '10px' }} circle={true} src="/img/blog/c1.jpg" />
+                            <span
+                                onClick={goToKudos}
+                            >
+                                <Nav.Item>
+                                    <Emoji text=":hatching_chick:  Kudos" />
+                                </Nav.Item>
+                            </span>
+                            <span onClick={goToChat}>
+                                <Nav.Item>
+                                    <Emoji text=":ghost:  Chat" />
+                                </Nav.Item>
+                            </span>
+                            <span onClick={goToProfile} style={{ cursor: 'pointer' }}>
+                                <Avatar
+                                    style={{ margin: '10px' }}
+                                    circle={true}
+                                    src="/img/blog/c1.jpg"
+                                />
+                            </span>
                         </Nav>
                     </Navbar.Body>
                 </Navbar>
