@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 
 
@@ -13,7 +13,8 @@ import {
 const mainPanelStyle = {
     display: 'inline-block',
     margin: '50px auto',
-    width: '700px',
+    maxWidth: '700px',
+    width: '100%',
 };
 const ImagePost = styled.div`
     max-height: 240px,
@@ -28,17 +29,29 @@ const PostContainer = styled.div`
     flex-wrap: wrap;
     justify-content: center;
     width: 100%;
+    cursor: pointer;
 `;
 
+export interface IPostInfo {
+    id: number;
+    title: string;
+    author: string;
+    date: string;
+    intro: string;
+}
+export default function SinglePostItem(props: { info: IPostInfo }) {
+    const sendToMeetupId = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        window.location.href = `/meetup/${props.info.id}`;
+        event.preventDefault();
+    };
 
-export default function SinglePostItem() {
     return (
-        <PostContainer>
+        <PostContainer onClick={sendToMeetupId}>
             <Panel shaded={true} bordered={true} bodyFill={true} style={mainPanelStyle}>
                 <ImagePost>
                     <img src="/img/posts/p2.jpg" alt="presenting" style={{ width: '100%' }} />
                 </ImagePost>
-                <Panel header="Lorem ipsum dolor sit amet" >
+                <Panel header={props.info.title} >
                     <div className="show-grid">
 
                         <FlexboxGrid align="middle">
@@ -49,22 +62,13 @@ export default function SinglePostItem() {
                             </FlexboxGrid.Item>
                             <FlexboxGrid.Item colspan={18}>
                                 <div style={{ lineHeight: 1.5 }}>
-                                    <p><b>THE PUBLISHER NAME</b></p>
-                                    <p><Icon icon="calendar-check-o" /> 13TH OCT, 2019</p>
+                                    <p><b>{props.info.author}</b></p>
+                                    <p><Icon icon="calendar-check-o" />{props.info.date}</p>
                                 </div>
                             </FlexboxGrid.Item>
                         </FlexboxGrid>
                     </div>
-                    <p style={{ margin: '20px 0px' }}>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        Morbi suscipit sollicitudin eros eu tempus. Vestibulum ante
-                        ipsum primis in faucibus orci luctus et ultrices posuere cubilia
-                        Curae; In hac habitasse platea dictumst. Mauris scelerisque
-                        pharetra orci, eu tempus purus malesuada nec. Integer elit
-                        nulla, convallis sit amet sapien non, convallis faucibus erat.
-                        Donec sit amet rhoncus eros, quis maximus libero. Cras at tellus in
-                        velit efficitur dictum in a massa. In vel mauris et urna volutpat cursus.
-                        </p>
+                    <p style={{ margin: '20px 0px' }}>{props.info.intro}</p>
                     <Button>Continue reading</Button>
                 </Panel>
             </Panel>
