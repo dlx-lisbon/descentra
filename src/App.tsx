@@ -21,6 +21,7 @@ import Pool from './Components/Sidebar/Pool';
 const Home = lazy(() => import('./routes/Home'));
 const Meetup = lazy(() => import('./routes/Meetup'));
 const Chat = lazy(() => import('./routes/Chat'));
+const Kudos = lazy(() => import('./routes/Kudos'));
 const Profile = lazy(() => import('./routes/Profile'));
 
 
@@ -84,7 +85,7 @@ export default function App() {
                     </Navbar.Body>
                 </Navbar>
             </Header>
-            <Container>
+            <Container style={{ width: '100%', maxWidth: '1300px', margin: 'auto' }}>
                 <Content>
                     <BrowserRouter>
                         <Suspense fallback={<div>Loading...</div>}>
@@ -92,6 +93,7 @@ export default function App() {
                                 <Route exact={true} path="/" component={Home} />
                                 <Route path="/meetup" component={Meetup} />
                                 <Route path="/chat" component={Chat} />
+                                <Route path="/kudos" component={Kudos} />
                                 <Route path="/profile" component={Profile} />
                             </Switch>
                         </Suspense>
@@ -102,7 +104,11 @@ export default function App() {
                     <Pool />
                 </Sidebar>
             </Container>
-            <Footer>Footer</Footer>
+            <Footer
+                style={{ height: '35px', backgroundColor: 'black', color: 'white', padding: '5px', }}
+            >
+                DLX 2020 <Emoji text=":ok_hand:" />
+            </Footer>
         </Container>
     );
 }
