@@ -31,6 +31,8 @@
             ]
         },
         "jsx-wrap-multiline": false,
+        "jsx-no-multiline-js": false,
+        "jsx-no-lambda": false,
         "quotemark": [true, "single", "jsx-double"]
     },
     "jsRules": {
