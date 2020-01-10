@@ -15,7 +15,7 @@
         "docs": "typedoc --out docs ./src"
     },
     "dependencies": {
-        "3box": "1.13.2",
+        "3box": "1.15.0",
         "@material-ui/core": "4.7.0",
         "@material-ui/icons": "4.5.1",
         "dlx-contracts": "file:../dlx-contracts/",
