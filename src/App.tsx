@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import { ContractTransaction, ethers } from 'ethers';
+import { JsonRpcProvider } from 'ethers/providers';
+import React, { useEffect, useState } from 'react';
 import Emoji from 'react-emoji-render';
 import styled from 'styled-components';
 
@@ -26,6 +28,7 @@ import {
     Input,
     InputGroup,
     List,
+    Modal,
     Nav,
     Navbar,
     Panel,
@@ -34,6 +37,10 @@ import {
     Tag,
     TagGroup,
 } from 'rsuite';
+import PlaceholderParagraph from 'rsuite/lib/Placeholder/PlaceholderParagraph';
+
+import MeetupCoreJSON from 'dlx-contracts/build/contracts/MeetupCore.json';
+import { MeetupCoreInstance } from 'dlx-contracts/types/truffle-contracts/index';
 
 
 interface IPostInfo {
@@ -353,12 +360,58 @@ function Profile() {
     );
 }
 
-
+interface INewContent {
+    date: string;
+    description: string;
+    location: string;
+    seats: string;
+    title: string;
+}
 export default function App() {
-    const [chat, openChat] = useState(false);
-    const [kudos, openKudos] = useState(false);
-    const [profile, openProfile] = useState(false);
-    const [post, openPost] = useState(-1);
+    // drawers and modals
+    const [chat, openChat] = useState<boolean>(false);
+    const [kudos, openKudos] = useState<boolean>(false);
+    const [profile, openProfile] = useState<boolean>(false);
+    const [newContent, openNewContent] = useState<boolean>(false);
+    // open post
+    const [post, openPost] = useState<number>(-1);
+    // blockchain variables
+    const [userSigner, setUserSigner] = useState<ethers.providers.JsonRpcSigner>(undefined as any);
+    const [meetupCoreInstance, setMeetupCoreInstance]
+        = useState<ethers.Contract & MeetupCoreInstance>(undefined as any);
+    // new content variables
+    const [newContentForm, setNewContentForm] = useState<INewContent>({
+        date: '',
+        description: '',
+        location: '',
+        seats: '',
+        title: '',
+    });
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const url = 'http://localhost:8545';
+            const customHttpProvider = new ethers.providers.JsonRpcProvider(url);
+
+            // We connect to the Contract using a Provider, so we will only
+            // have read-only access to the Contract
+            const network = await customHttpProvider.getNetwork();
+            setMeetupCoreInstance(new ethers.Contract(
+                // TODO: improve next line
+                (MeetupCoreJSON.networks as any)[network.chainId].address,
+                MeetupCoreJSON.abi,
+                customHttpProvider,
+            ) as ethers.Contract & MeetupCoreInstance);
+
+            setUserSigner(customHttpProvider.getSigner(0));
+            // const storageValue = await meetupCoreInstance.meetups();
+
+            // Set provider and contract to the state, and then proceed with an
+            // example of interacting with the contract's methods.
+            // this.setState({ provider: customHttpProvider, simpleStorageInstance, userSigner, storageValue });
+        };
+        fetchData();
+    }, []);
 
     const someFakePostInfo: IPostInfo[] = [{
         id: 1,
@@ -387,6 +440,21 @@ export default function App() {
         velit efficitur dictum in a massa. In vel mauris et urna volutpat cursus.',
         title: 'Lorem ipsum dolor sit amet',
     }];
+
+    const postNewContent = (event: React.SyntheticEvent<Element, Event>) => {
+        //
+        openNewContent(false);
+        event.preventDefault();
+    };
+
+    const handleInputNewContentChange = (
+        value: string | string[],
+        name: string,
+        event: React.SyntheticEvent<HTMLElement, Event>,
+    ) => {
+        //
+        event.preventDefault();
+    };
 
     const closeAll = (event: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
         window.location.reload();
@@ -495,6 +563,14 @@ export default function App() {
                     </Drawer>
                 </Content>
                 <Sidebar width={400}>
+                    <Button
+                        color="blue"
+                        block={true}
+                        style={{ margin: '50px 0px', width: '350px' }}
+                        onClick={() => openNewContent(true)}
+                    >
+                        <Icon icon="edit" /> New Content
+                    </Button>
                     <InputGroup style={{ margin: '50px 0px', width: '350px' }} size="lg" inside={true}>
                         <Input placeholder="Procurar por uma publicação" />
                         <InputGroup.Button><Icon icon="search" /></InputGroup.Button>
@@ -519,8 +595,41 @@ export default function App() {
                     </div>
                 </Sidebar>
             </Container>
+            <Modal full={true} show={newContent} onHide={() => openNewContent(false)}>
+                <Modal.Header>
+                    <Modal.Title>New Content</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Input
+                        style={{ width: 300 }}
+                        placeholder="Title"
+                        onChange={(v, e) => handleInputNewContentChange(v, 'title', e)}
+                    /><br />
+                    <Input
+                        style={{ width: 300 }}
+                        placeholder="Description"
+                        onChange={(v, e) => handleInputNewContentChange(v, 'description', e)}
+                    /><br />
+                    <Input
+                        style={{ width: 300 }}
+                        placeholder="Date"
+                        onChange={(v, e) => handleInputNewContentChange(v, 'date', e)}
+                    /><br />
+                    <Input style={{ width: 300 }} placeholder="Location" /><br />
+                    <Input style={{ width: 300 }} placeholder="Seats" /><br />
+                    <PlaceholderParagraph rows={8} />
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={postNewContent} appearance="primary">
+                        Post
+                    </Button>
+                    <Button onClick={() => openNewContent(false)} appearance="subtle">
+                        Cancel
+                    </Button>
+                </Modal.Footer>
+            </Modal>
             <Footer
-                style={{ height: '35px', backgroundColor: 'black', color: 'white', padding: '5px', }}
+                style={{ height: '35px', backgroundColor: 'black', color: 'white', padding: '5px' }}
             >
                 DLX 2020 <Emoji text=":ok_hand:" />
             </Footer>
