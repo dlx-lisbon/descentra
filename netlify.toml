@@ -2,3 +2,9 @@
   base = "."
   publish = "build/"
   command = "yarn build"
+
+[context.production]
+  environment = { RPC_URL = "RPC_URL_PROD" }
+
+[context.dev]
+  environment = { RPC_URL = "RPC_URL_DEV" }
