@@ -11,8 +11,17 @@ env:
 node_js:
     - "lts/dubnium"
 
+git:
+  clone: false
+
+before_install:
+    - git clone https://github.com/dlx-lisbon/dlx-contracts.git
+    - git clone https://github.com/dlx-lisbon/dlx-ui.git
+
 install:
-    - yarn
+    - (cd dlx-contracts && yarn)
+    - (cd dlx-ui && yarn)
 
 script:
-    - npm run lint
+    - cd dlx-ui
+    - yarn lint
