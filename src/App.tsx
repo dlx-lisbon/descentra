@@ -1,5 +1,6 @@
 import { ethers } from 'ethers';
-import React, { useEffect, useState, Suspense } from 'react';
+import ipfsClient from 'ipfs-http-client';
+import React, { Suspense, useEffect, useState } from 'react';
 import Emoji from 'react-emoji-render';
 
 import 'rsuite/dist/styles/rsuite-default.css';
@@ -23,6 +24,7 @@ import {
 
 import MeetupCoreJSON from 'dlx-contracts/build/contracts/MeetupCore.json';
 import { MeetupCoreInstance } from 'dlx-contracts/types/truffle-contracts/index';
+import { IMeetupInfo, IMeetupIPFSData } from './interfaces';
 import SinglePostItem from './SinglePostItem';
 
 const Kudos = React.lazy(() => import('./Kudos'));
@@ -31,90 +33,73 @@ const Chat = React.lazy(() => import('./Chat'));
 const NewContent = React.lazy(() => import('./NewContent'));
 const Meetup = React.lazy(() => import('./Meetup'));
 
-
-// TODO: duplicated! solve this
-interface IPostInfo {
-    id: number;
-    title: string;
-    author: string;
-    date: string;
-    intro: string;
-}
-
+const ipfs = ipfsClient(process.env.REACT_APP_IPFS_URL);
 
 
 export default function App() {
     // drawers and modals
+    const [loadingContent, setLoadingContent] = useState<boolean>(true);
     const [chat, openChat] = useState<boolean>(false);
     const [kudos, openKudos] = useState<boolean>(false);
     const [profile, openProfile] = useState<boolean>(false);
     const [newContent, openNewContent] = useState<boolean>(false);
     // open post
-    const [post, openPost] = useState<number>(-1);
+    const [openMeetup, setOpenMeetup] = useState<number>(-1);
+    const [isOpenMeetup, setIsOpenMeetup] = useState<boolean>(false);
     // blockchain variables
     const [userSigner, setUserSigner] = useState<ethers.providers.JsonRpcSigner>(undefined as any);
     const [meetupCoreInstance, setMeetupCoreInstance]
         = useState<ethers.Contract & MeetupCoreInstance>(undefined as any);
+    const [meetups, setMeetups] = useState<Map<number, IMeetupInfo>>(new Map());
 
 
     useEffect(() => {
         const fetchData = async () => {
-            const url = 'http://localhost:8545';
-            const customHttpProvider = new ethers.providers.JsonRpcProvider(url);
+            const customHttpProvider = new ethers.providers.JsonRpcProvider(process.env.REACT_APP_RPC_URL);
 
             // We connect to the Contract using a Provider, so we will only
             // have read-only access to the Contract
             const network = await customHttpProvider.getNetwork();
-            setMeetupCoreInstance(new ethers.Contract(
+            const meetupCoreContract = new ethers.Contract(
                 // TODO: improve next line
                 (MeetupCoreJSON.networks as any)[network.chainId].address,
                 MeetupCoreJSON.abi,
                 customHttpProvider,
-            ) as ethers.Contract & MeetupCoreInstance);
+            ) as ethers.Contract & MeetupCoreInstance;
+            setMeetupCoreInstance(meetupCoreContract);
 
             setUserSigner(customHttpProvider.getSigner(0));
-            // const storageValue = await meetupCoreInstance.meetups();
 
-            // Set provider and contract to the state, and then proceed with an
-            // example of interacting with the contract's methods.
-            // this.setState({ provider: customHttpProvider, simpleStorageInstance, userSigner, storageValue });
+            const totalMeetups = (await meetupCoreContract.totalMeetups()).toNumber();
+            const loadingMeetups: Map<number, IMeetupInfo> = new Map();
+            for (let m = totalMeetups - 1; m >= 0; m -= 1) {
+                const meetup = await meetupCoreContract.meetups(m);
+                const ipfsData = JSON.parse((await ipfs.cat(meetup[3])).toString()) as IMeetupIPFSData;
+                loadingMeetups.set(m, {
+                    author: 'ze',
+                    date: meetup[1].toNumber(),
+                    description: ipfsData.description,
+                    id: m,
+                    location: ipfsData.location,
+                    seats: meetup[2].toNumber(),
+                    status: meetup[0].toNumber(),
+                    title: ipfsData.title,
+                });
+            }
+            setMeetups(loadingMeetups);
+            setLoadingContent(false);
         };
         fetchData();
     }, []);
 
-    const someFakePostInfo: IPostInfo[] = [{
-        id: 1,
-        author: 'Jane',
-        date: '13 Nov, 2020',
-        intro: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.\
-        Morbi suscipit sollicitudin eros eu tempus. Vestibulum ante\
-        ipsum primis in faucibus orci luctus et ultrices posuere cubilia\
-        Curae; In hac habitasse platea dictumst. Mauris scelerisque\
-        pharetra orci, eu tempus purus malesuada nec. Integer elit\
-        nulla, convallis sit amet sapien non, convallis faucibus erat.\
-        Donec sit amet rhoncus eros, quis maximus libero. Cras at tellus in\
-        velit efficitur dictum in a massa. In vel mauris et urna volutpat cursus.',
-        title: 'Lorem ipsum dolor sit amet',
-    }, {
-        id: 2,
-        author: 'Jane',
-        date: '13 Nov, 2020',
-        intro: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.\
-        Morbi suscipit sollicitudin eros eu tempus. Vestibulum ante\
-        ipsum primis in faucibus orci luctus et ultrices posuere cubilia\
-        Curae; In hac habitasse platea dictumst. Mauris scelerisque\
-        pharetra orci, eu tempus purus malesuada nec. Integer elit\
-        nulla, convallis sit amet sapien non, convallis faucibus erat.\
-        Donec sit amet rhoncus eros, quis maximus libero. Cras at tellus in\
-        velit efficitur dictum in a massa. In vel mauris et urna volutpat cursus.',
-        title: 'Lorem ipsum dolor sit amet',
-    }];
-
-
-
     const closeAll = (event: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
         window.location.reload();
         event.preventDefault();
+    };
+
+    const handleOpenMeetup = (id: number) => {
+        setOpenMeetup(id);
+        setIsOpenMeetup(true);
     };
 
     return (
@@ -163,13 +148,12 @@ export default function App() {
             </Header>
             <Container style={{ width: '100%', maxWidth: '1300px', margin: 'auto' }}>
                 <Content>
-                    {someFakePostInfo
-                        .map((postInfo) => (<SinglePostItem
-                            key={postInfo.id}
-                            info={postInfo}
-                            openPost={openPost}
-                        />))
-                    }
+                    {loadingContent && <p>Loading content...</p>}
+                    {Array.from(meetups.values()).map((meetup) => <SinglePostItem
+                        key={meetup.id}
+                        info={meetup}
+                        onClick={handleOpenMeetup}
+                    />)}
                     <Drawer placement={'right'} show={chat} onHide={() => openChat(false)}>
                         <Drawer.Header>
                             <Drawer.Title>Chat</Drawer.Title>
@@ -215,13 +199,13 @@ export default function App() {
                             </Button>
                         </Drawer.Footer>
                     </Drawer>
-                    <Drawer full={true} placement={'bottom'} show={post !== -1} onHide={() => openPost(-1)}>
+                    <Drawer full={true} placement={'bottom'} show={isOpenMeetup} onHide={() => setIsOpenMeetup(false)}>
                         <Drawer.Header>
                             <Drawer.Title>Post</Drawer.Title>
                         </Drawer.Header>
                         <Drawer.Body>
                             <Suspense fallback={<div>Loading...</div>}>
-                                <Meetup />
+                                <Meetup meetupData={meetups.get(openMeetup)!} />
                             </Suspense>
                         </Drawer.Body>
                     </Drawer>
@@ -260,7 +244,13 @@ export default function App() {
                 </Sidebar>
             </Container>
             <Suspense fallback={<div>Loading...</div>}>
-                <NewContent show={newContent} setShow={openNewContent} />
+                <NewContent
+                    show={newContent}
+                    setShow={openNewContent}
+                    meetupCore={meetupCoreInstance}
+                    userSigner={userSigner}
+                    ipfs={ipfs}
+                />
             </Suspense>
             <Footer
                 style={{ height: '35px', backgroundColor: 'black', color: 'white', padding: '5px' }}

@@ -15,9 +15,13 @@ import {
     Tag,
     TagGroup,
 } from 'rsuite';
+import { IMeetupInfo } from './interfaces';
 
 
-export default function Meetup() {
+interface IMeetupProps {
+    meetupData: IMeetupInfo;
+}
+export default function Meetup(props: IMeetupProps) {
     const ImagePost = styled.div`
         max-height: 240px,
         object-fit: cover,
@@ -34,7 +38,7 @@ export default function Meetup() {
             <ImagePost>
                 <img src="img/posts/p2.jpg" alt="presenting" style={{ width: '100%' }} />
             </ImagePost>
-            <h2>Lorem ipsum dolor sit amet</h2>
+            <h2>{props.meetupData.title}</h2>
             <TagGroup>
                 <Tag color="red">Red</Tag>
                 <Tag color="orange">Orange</Tag>
@@ -58,22 +62,13 @@ export default function Meetup() {
                     </div>
                 </FlexboxGrid.Item>
             </FlexboxGrid>
-            <p style={{ margin: '20px 0px' }}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Morbi suscipit sollicitudin eros eu tempus. Vestibulum ante
-                ipsum primis in faucibus orci luctus et ultrices posuere cubilia
-                Curae; In hac habitasse platea dictumst. Mauris scelerisque
-                pharetra orci, eu tempus purus malesuada nec. Integer elit
-                nulla, convallis sit amet sapien non, convallis faucibus erat.
-                Donec sit amet rhoncus eros, quis maximus libero. Cras at tellus in
-                velit efficitur dictum in a massa. In vel mauris et urna volutpat cursus.
-            </p>
+            <p style={{ margin: '20px 0px' }}>{props.meetupData.description}</p>
             <Grid>
                 <Row className="show-grid">
                     <Col xs={8}>
-                        <p><Icon icon="calendar" />&nbsp;13 Jan, 2037</p>
+                        <p><Icon icon="calendar" />&nbsp;{props.meetupData.date}</p>
                         <p><Icon icon="clock-o" />&nbsp;18h30</p>
-                        <p><Icon icon="map-marker" />&nbsp;Tropical Insland</p>
+                        <p><Icon icon="map-marker" />&nbsp;{props.meetupData.location}</p>
                     </Col>
                     <Col xs={12}>
                         <img

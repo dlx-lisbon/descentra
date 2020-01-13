@@ -10,18 +10,12 @@ import {
     Icon,
     Panel,
 } from 'rsuite';
+import { IMeetupInfo } from './interfaces';
 
 
-interface IPostInfo {
-    id: number;
-    title: string;
-    author: string;
-    date: string;
-    intro: string;
-}
 interface ISinglePostItemProps {
-    info: IPostInfo;
-    openPost: (value: React.SetStateAction<number>) => void;
+    info: IMeetupInfo;
+    onClick: (value: number) => void;
 }
 export default function SinglePostItem(props: ISinglePostItemProps) {
     const mainPanelStyle = {
@@ -47,7 +41,7 @@ export default function SinglePostItem(props: ISinglePostItemProps) {
     `;
 
     const sendToMeetupId = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        props.openPost(props.info.id);
+        props.onClick(props.info.id);
         event.preventDefault();
     };
 
@@ -74,7 +68,7 @@ export default function SinglePostItem(props: ISinglePostItemProps) {
                             </FlexboxGrid.Item>
                         </FlexboxGrid>
                     </div>
-                    <p style={{ margin: '20px 0px' }}>{props.info.intro}</p>
+                    <p style={{ margin: '20px 0px' }}>{props.info.description}</p>
                     <Button>Continue reading</Button>
                 </Panel>
             </Panel>
