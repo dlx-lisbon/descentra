@@ -20,6 +20,7 @@
         "@material-ui/icons": "4.5.1",
         "dlx-contracts": "file:../dlx-contracts/",
         "ethers": "4.0.42",
+        "ipfs-http-client": "41.0.0",
         "react": "16.9.0",
         "react-dom": "16.10.1",
         "react-emoji-render": "1.1.0",
