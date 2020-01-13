@@ -39,7 +39,7 @@
         "eslint-plugin-jsx-a11y": "6.2.3",
         "eslint-plugin-react": "7.17.0",
         "react-scripts": "3.0.1",
-        "tslint": "5.20.0",
+        "tslint": "5.20.1",
         "tslint-react": "4.1.0",
         "typedoc": "0.15.8",
         "typescript": "3.7.4",
