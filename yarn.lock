@@ -5408,7 +5408,7 @@ electron-to-chromium@^1.3.247:
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.281.tgz#2dbeb9f0bdffddb1662f9ca00d26c49d31dc0f7e"
   integrity sha512-oxXKngPjTWRmXFy4vV9FeAkPl7wU4xMejfOY+HXjGrj4T0z9l96loWWVDLJEtbT/aPKOWKrSz6xoYxd+YJ/gJA==
 
-element-resize-event@^3.0.2:
+element-resize-event@^3.0.2, element-resize-event@^3.0.3:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/element-resize-event/-/element-resize-event-3.0.3.tgz#3f59facef6b8f23fbd678a5f364ee5723af98a2a"
   integrity sha512-vhGNxT87PdZA6Ak4E0QhArwGzNcSPUwSN7n9wCFLeBlY2NNuuiwguQuQIp7P5oB65PLJ892yKcHiqz1xLWeiug==
@@ -14573,10 +14573,10 @@ rsa-unpack@0.0.6:
   dependencies:
     optimist "~0.3.5"
 
-rsuite-table@^3.7.1:
-  version "3.7.1"
-  resolved "https://registry.yarnpkg.com/rsuite-table/-/rsuite-table-3.7.1.tgz#f55a628e72d7dd7cb24b4728f3b89a3b221395a2"
-  integrity sha512-kDSDueMTO14FUR62rug9tRxYDw3JY2cHyB1iDaAcqM8KmEnTFpIxmo7difU0iuiRyTGdXYFF2S4v9HyM7lOAeA==
+rsuite-table@^3.8.2:
+  version "3.8.2"
+  resolved "https://registry.yarnpkg.com/rsuite-table/-/rsuite-table-3.8.2.tgz#4bf6453dee167c92e187bbff303aebb22cc23332"
+  integrity sha512-d7L9yzel8H7rPQtIhewnsoiMPizEhBw/I939eqAAPAZIKylcd4/TtBd+Fji1EZaIDaMQ9ofIkc4ZySqHMrlGuw==
   dependencies:
     classnames "^2.2.5"
     dom-lib "^1.2.1"
@@ -14593,24 +14593,24 @@ rsuite-utils@^2.2.1:
     lodash "^4.17.5"
     react-lifecycles-compat "^3.0.4"
 
-rsuite@4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/rsuite/-/rsuite-4.1.1.tgz#a53d96a1ea9c1c3b141173d8392b90f721635d80"
-  integrity sha512-jAWJ6yYtgoBzvJa8tL9GRSzwCMNNkCubcQj0r6moCtaB1H9OYseB6yRrVulQKsbzookW/2mL6gSoiIk9yK+Lug==
+rsuite@4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/rsuite/-/rsuite-4.2.0.tgz#18af9e5850cb569872523d8478b3f56c3b5e49dc"
+  integrity sha512-WFzRwSozyLNRgiJT73zi+JBh7ylnhdAXWZv2kxhhJ661T7IBY5oA9Y/Ruu0io2t+V2alHe/y/+Tru2jOL8ISRg==
   dependencies:
     "@babel/runtime" "^7.0.0"
     classnames ">=2.0.0"
     date-fns "^1.30.1"
     dom-lib "^1.2.1"
-    element-resize-event "^3.0.2"
+    element-resize-event "^3.0.3"
     lodash "^4.17.11"
     prop-types "^15.7.2"
     react-lifecycles-compat "^3.0.4"
     react-virtualized "^9.21.0"
     recompose "^0.26.0"
-    rsuite-table "^3.7.1"
+    rsuite-table "^3.8.2"
     rsuite-utils "^2.2.1"
-    schema-typed "^1.3.1"
+    schema-typed "^1.4.0"
 
 rsvp@^4.8.4:
   version "4.8.5"
@@ -14714,10 +14714,10 @@ scheduler@^0.16.1:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
 
-schema-typed@^1.3.1:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/schema-typed/-/schema-typed-1.3.1.tgz#ca9e6a8d93c64c9fe6dc9986d60139c0513a23d1"
-  integrity sha512-gqYJNjppMNx1Xvre+G1hiXZR4oymGXgqxp0vb+uPrmxfaCa371guqKarL7PD1eN4Dflu7qhr2rJetLA7wW6NVQ==
+schema-typed@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/schema-typed/-/schema-typed-1.4.0.tgz#9cc8d7a924cd7e9cfbd2fcbbbd9f8ec810db3590"
+  integrity sha512-QIs8cTNoMPQUCD7n2ycpVOU56FHIf7Yt8LXkoPoGXskOAl1TRmcIjUQI8/EA8GQv1+UB8u4KtaGx4yMoDUaKUw==
 
 schema-utils@^1.0.0:
   version "1.0.0"
