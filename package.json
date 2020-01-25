@@ -18,7 +18,7 @@
         "3box": "1.16.0",
         "@material-ui/core": "4.7.0",
         "@material-ui/icons": "4.5.1",
-        "dlx-contracts": "file:../dlx-contracts/",
+        "dlx-contracts": "git://github.com/dlx-lisbon/dlx-contracts.git#0af3aaa",
         "ethers": "4.0.42",
         "ipfs-http-client": "41.0.0",
         "react": "16.9.0",
