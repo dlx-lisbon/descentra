@@ -23,7 +23,8 @@ import {
 } from 'rsuite';
 
 import MeetupCoreJSON from 'dlx-contracts/build/contracts/MeetupCore.json';
-import { MeetupCoreInstance } from 'dlx-contracts/types/truffle-contracts/index';
+import KudosCoreJSON from 'dlx-contracts/build/contracts/KudosCore.json';
+import { MeetupCoreInstance, KudosCoreInstance } from 'dlx-contracts/types/truffle-contracts/index';
 import { IMeetupInfo, IMeetupIPFSData } from './interfaces';
 import SinglePostItem from './SinglePostItem';
 
@@ -32,6 +33,7 @@ const Profile = React.lazy(() => import('./Profile'));
 const Chat = React.lazy(() => import('./Chat'));
 const NewContent = React.lazy(() => import('./NewContent'));
 const Meetup = React.lazy(() => import('./Meetup'));
+const MintKudo = React.lazy(() => import('./MintKudo'));
 
 const ipfs = ipfsClient(process.env.REACT_APP_IPFS_URL);
 
@@ -42,6 +44,7 @@ export default function App() {
     const [chat, openChat] = useState<boolean>(false);
     const [kudos, openKudos] = useState<boolean>(false);
     const [profile, openProfile] = useState<boolean>(false);
+    const [mintKudo, openMintKudo] = useState<boolean>(false);
     const [newContent, openNewContent] = useState<boolean>(false);
     // open post
     const [openMeetup, setOpenMeetup] = useState<number>(-1);
@@ -50,6 +53,8 @@ export default function App() {
     const [userSigner, setUserSigner] = useState<ethers.providers.JsonRpcSigner>(undefined as any);
     const [meetupCoreInstance, setMeetupCoreInstance]
         = useState<ethers.Contract & MeetupCoreInstance>(undefined as any);
+    const [kudosCoreInstance, setKudosCoreInstance]
+        = useState<ethers.Contract & KudosCoreInstance>(undefined as any);
     const [meetups, setMeetups] = useState<Map<number, IMeetupInfo>>(new Map());
 
 
@@ -67,6 +72,13 @@ export default function App() {
                 customHttpProvider,
             ) as ethers.Contract & MeetupCoreInstance;
             setMeetupCoreInstance(meetupCoreContract);
+            const kudosCoreContract = new ethers.Contract(
+                // TODO: improve next line
+                (KudosCoreJSON.networks as any)[network.chainId].address,
+                KudosCoreJSON.abi,
+                customHttpProvider,
+            ) as ethers.Contract & KudosCoreInstance;
+            setKudosCoreInstance(kudosCoreContract);
 
             setUserSigner(customHttpProvider.getSigner(0));
 
@@ -118,6 +130,13 @@ export default function App() {
                     </Navbar.Header>
                     <Navbar.Body>
                         <Nav pullRight={true} style={{ height: '60px' }}>
+                            <span
+                                onClick={() => openMintKudo(true)}
+                            >
+                                <Nav.Item>
+                                    <Emoji text=":construction_worker:  Mint Kudo" />
+                                </Nav.Item>
+                            </span>
                             <span
                                 onClick={() => openKudos(true)}
                             >
@@ -175,7 +194,10 @@ export default function App() {
                         </Drawer.Header>
                         <Drawer.Body>
                             <Suspense fallback={<div>Loading...</div>}>
-                                <Kudos />
+                                <Kudos
+                                    kudosCore={kudosCoreInstance}
+                                    userSigner={userSigner}
+                                />
                             </Suspense>
                         </Drawer.Body>
                         <Drawer.Footer>
@@ -217,7 +239,7 @@ export default function App() {
                         style={{ margin: '50px 0px', width: '350px' }}
                         onClick={() => openNewContent(true)}
                     >
-                        <Icon icon="edit" /> New Content
+                        <Icon icon="edit" />New Content
                     </Button>
                     <InputGroup style={{ margin: '50px 0px', width: '350px' }} size="lg" inside={true}>
                         <Input placeholder="Procurar por uma publicação" />
@@ -250,6 +272,14 @@ export default function App() {
                     meetupCore={meetupCoreInstance}
                     userSigner={userSigner}
                     ipfs={ipfs}
+                />
+            </Suspense>
+            <Suspense fallback={<div>Loading...</div>}>
+                <MintKudo
+                    show={mintKudo}
+                    setShow={openMintKudo}
+                    kudosCore={kudosCoreInstance}
+                    userSigner={userSigner}
                 />
             </Suspense>
             <Footer
