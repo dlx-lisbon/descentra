@@ -2,10 +2,10 @@ import { ContractTransaction, ethers } from 'ethers';
 import React, { useState } from 'react';
 import {
     Button,
-    Input,
-    Modal,
     DatePicker,
+    Input,
     InputGroup,
+    Modal,
 } from 'rsuite';
 
 import { MeetupCoreInstance } from 'dlx-contracts/types/truffle-contracts/index';
