@@ -1,3 +1,4 @@
+import format from 'date-format';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -57,8 +58,8 @@ export default function Meetup(props: IMeetupProps) {
                 </FlexboxGrid.Item>
                 <FlexboxGrid.Item colspan={18}>
                     <div style={{ lineHeight: 1.5 }}>
-                        <p><b>ORGANIZED BY</b></p>
-                        <p>publishers name</p>
+                        <p><b>ORGANIZADO POR</b></p>
+                        <p>{props.meetupData.author}</p>
                     </div>
                 </FlexboxGrid.Item>
             </FlexboxGrid>
@@ -66,9 +67,18 @@ export default function Meetup(props: IMeetupProps) {
             <Grid>
                 <Row className="show-grid">
                     <Col xs={8}>
-                        <p><Icon icon="calendar" />&nbsp;{props.meetupData.date}</p>
-                        <p><Icon icon="clock-o" />&nbsp;18h30</p>
-                        <p><Icon icon="map-marker" />&nbsp;{props.meetupData.location}</p>
+                        <p>
+                            <Icon icon="calendar" />
+                            &nbsp;{format('dd/MM/yyyy', new Date(props.meetupData.date * 1000))}
+                        </p>
+                        <p>
+                            <Icon icon="clock-o" />
+                            &nbsp;{format('hh:mm', new Date(props.meetupData.date * 1000))}
+                        </p>
+                        <p>
+                            <Icon icon="map-marker" />
+                            &nbsp;{props.meetupData.location}
+                        </p>
                     </Col>
                     <Col xs={12}>
                         <img
@@ -79,8 +89,8 @@ export default function Meetup(props: IMeetupProps) {
                     </Col>
                 </Row>
             </Grid>
-            <Button>Join</Button>
-            <Divider>Participants</Divider>
+            <Button>Participar</Button>
+            <Divider>Participantes</Divider>
             <Grid fluid={true}>
                 <Row className="show-grid">
                     <Col xs={2}><Avatar style={{ background: '#7B1FA2' }}>RS</Avatar></Col>

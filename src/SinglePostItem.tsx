@@ -1,3 +1,4 @@
+import format from 'date-format';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -63,13 +64,16 @@ export default function SinglePostItem(props: ISinglePostItemProps) {
                             <FlexboxGrid.Item colspan={18}>
                                 <div style={{ lineHeight: 1.5 }}>
                                     <p><b>{props.info.author}</b></p>
-                                    <p><Icon icon="calendar-check-o" />{props.info.date}</p>
+                                    <p>
+                                        <Icon icon="calendar-check-o" />
+                                        &nbsp;{format('dd/MM/yyyy hh:mm', new Date(props.info.date * 1000))}
+                                    </p>
                                 </div>
                             </FlexboxGrid.Item>
                         </FlexboxGrid>
                     </div>
                     <p style={{ margin: '20px 0px' }}>{props.info.description}</p>
-                    <Button>Continue reading</Button>
+                    <Button>Continuar a ler</Button>
                 </Panel>
             </Panel>
         </PostContainer>
