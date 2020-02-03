@@ -13858,10 +13858,10 @@ rsa-unpack@0.0.6:
   dependencies:
     optimist "~0.3.5"
 
-rsuite-table@^3.8.2:
-  version "3.8.2"
-  resolved "https://registry.yarnpkg.com/rsuite-table/-/rsuite-table-3.8.2.tgz#4bf6453dee167c92e187bbff303aebb22cc23332"
-  integrity sha512-d7L9yzel8H7rPQtIhewnsoiMPizEhBw/I939eqAAPAZIKylcd4/TtBd+Fji1EZaIDaMQ9ofIkc4ZySqHMrlGuw==
+rsuite-table@^3.8.4:
+  version "3.8.4"
+  resolved "https://registry.yarnpkg.com/rsuite-table/-/rsuite-table-3.8.4.tgz#8c70447b9760656b45a45a5ce5aef4bc7e0aee8d"
+  integrity sha512-HT6nKVR4LuREwh/ZoQrQzEq2UhXUy1ArJg09e6H+pbky8zVpuXjhEFpLaHO6xMYdamtGoF2LvVD09EW/4lwEVg==
   dependencies:
     classnames "^2.2.5"
     dom-lib "^1.2.1"
@@ -13878,10 +13878,10 @@ rsuite-utils@^2.2.1:
     lodash "^4.17.5"
     react-lifecycles-compat "^3.0.4"
 
-rsuite@4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/rsuite/-/rsuite-4.2.0.tgz#18af9e5850cb569872523d8478b3f56c3b5e49dc"
-  integrity sha512-WFzRwSozyLNRgiJT73zi+JBh7ylnhdAXWZv2kxhhJ661T7IBY5oA9Y/Ruu0io2t+V2alHe/y/+Tru2jOL8ISRg==
+rsuite@4.2.1:
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/rsuite/-/rsuite-4.2.1.tgz#23b82a8d91b3c81be104abd6acf2bce2b9641636"
+  integrity sha512-7Lfoq8jmHlbgrFyJRNbEhY4uWE3mSZU7OkwQBuCpQq89ohk2kI93+oTp/RllqSyspBKOLLn3744HyINYdOZWng==
   dependencies:
     "@babel/runtime" "^7.0.0"
     classnames ">=2.0.0"
@@ -13893,7 +13893,7 @@ rsuite@4.2.0:
     react-lifecycles-compat "^3.0.4"
     react-virtualized "^9.21.0"
     recompose "^0.26.0"
-    rsuite-table "^3.8.2"
+    rsuite-table "^3.8.4"
     rsuite-utils "^2.2.1"
     schema-typed "^1.4.0"
 
