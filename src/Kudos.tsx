@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Col,
     Grid,
@@ -12,41 +12,54 @@ import { KudosCoreInstance } from 'dlx-contracts/types/truffle-contracts/index';
 interface IKudosProps {
     kudosCore: ethers.Contract & KudosCoreInstance;
     userSigner: ethers.providers.JsonRpcSigner;
+    ipfs: any;
+}
+interface IKudosMetadata {
+    name: string;
+    description: string;
+    image: string;
 }
 export default function Kudos(props: IKudosProps) {
+    const [kudos, setKudos] = useState<IKudosMetadata[][]>([]);
     useEffect(() => {
         const fetchData = async () => {
             // We connect to the Contract using a Provider, so we will only
-            const owner = '0xd20f839e0424D97ecf49073f7F0725f47c8E27A6';
+            const owner = await props.userSigner.getAddress();
             const totalUserKudos = (await props.kudosCore.balanceOf(owner)).toNumber();
-            for (let k = 0; k < totalUserKudos; k++) {
-                const tokenId = await props.kudosCore.tokenOfOwnerByIndex(owner, k);
-                const tokenUri = (await props.kudosCore.tokenURI(tokenId));
-                // TODO: complete
+            const kudosArray: IKudosMetadata[][] = [];
+            for (let l = 0; l < totalUserKudos; l += 6) {
+                const kudosArrayLine: IKudosMetadata[] = [];
+                for (let k = 0; k < Math.min(Math.abs(6 * l - totalUserKudos), 6); k += 1) {
+                    const index = k + l;
+                    const tokenId = await props.kudosCore.tokenOfOwnerByIndex(owner, index);
+                    const tokenUri = (await props.kudosCore.tokenURI(tokenId));
+                    const data = JSON.parse((await props.ipfs.cat(tokenUri)).toString()) as IKudosMetadata;
+                    kudosArrayLine.push(data);
+                }
+                kudosArray.push(kudosArrayLine);
             }
+            setKudos(kudosArray);
+            console.log(kudosArray);
         };
         fetchData();
     }, []);
 
-    return (
-        <Grid fluid={true} style={{ padding: '50px' }}>
-            <Row className="show-grid">
-                <Col xs={4}><img src="https://via.placeholder.com/100" alt="example" /></Col>
-                <Col xs={4}><img src="https://via.placeholder.com/100" alt="example" /></Col>
-                <Col xs={4}><img src="https://via.placeholder.com/100" alt="example" /></Col>
-                <Col xs={4}><img src="https://via.placeholder.com/100" alt="example" /></Col>
-                <Col xs={4}><img src="https://via.placeholder.com/100" alt="example" /></Col>
-                <Col xs={4}><img src="https://via.placeholder.com/100" alt="example" /></Col>
-            </Row>
-            <br />
-            <Row className="show-grid">
-                <Col xs={4}><img src="https://via.placeholder.com/100" alt="example" /></Col>
-                <Col xs={4}><img src="https://via.placeholder.com/100" alt="example" /></Col>
-                <Col xs={4}><img src="https://via.placeholder.com/100" alt="example" /></Col>
-                <Col xs={4}><img src="https://via.placeholder.com/100" alt="example" /></Col>
-                <Col xs={4}><img src="https://via.placeholder.com/100" alt="example" /></Col>
-                <Col xs={4}><img src="https://via.placeholder.com/100" alt="example" /></Col>
-            </Row>
-        </Grid>
-    );
+    const kudosSpace = (kudo: IKudosMetadata) => {
+        return (
+            <Col key={kudo.image} xs={4}>
+                <img height="100" width="100" src={kudo.image} alt={kudo.name} />
+                <div style={{ textAlign: 'center', fontFamily: 'monospace' }}>{kudo.name}</div>
+            </Col>
+        );
+    };
+
+    const renderKudos = () => {
+        return (
+            <Grid fluid={true} style={{ padding: '50px' }}>
+                {kudos.map((k, i) => <Row key={i} className="show-grid">{k.map((k1) => kudosSpace(k1))}</Row>)}
+            </Grid>
+        );
+    };
+
+    return renderKudos();
 }
