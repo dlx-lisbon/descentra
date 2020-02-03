@@ -14,7 +14,10 @@ import {
 } from 'rsuite';
 
 
-export default function Chat() {
+interface IChatProps {
+    threeBox: any;
+}
+export default function Chat(props: IChatProps) {
     const [loadingAccount, setLoadingAccount] = React.useState(false);
     const [connectedToChat, setConnectedToChat] = React.useState(false);
     const [profile, setProfile] = React.useState(undefined as any);
@@ -22,14 +25,6 @@ export default function Chat() {
     const [onlineUsers, setOnlineUsers] = React.useState([]);
     const [messageToSend, setMessageToSend] = React.useState('');
     const [ghostThreadChat, setGhostThreadChat] = React.useState(undefined as any);
-
-    const loadUserBox = async () => {
-        await (window as any).ethereum.enable();
-        const userAddress = (window as any).ethereum.selectedAddress;
-        const box = await Box.openBox(userAddress, (window as any).ethereum);
-        await box.syncDone;
-        return box;
-    };
 
     const loadSpace = async (box: any) => {
         const space = await box.openSpace('dlx');
@@ -55,9 +50,8 @@ export default function Chat() {
     const connectToChat = (event: React.SyntheticEvent<Element, Event>) => {
         const fetchData = async () => {
             setLoadingAccount(true);
-            const box = await loadUserBox();
-            setProfile(await box.public.all());
-            const space = await loadSpace(box);
+            setProfile(await props.threeBox.public.all());
+            const space = await loadSpace(props.threeBox);
             await loadChat(space);
             setLoadingAccount(false);
             setConnectedToChat(true);

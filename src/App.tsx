@@ -5,6 +5,7 @@ import Emoji from 'react-emoji-render';
 
 import 'rsuite/dist/styles/rsuite-default.css';
 
+import ThreeBox from '3box';
 import {
     Avatar,
     Button,
@@ -22,9 +23,9 @@ import {
     Sidebar,
 } from 'rsuite';
 
-import MeetupCoreJSON from 'dlx-contracts/build/contracts/MeetupCore.json';
 import KudosCoreJSON from 'dlx-contracts/build/contracts/KudosCore.json';
-import { MeetupCoreInstance, KudosCoreInstance } from 'dlx-contracts/types/truffle-contracts/index';
+import MeetupCoreJSON from 'dlx-contracts/build/contracts/MeetupCore.json';
+import { KudosCoreInstance, MeetupCoreInstance } from 'dlx-contracts/types/truffle-contracts/index';
 import { IMeetupInfo, IMeetupIPFSData } from './interfaces';
 import SinglePostItem from './SinglePostItem';
 
@@ -44,6 +45,8 @@ export default function App() {
     const [chat, openChat] = useState<boolean>(false);
     const [kudos, openKudos] = useState<boolean>(false);
     const [profile, openProfile] = useState<boolean>(false);
+    const [user3box, setUser3Box] = useState<any>(undefined);
+    const [user3boxProfile, setUser3BoxProfile] = useState<any>(undefined);
     const [mintKudo, openMintKudo] = useState<boolean>(false);
     const [newContent, openNewContent] = useState<boolean>(false);
     // open post
@@ -60,27 +63,30 @@ export default function App() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const customHttpProvider = new ethers.providers.JsonRpcProvider(process.env.REACT_APP_RPC_URL);
+            const injectedEthereumMetamask = (window as any).ethereum;
+            await injectedEthereumMetamask.enable();
+            // const provider = new ethers.providers.Web3Provider(injectedEthereumMetamask);
+            const provider = new ethers.providers.JsonRpcProvider(process.env.REACT_APP_RPC_URL);
 
             // We connect to the Contract using a Provider, so we will only
             // have read-only access to the Contract
-            const network = await customHttpProvider.getNetwork();
+            const network = await provider.getNetwork();
             const meetupCoreContract = new ethers.Contract(
                 // TODO: improve next line
                 (MeetupCoreJSON.networks as any)[network.chainId].address,
                 MeetupCoreJSON.abi,
-                customHttpProvider,
+                provider,
             ) as ethers.Contract & MeetupCoreInstance;
             setMeetupCoreInstance(meetupCoreContract);
             const kudosCoreContract = new ethers.Contract(
                 // TODO: improve next line
                 (KudosCoreJSON.networks as any)[network.chainId].address,
                 KudosCoreJSON.abi,
-                customHttpProvider,
+                provider,
             ) as ethers.Contract & KudosCoreInstance;
             setKudosCoreInstance(kudosCoreContract);
 
-            setUserSigner(customHttpProvider.getSigner(0));
+            setUserSigner(provider.getSigner(0));
 
             const totalMeetups = (await meetupCoreContract.totalMeetups()).toNumber();
             const loadingMeetups: Map<number, IMeetupInfo> = new Map();
@@ -100,9 +106,17 @@ export default function App() {
             }
             setMeetups(loadingMeetups);
             setLoadingContent(false);
+            setUser3BoxProfile(await ThreeBox.getProfile((window as any).ethereum.selectedAddress));
+            setUser3Box(await loadUserThreeBox((window as any).ethereum.selectedAddress));
         };
         fetchData();
     }, []);
+
+    const loadUserThreeBox = async (userAddress: string) => {
+        const box = await ThreeBox.openBox(userAddress, (window as any).ethereum);
+        await box.syncDone;
+        return box;
+    };
 
     const closeAll = (event: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
         window.location.reload();
@@ -113,6 +127,9 @@ export default function App() {
         setOpenMeetup(id);
         setIsOpenMeetup(true);
     };
+
+    const userAvatarSrc = user3boxProfile === undefined ?
+        'img/blog/c1.jpg' : 'https://ipfs.io/ipfs/' + user3boxProfile.image[0].contentUrl['/'];
 
     return (
         <Container>
@@ -158,7 +175,7 @@ export default function App() {
                                 <Avatar
                                     style={{ margin: '10px' }}
                                     circle={true}
-                                    src="img/blog/c1.jpg"
+                                    src={userAvatarSrc}
                                 />
                             </span>
                         </Nav>
@@ -179,7 +196,9 @@ export default function App() {
                         </Drawer.Header>
                         <Drawer.Body>
                             <Suspense fallback={<div>Loading...</div>}>
-                                <Chat />
+                                <Chat
+                                    threeBox={user3box}
+                                />
                             </Suspense>
                         </Drawer.Body>
                         <Drawer.Footer>
@@ -197,6 +216,7 @@ export default function App() {
                                 <Kudos
                                     kudosCore={kudosCoreInstance}
                                     userSigner={userSigner}
+                                    ipfs={ipfs}
                                 />
                             </Suspense>
                         </Drawer.Body>
@@ -208,11 +228,13 @@ export default function App() {
                     </Drawer>
                     <Drawer full={true} placement={'bottom'} show={profile} onHide={() => openProfile(false)}>
                         <Drawer.Header>
-                            <Drawer.Title>Profile</Drawer.Title>
+                            <Drawer.Title>Perfil</Drawer.Title>
                         </Drawer.Header>
                         <Drawer.Body>
                             <Suspense fallback={<div>Loading...</div>}>
-                                <Profile />
+                                <Profile
+                                    threeBoxProfile={user3boxProfile}
+                                />
                             </Suspense>
                         </Drawer.Body>
                         <Drawer.Footer>
@@ -239,7 +261,7 @@ export default function App() {
                         style={{ margin: '50px 0px', width: '350px' }}
                         onClick={() => openNewContent(true)}
                     >
-                        <Icon icon="edit" />New Content
+                        <Icon icon="edit" />Novo Conteudo
                     </Button>
                     <InputGroup style={{ margin: '50px 0px', width: '350px' }} size="lg" inside={true}>
                         <Input placeholder="Procurar por uma publicação" />
@@ -250,17 +272,31 @@ export default function App() {
                             shaded={true}
                             bordered={true}
                             bodyFill={true}
-                            style={{ display: 'inline-block', width: 350 }}
+                            style={{ display: 'inline-block', margin: '0px 0px 50px 0px', width: '350px' }}
                         >
-                            <img alt="placeholder" src="https://via.placeholder.com/350x240" height="240" />
-                            <Panel header="RSUITE">
+                            <Panel header="POOL">
                                 <p>
                                     <small>
-                                        A suite of React components, sensible UI design,
-                                        and a friendly development experience.
+                                        Isto é uma pool sobre batatas e outras coisas variadas!
                                     </small>
                                 </p>
                             </Panel>
+                            <img alt="placeholder" src="https://via.placeholder.com/350x240" height="240" />
+                        </Panel>
+                        <Panel
+                            shaded={true}
+                            bordered={true}
+                            bodyFill={true}
+                            style={{ display: 'inline-block', margin: '0px 0px 50px 0px', width: '350px' }}
+                        >
+                            <Panel header="MEMBROS">
+                                <p>
+                                    <small>
+                                        Lista completa de membros. Participa aqui!
+                                    </small>
+                                </p>
+                            </Panel>
+                            <img alt="placeholder" src="https://via.placeholder.com/350x240" height="240" />
                         </Panel>
                     </div>
                 </Sidebar>
@@ -280,6 +316,7 @@ export default function App() {
                     setShow={openMintKudo}
                     kudosCore={kudosCoreInstance}
                     userSigner={userSigner}
+                    ipfs={ipfs}
                 />
             </Suspense>
             <Footer

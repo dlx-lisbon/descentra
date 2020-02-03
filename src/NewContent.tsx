@@ -56,7 +56,7 @@ export default function NewContent(props: INewContentProps) {
                     await tx.wait();
                     props.setShow(false);
                 });
-            })
+            });
 
         event.preventDefault();
     };
@@ -104,7 +104,7 @@ export default function NewContent(props: INewContentProps) {
     return (
         <Modal full={true} show={props.show} onHide={() => props.setShow(false)}>
             <Modal.Header>
-                <Modal.Title>New Content</Modal.Title>
+                <Modal.Title>Novo Conteudo</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Input
@@ -123,7 +123,7 @@ export default function NewContent(props: INewContentProps) {
                     style={{ width: 450 }}
                 >
                     <DatePicker
-                        format="YYYY-MM-DD HH:mm:ss"
+                        format="YYYY-MM-DD HH:mm"
                         onChange={(v, e) => handleInputNewContentChange(v, 'date', e)}
                         ranges={[
                             {
