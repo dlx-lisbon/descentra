@@ -12,32 +12,44 @@ import PlaceholderParagraph from 'rsuite/lib/Placeholder/PlaceholderParagraph';
 
 interface IMintKudo {
     address: string;
-    uri: string;
+    name: string;
+    description: string;
+    image: string;
 }
 interface IMintKudoProps {
     show: boolean;
     setShow: React.Dispatch<React.SetStateAction<boolean>>;
     kudosCore: ethers.Contract & KudosCoreInstance;
     userSigner: ethers.providers.JsonRpcSigner;
+    ipfs: any;
 }
 export default function MintKudo(props: IMintKudoProps) {
     // new content variables
     const [mintKudoForm, setMintKudoForm] = useState<IMintKudo>({
         address: '',
-        uri: '',
+        description: '',
+        image: '',
+        name: '',
     });
 
     const postMintKudo = async (event: React.SyntheticEvent<Element, Event>) => {
         // Create a new instance of the Contract with a Signer, allowing to send transactions
         const kudosCoreWithSigner = props.kudosCore.connect(props.userSigner) as ethers.Contract & KudosCoreInstance;
 
-        const tokenId = (await kudosCoreWithSigner.totalSupply()).toNumber() + 1;
-        await kudosCoreWithSigner.mintWithTokenURI(
-            mintKudoForm.address,
-            tokenId,
-            mintKudoForm.uri,
-        );
-        props.setShow(false);
+        const content = {
+            description: mintKudoForm.description,
+            image: mintKudoForm.image,
+            name: mintKudoForm.name,
+        };
+        props.ipfs.add(Buffer.from(JSON.stringify(content), 'utf8')).then(async (result: any) => {
+            const tokenId = (await kudosCoreWithSigner.totalSupply()).toNumber() + 1;
+            await kudosCoreWithSigner.mintWithTokenURI(
+                mintKudoForm.address,
+                tokenId,
+                result[0].hash,
+            );
+            props.setShow(false);
+        });
     };
 
     const handleInputMintKudoChange = (
@@ -52,10 +64,22 @@ export default function MintKudo(props: IMintKudoProps) {
                     address: value,
                 } as any);
                 break;
-            case 'uri':
+            case 'name':
                 setMintKudoForm({
                     ...mintKudoForm,
-                    uri: value,
+                    name: value,
+                } as any);
+                break;
+            case 'description':
+                setMintKudoForm({
+                    ...mintKudoForm,
+                    description: value,
+                } as any);
+                break;
+            case 'image':
+                setMintKudoForm({
+                    ...mintKudoForm,
+                    image: value,
                 } as any);
                 break;
         }
@@ -75,8 +99,18 @@ export default function MintKudo(props: IMintKudoProps) {
                 /><br />
                 <Input
                     style={{ width: 450 }}
-                    placeholder="URI"
-                    onChange={(v, e) => handleInputMintKudoChange(v, 'uri', e)}
+                    placeholder="Name"
+                    onChange={(v, e) => handleInputMintKudoChange(v, 'name', e)}
+                /><br />
+                <Input
+                    style={{ width: 450 }}
+                    placeholder="Description"
+                    onChange={(v, e) => handleInputMintKudoChange(v, 'description', e)}
+                /><br />
+                <Input
+                    style={{ width: 450 }}
+                    placeholder="Image"
+                    onChange={(v, e) => handleInputMintKudoChange(v, 'image', e)}
                 /><br />
                 <PlaceholderParagraph rows={8} />
             </Modal.Body>
