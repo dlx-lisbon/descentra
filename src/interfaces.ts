@@ -20,11 +20,12 @@ export interface IMeetupIPFSData {
 }
 export interface IMeetupInfo {
     id: number;
-    author: string;
+    author: any;
     status: number;
     date: number;
     seats: number;
     title: string;
     description: string;
     location: string;
+    coverImage?: string;
 }

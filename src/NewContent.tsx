@@ -119,22 +119,17 @@ export default function NewContent(props: INewContentProps) {
                     placeholder="Description"
                     onChange={(v, e) => handleInputNewContentChange(v, 'description', e)}
                 /><br />
-                <InputGroup
+                <DatePicker
                     style={{ width: 450 }}
-                >
-                    <DatePicker
-                        format="YYYY-MM-DD HH:mm"
-                        onChange={(v, e) => handleInputNewContentChange(v, 'date', e)}
-                        ranges={[
-                            {
-                                label: 'Now',
-                                value: new Date(),
-                            },
-                        ]}
-                    />
-                    <InputGroup.Addon>to</InputGroup.Addon>
-                    <DatePicker format="HH:mm" ranges={[]} />
-                </InputGroup><br /><br />
+                    format="YYYY-MM-DD HH:mm"
+                    onChange={(v, e) => handleInputNewContentChange(v, 'date', e)}
+                    ranges={[
+                        {
+                            label: 'Now',
+                            value: new Date(),
+                        },
+                    ]}
+                /><br /><br />
                 <Input
                     style={{ width: 450 }}
                     placeholder="Location"

@@ -59,14 +59,15 @@ export default function App() {
     const [kudosCoreInstance, setKudosCoreInstance]
         = useState<ethers.Contract & KudosCoreInstance>(undefined as any);
     const [meetups, setMeetups] = useState<Map<number, IMeetupInfo>>(new Map());
+    const [usingProvider, setUsingProvider] = useState<any>(undefined);
 
 
     useEffect(() => {
         const fetchData = async () => {
             const injectedEthereumMetamask = (window as any).ethereum;
             await injectedEthereumMetamask.enable();
-            // const provider = new ethers.providers.Web3Provider(injectedEthereumMetamask);
-            const provider = new ethers.providers.JsonRpcProvider(process.env.REACT_APP_RPC_URL);
+            const provider = new ethers.providers.Web3Provider(injectedEthereumMetamask);
+            // const provider = new ethers.providers.JsonRpcProvider(process.env.REACT_APP_RPC_URL);
 
             // We connect to the Contract using a Provider, so we will only
             // have read-only access to the Contract
@@ -92,28 +93,29 @@ export default function App() {
             const loadingMeetups: Map<number, IMeetupInfo> = new Map();
             for (let m = totalMeetups - 1; m >= 0; m -= 1) {
                 const meetup = await meetupCoreContract.meetups(m);
-                const ipfsData = JSON.parse((await ipfs.cat(meetup[3])).toString()) as IMeetupIPFSData;
+                const ipfsData = JSON.parse((await ipfs.cat(meetup[4])).toString()) as IMeetupIPFSData;
                 loadingMeetups.set(m, {
-                    author: 'ze',
-                    date: meetup[1].toNumber(),
+                    author: await ThreeBox.getProfile(meetup[0]),
+                    date: meetup[2].toNumber(),
                     description: ipfsData.description,
                     id: m,
                     location: ipfsData.location,
-                    seats: meetup[2].toNumber(),
-                    status: meetup[0].toNumber(),
+                    seats: meetup[3].toNumber(),
+                    status: meetup[1].toNumber(),
                     title: ipfsData.title,
                 });
             }
             setMeetups(loadingMeetups);
+            setUsingProvider(injectedEthereumMetamask);
             setLoadingContent(false);
-            setUser3BoxProfile(await ThreeBox.getProfile((window as any).ethereum.selectedAddress));
-            setUser3Box(await loadUserThreeBox((window as any).ethereum.selectedAddress));
+            setUser3BoxProfile(await ThreeBox.getProfile(injectedEthereumMetamask.selectedAddress));
+            setUser3Box(await loadUserThreeBox(injectedEthereumMetamask));
         };
         fetchData();
     }, []);
 
-    const loadUserThreeBox = async (userAddress: string) => {
-        const box = await ThreeBox.openBox(userAddress, (window as any).ethereum);
+    const loadUserThreeBox = async (provider: any) => {
+        const box = await ThreeBox.openBox(provider.selectedAddress, provider);
         await box.syncDone;
         return box;
     };
@@ -129,7 +131,7 @@ export default function App() {
     };
 
     const userAvatarSrc = user3boxProfile === undefined ?
-        'img/blog/c1.jpg' : 'https://ipfs.io/ipfs/' + user3boxProfile.image[0].contentUrl['/'];
+        'img/unknown_user.svg' : 'https://ipfs.io/ipfs/' + user3boxProfile.image[0].contentUrl['/'];
 
     return (
         <Container>

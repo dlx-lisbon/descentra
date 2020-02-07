@@ -59,7 +59,7 @@ export default function Meetup(props: IMeetupProps) {
                 <FlexboxGrid.Item colspan={18}>
                     <div style={{ lineHeight: 1.5 }}>
                         <p><b>ORGANIZADO POR</b></p>
-                        <p>{props.meetupData.author}</p>
+                        <p>{props.meetupData.author.name}</p>
                     </div>
                 </FlexboxGrid.Item>
             </FlexboxGrid>
