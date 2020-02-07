@@ -4,7 +4,7 @@
   command = "yarn build"
 
 [context.production]
-  environment = { RPC_URL = "RPC_URL_PROD" }
+  environment = { REACT_APP_RPC_URL = "RPC_URL_PROD" }
 
-[context.dev]
-  environment = { RPC_URL = "RPC_URL_DEV" }
+[context.deploy-preview]
+  environment = { REACT_APP_RPC_URL = "RPC_URL_DEV" }

@@ -1,3 +1,4 @@
+import format from 'date-format';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -10,18 +11,12 @@ import {
     Icon,
     Panel,
 } from 'rsuite';
+import { IMeetupInfo } from './interfaces';
 
 
-interface IPostInfo {
-    id: number;
-    title: string;
-    author: string;
-    date: string;
-    intro: string;
-}
 interface ISinglePostItemProps {
-    info: IPostInfo;
-    openPost: (value: React.SetStateAction<number>) => void;
+    info: IMeetupInfo;
+    onClick: (value: number) => void;
 }
 export default function SinglePostItem(props: ISinglePostItemProps) {
     const mainPanelStyle = {
@@ -47,35 +42,42 @@ export default function SinglePostItem(props: ISinglePostItemProps) {
     `;
 
     const sendToMeetupId = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        props.openPost(props.info.id);
+        props.onClick(props.info.id);
         event.preventDefault();
     };
+
+    const coverImage = props.info.coverImage && <ImagePost>
+        <img src={props.info.coverImage} alt="presenting" style={{ width: '100%' }} />
+    </ImagePost>;
+
+    const userAvatarSrc = 'https://ipfs.io/ipfs/' + props.info.author.image[0].contentUrl['/'];
 
     return (
         <PostContainer onClick={sendToMeetupId}>
             <Panel shaded={true} bordered={true} bodyFill={true} style={mainPanelStyle}>
-                <ImagePost>
-                    <img src="img/posts/p2.jpg" alt="presenting" style={{ width: '100%' }} />
-                </ImagePost>
+                {coverImage}
                 <Panel header={props.info.title} >
                     <div className="show-grid">
 
                         <FlexboxGrid align="middle">
                             <FlexboxGrid.Item colspan={3}>
                                 <div style={{ lineHeight: 0 }}>
-                                    <Avatar circle={true} src="img/blog/c1.jpg" />
+                                    <Avatar circle={true} src={userAvatarSrc} />
                                 </div>
                             </FlexboxGrid.Item>
                             <FlexboxGrid.Item colspan={18}>
                                 <div style={{ lineHeight: 1.5 }}>
-                                    <p><b>{props.info.author}</b></p>
-                                    <p><Icon icon="calendar-check-o" />{props.info.date}</p>
+                                    <p><b>{props.info.author.name}</b></p>
+                                    <p>
+                                        <Icon icon="calendar-check-o" />
+                                        &nbsp;{format('dd/MM/yyyy hh:mm', new Date(props.info.date * 1000))}
+                                    </p>
                                 </div>
                             </FlexboxGrid.Item>
                         </FlexboxGrid>
                     </div>
-                    <p style={{ margin: '20px 0px' }}>{props.info.intro}</p>
-                    <Button>Continue reading</Button>
+                    {props.info.description.split('\n').map((i, index) => <p key={index}>{i}</p>)}
+                    <Button>Continuar a ler</Button>
                 </Panel>
             </Panel>
         </PostContainer>
