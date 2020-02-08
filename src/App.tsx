@@ -186,7 +186,7 @@ export default function App() {
             </Header>
             <Container style={{ width: '100%', maxWidth: '1300px', margin: 'auto' }}>
                 <Content>
-                    {loadingContent && <p>Loading content...</p>}
+                    {loadingContent && <img src="img/fish_loading.gif" />}
                     {Array.from(meetups.values()).map((meetup) => <SinglePostItem
                         key={meetup.id}
                         info={meetup}
