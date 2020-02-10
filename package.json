@@ -15,7 +15,7 @@
         "docs": "typedoc --out docs ./src"
     },
     "dependencies": {
-        "3box": "1.16.0",
+        "3box": "1.16.2",
         "@material-ui/core": "4.8.3",
         "@material-ui/icons": "4.5.1",
         "date-format": "3.0.0",
