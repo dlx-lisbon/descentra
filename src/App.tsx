@@ -1,7 +1,9 @@
 import { ethers } from 'ethers';
-import ipfsClient from 'ipfs-http-client';
+import IPFS from 'ipfs';
+import OrbitDB from 'orbit-db';
 import React, { Suspense, useEffect, useState } from 'react';
 import Emoji from 'react-emoji-render';
+
 
 import 'rsuite/dist/styles/rsuite-default.css';
 
@@ -23,10 +25,10 @@ import {
     Sidebar,
 } from 'rsuite';
 
-import KudosCoreJSON from 'dlx-contracts/build/contracts/KudosCore.json';
-import MeetupCoreJSON from 'dlx-contracts/build/contracts/MeetupCore.json';
-import { KudosCoreInstance, MeetupCoreInstance } from 'dlx-contracts/types/truffle-contracts/index';
-import { IMeetupInfo, IMeetupIPFSData } from './interfaces';
+import DLXJSON from 'dlx-contracts/build/contracts/DLX.json';
+import KudosJSON from 'dlx-contracts/build/contracts/Kudos.json';
+import { DLXInstance, KudosInstance } from 'dlx-contracts/types/truffle-contracts/index';
+import { IMeetupInfo, IOrbitMeetupInfo } from './interfaces';
 import SinglePostItem from './SinglePostItem';
 
 const Kudos = React.lazy(() => import('./Kudos'));
@@ -35,8 +37,6 @@ const Chat = React.lazy(() => import('./Chat'));
 const NewContent = React.lazy(() => import('./NewContent'));
 const Meetup = React.lazy(() => import('./Meetup'));
 const MintKudo = React.lazy(() => import('./MintKudo'));
-
-const ipfs = ipfsClient(process.env.REACT_APP_IPFS_URL);
 
 
 export default function App() {
@@ -54,12 +54,15 @@ export default function App() {
     const [isOpenMeetup, setIsOpenMeetup] = useState<boolean>(false);
     // blockchain variables
     const [userSigner, setUserSigner] = useState<ethers.providers.JsonRpcSigner>(undefined as any);
-    const [meetupCoreInstance, setMeetupCoreInstance]
-        = useState<ethers.Contract & MeetupCoreInstance>(undefined as any);
-    const [kudosCoreInstance, setKudosCoreInstance]
-        = useState<ethers.Contract & KudosCoreInstance>(undefined as any);
+    const [dlxInstance, setDLXInstance]
+        = useState<ethers.Contract & DLXInstance>(undefined as any);
+    const [kudosCoreInstance, setKudosInstance]
+        = useState<ethers.Contract & KudosInstance>(undefined as any);
     const [meetups, setMeetups] = useState<Map<number, IMeetupInfo>>(new Map());
     const [usingProvider, setUsingProvider] = useState<any>(undefined);
+    const [orbitdb, setOrbitdb] = useState<any>(undefined);
+    const [dlxorbitdb, setDlxOrbitdb] = useState<any>(undefined);
+    const [ipfs, setIpfs] = useState<any>(undefined);
 
 
     useEffect(() => {
@@ -67,42 +70,48 @@ export default function App() {
             const injectedEthereumMetamask = (window as any).ethereum;
             await injectedEthereumMetamask.enable();
             const provider = new ethers.providers.Web3Provider(injectedEthereumMetamask);
+            const currentIpfs = await IPFS.create();
+            const currentOrbitdb = await OrbitDB.createInstance(currentIpfs);
+            setIpfs(currentIpfs);
+            setOrbitdb(currentOrbitdb);
             // const provider = new ethers.providers.JsonRpcProvider(process.env.REACT_APP_RPC_URL);
 
             // We connect to the Contract using a Provider, so we will only
             // have read-only access to the Contract
             const network = await provider.getNetwork();
-            const meetupCoreContract = new ethers.Contract(
+            const dlxContract = new ethers.Contract(
                 // TODO: improve next line
-                (MeetupCoreJSON.networks as any)[network.chainId].address,
-                MeetupCoreJSON.abi,
+                (DLXJSON.networks as any)[network.chainId].address,
+                DLXJSON.abi,
                 provider,
-            ) as ethers.Contract & MeetupCoreInstance;
-            setMeetupCoreInstance(meetupCoreContract);
+            ) as ethers.Contract & DLXInstance;
+            setDLXInstance(dlxContract);
             const kudosCoreContract = new ethers.Contract(
                 // TODO: improve next line
-                (KudosCoreJSON.networks as any)[network.chainId].address,
-                KudosCoreJSON.abi,
+                (KudosJSON.networks as any)[network.chainId].address,
+                KudosJSON.abi,
                 provider,
-            ) as ethers.Contract & KudosCoreInstance;
-            setKudosCoreInstance(kudosCoreContract);
+            ) as ethers.Contract & KudosInstance;
+            setKudosInstance(kudosCoreContract);
 
             setUserSigner(provider.getSigner(0));
+            const db = await currentOrbitdb.keyvalue('test.local.dlx.meetups');
+            await db.load();
+            setDlxOrbitdb(db);
 
-            const totalMeetups = (await meetupCoreContract.totalMeetups()).toNumber();
+            const totalContents = (await dlxContract.totalContents()).toNumber();
             const loadingMeetups: Map<number, IMeetupInfo> = new Map();
-            for (let m = totalMeetups - 1; m >= 0; m -= 1) {
-                const meetup = await meetupCoreContract.meetups(m);
-                const ipfsData = JSON.parse((await ipfs.cat(meetup[4])).toString()) as IMeetupIPFSData;
+            for (let m = totalContents - 1; m >= 0; m -= 1) {
+                const meetup = await dlxContract.contents(m);
+                const orbitMeetup = db.get(m.toString()) as IOrbitMeetupInfo;
                 loadingMeetups.set(m, {
                     author: await ThreeBox.getProfile(meetup[0]),
-                    date: meetup[2].toNumber(),
-                    description: ipfsData.description,
+                    date: orbitMeetup.date,
+                    description: orbitMeetup.description,
                     id: m,
-                    location: ipfsData.location,
-                    seats: meetup[3].toNumber(),
-                    status: meetup[1].toNumber(),
-                    title: ipfsData.title,
+                    location: orbitMeetup.location,
+                    status: await dlxContract.meetupCanceled(m),
+                    title: orbitMeetup.title,
                 });
             }
             setMeetups(loadingMeetups);
@@ -307,9 +316,9 @@ export default function App() {
                 <NewContent
                     show={newContent}
                     setShow={openNewContent}
-                    meetupCore={meetupCoreInstance}
+                    dlx={dlxInstance}
                     userSigner={userSigner}
-                    ipfs={ipfs}
+                    dlxorbitdb={dlxorbitdb}
                 />
             </Suspense>
             <Suspense fallback={<div>Loading...</div>}>

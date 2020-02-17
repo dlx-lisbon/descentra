@@ -4,27 +4,25 @@ import {
     Button,
     DatePicker,
     Input,
-    InputGroup,
     Modal,
 } from 'rsuite';
 
-import { MeetupCoreInstance } from 'dlx-contracts/types/truffle-contracts/index';
-import PlaceholderParagraph from 'rsuite/lib/Placeholder/PlaceholderParagraph';
+import { DLXInstance } from 'dlx-contracts/types/truffle-contracts/index';
+import { IOrbitMeetupInfo } from './interfaces';
 
 
 interface INewContent {
     date: string;
     description: string;
     location: string;
-    seats: string;
     title: string;
 }
 interface INewContentProps {
     show: boolean;
     setShow: React.Dispatch<React.SetStateAction<boolean>>;
-    meetupCore: ethers.Contract & MeetupCoreInstance;
+    dlx: ethers.Contract & DLXInstance;
     userSigner: ethers.providers.JsonRpcSigner;
-    ipfs: any;
+    dlxorbitdb: any;
 }
 export default function NewContent(props: INewContentProps) {
     // new content variables
@@ -32,31 +30,30 @@ export default function NewContent(props: INewContentProps) {
         date: '',
         description: '',
         location: '',
-        seats: '',
         title: '',
     });
 
     const postNewContent = (event: React.SyntheticEvent<Element, Event>) => {
-        const ipfsContent = {
-            description: newContentForm.description,
-            location: newContentForm.location,
-            title: newContentForm.title,
-        };
-        props.ipfs.add(Buffer.from(JSON.stringify(ipfsContent), 'utf8'))
-            .then((ipfsContentHash: [{ path: string, hash: string, size: number }]) => {
-                // Create a new instance of the Contract with a Signer, allowing to send transactions
-                const meetupCoreWithSigner = props.meetupCore.connect(props.userSigner);
+        const dlxWithSigner = props.dlx.connect(props.userSigner);
 
-                meetupCoreWithSigner.newMeetup(
-                    newContentForm.date,
-                    newContentForm.seats,
-                    ipfsContentHash[0].hash,
-                ).then(async (tx: ContractTransaction) => {
-                    // this.setState({ miningTransaction: true });
-                    await tx.wait();
-                    props.setShow(false);
-                });
+        dlxWithSigner.newMeetup().then(async (tx: ContractTransaction) => {
+            dlxWithSigner.on('NewMeetup', async (id, eventEmit) => {
+                if (eventEmit.transactionHash === tx.hash) {
+                    // tslint:disable-next-line: no-empty
+                    dlxWithSigner.removeListener('NewMeetup', () => { });
+                    const orbitdbContent: IOrbitMeetupInfo = {
+                        date: parseInt(newContentForm.date, 10),
+                        description: newContentForm.description,
+                        location: newContentForm.location,
+                        title: newContentForm.title,
+                    };
+                    const result = await props.dlxorbitdb.put(id.toString(), orbitdbContent);
+                    console.log(orbitdbContent, result);
+                }
             });
+            await tx.wait();
+            props.setShow(false);
+        });
 
         event.preventDefault();
     };
@@ -89,12 +86,6 @@ export default function NewContent(props: INewContentProps) {
                 setNewContentForm({
                     ...newContentForm,
                     location: value,
-                } as any);
-                break;
-            case 'seats':
-                setNewContentForm({
-                    ...newContentForm,
-                    seats: value,
                 } as any);
                 break;
         }
@@ -135,12 +126,6 @@ export default function NewContent(props: INewContentProps) {
                     placeholder="Location"
                     onChange={(v, e) => handleInputNewContentChange(v, 'location', e)}
                 /><br />
-                <Input
-                    style={{ width: 450 }}
-                    placeholder="Seats"
-                    onChange={(v, e) => handleInputNewContentChange(v, 'seats', e)}
-                /><br />
-                <PlaceholderParagraph rows={8} />
             </Modal.Body>
             <Modal.Footer>
                 <Button onClick={postNewContent} appearance="primary">

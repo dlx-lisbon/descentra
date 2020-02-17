@@ -6,11 +6,11 @@ import {
     Row,
 } from 'rsuite';
 
-import { KudosCoreInstance } from 'dlx-contracts/types/truffle-contracts/index';
+import { KudosInstance } from 'dlx-contracts/types/truffle-contracts/index';
 
 
 interface IKudosProps {
-    kudosCore: ethers.Contract & KudosCoreInstance;
+    kudosCore: ethers.Contract & KudosInstance;
     userSigner: ethers.providers.JsonRpcSigner;
     ipfs: any;
 }

@@ -21,9 +21,15 @@ export interface IMeetupIPFSData {
 export interface IMeetupInfo {
     id: number;
     author: any;
-    status: number;
+    status: boolean;
     date: number;
-    seats: number;
+    title: string;
+    description: string;
+    location: string;
+    coverImage?: string;
+}
+export interface IOrbitMeetupInfo {
+    date: number;
     title: string;
     description: string;
     location: string;

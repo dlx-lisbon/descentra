@@ -2,7 +2,6 @@ import React from 'react';
 
 import 'rsuite/dist/styles/rsuite-default.css';
 
-import Box from '3box';
 import {
     Button,
     ButtonToolbar,

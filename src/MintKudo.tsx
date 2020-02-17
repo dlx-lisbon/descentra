@@ -6,7 +6,7 @@ import {
     Modal,
 } from 'rsuite';
 
-import { KudosCoreInstance } from 'dlx-contracts/types/truffle-contracts/index';
+import { KudosInstance } from 'dlx-contracts/types/truffle-contracts/index';
 import PlaceholderParagraph from 'rsuite/lib/Placeholder/PlaceholderParagraph';
 
 
@@ -19,7 +19,7 @@ interface IMintKudo {
 interface IMintKudoProps {
     show: boolean;
     setShow: React.Dispatch<React.SetStateAction<boolean>>;
-    kudosCore: ethers.Contract & KudosCoreInstance;
+    kudosCore: ethers.Contract & KudosInstance;
     userSigner: ethers.providers.JsonRpcSigner;
     ipfs: any;
 }
@@ -34,7 +34,7 @@ export default function MintKudo(props: IMintKudoProps) {
 
     const postMintKudo = async (event: React.SyntheticEvent<Element, Event>) => {
         // Create a new instance of the Contract with a Signer, allowing to send transactions
-        const kudosCoreWithSigner = props.kudosCore.connect(props.userSigner) as ethers.Contract & KudosCoreInstance;
+        const kudosCoreWithSigner = props.kudosCore.connect(props.userSigner) as ethers.Contract & KudosInstance;
 
         const content = {
             description: mintKudoForm.description,
