@@ -2,21 +2,23 @@
 # yarn lockfile v1
 
 
-"3box-orbitdb-plugins@github:3box/3box-orbitdb-plugins#feat/orbit-23":
-  version "1.0.7"
-  resolved "https://codeload.github.com/3box/3box-orbitdb-plugins/tar.gz/b46d28ea94a508810d82c6c4c0b340676dd3e7f6"
+"3box-orbitdb-plugins@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/3box-orbitdb-plugins/-/3box-orbitdb-plugins-1.1.0.tgz#9d474ced2d9f3c70ce8ba723ae408aaedb17de40"
+  integrity sha512-xQ6BoaHjA3/NncmEH6q2g2+cAz2Kkox4B9MSptcGcUG7uIxCyIPyStRP9AESD5MgIyFtLlhyckgQQ+aAggZ48g==
   dependencies:
     did-jwt "^0.1.3"
     ipfs-log "^4.5.4"
     is-ipfs "^0.6.3"
+    orbit-db "^0.23.1"
     orbit-db-access-controllers "~0.2.4"
 
-"3box@1.16.2":
-  version "1.16.2"
-  resolved "https://registry.yarnpkg.com/3box/-/3box-1.16.2.tgz#8107ae1cb0bc45b5a191e5fce5d67c86179c91b8"
-  integrity sha512-I7LkFDJBuR59C61hNSJGWg7tGFfgCWDsSj5X934Tz+w1n3WaGu/nsp2GXUdZSUOFio2kEYxq1nYVwpH7mOwF/Q==
+"3box@1.17.0":
+  version "1.17.0"
+  resolved "https://registry.yarnpkg.com/3box/-/3box-1.17.0.tgz#a9a39e8de8c0841725e3173033698c882a5a2b24"
+  integrity sha512-rPTAtqiMrVhjFz1S+LUjUFmxZ70wm3Pd/IAf/BQlTvdxM7Du/3ui7VjhR673oMgR4W3CTJ/VbAli1BgaSQF6EQ==
   dependencies:
-    "3box-orbitdb-plugins" "3box/3box-orbitdb-plugins#feat/orbit-23"
+    "3box-orbitdb-plugins" "^1.1.0"
     "3id-blockchain-utils" "^0.3.2"
     "3id-resolver" "^0.0.5"
     "@babel/runtime" "^7.4.5"
