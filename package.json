@@ -22,7 +22,7 @@
         "date-format": "3.0.0",
         "dlx-contracts": "file:../dlx-contracts",
         "ethers": "4.0.42",
-        "ipfs": "0.41.0",
+        "ipfs": "0.41.1",
         "ipfs-http-client": "42.0.0",
         "multicodec": "0.5.6",
         "orbit-db": "0.23.1",
