@@ -50,7 +50,7 @@ export default function SinglePostItem(props: ISinglePostItemProps) {
         <img src={props.info.coverImage} alt="presenting" style={{ width: '100%' }} />
     </ImagePost>;
 
-    const userAvatarSrc = 'https://ipfs.io/ipfs/' + props.info.author.image[0].contentUrl['/'];
+    const userAvatarSrc = ''; // 'https://ipfs.io/ipfs/' + props.info.author.image[0].contentUrl['/'];
 
     return (
         <PostContainer onClick={sendToMeetupId}>

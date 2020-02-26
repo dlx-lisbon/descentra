@@ -7,7 +7,7 @@ import {
     Modal,
 } from 'rsuite';
 
-import { DLXInstance } from 'dlx-contracts/types/truffle-contracts/index';
+import { DLXInstance } from './contracts/types/index';
 import { IOrbitMeetupInfo } from './interfaces';
 
 

@@ -25,9 +25,10 @@ import {
     Sidebar,
 } from 'rsuite';
 
-import DLXJSON from 'dlx-contracts/build/contracts/DLX.json';
-import KudosJSON from 'dlx-contracts/build/contracts/Kudos.json';
-import { DLXInstance, KudosInstance } from 'dlx-contracts/types/truffle-contracts/index';
+import DLXABI from './contracts/abi/DLX.json';
+import KudosABI from './contracts/abi/Kudos.json';
+import NetworkDevAddress from './contracts/network/development.json';
+import { DLXInstance, KudosInstance } from './contracts/types/index';
 import { IMeetupInfo, IOrbitMeetupInfo } from './interfaces';
 import SinglePostItem from './SinglePostItem';
 
@@ -68,33 +69,38 @@ export default function App() {
     useEffect(() => {
         const fetchData = async () => {
             const injectedEthereumMetamask = (window as any).ethereum;
-            await injectedEthereumMetamask.enable();
-            const provider = new ethers.providers.Web3Provider(injectedEthereumMetamask);
+            let provider;
             const currentIpfs = await IPFS.create();
             const currentOrbitdb = await OrbitDB.createInstance(currentIpfs);
+            if (injectedEthereumMetamask !== undefined) {
+                await injectedEthereumMetamask.enable();
+                provider = new ethers.providers.Web3Provider(injectedEthereumMetamask);
+                setUserSigner(provider.getSigner(0));
+                setUser3BoxProfile(await ThreeBox.getProfile(injectedEthereumMetamask.selectedAddress));
+                // setUser3Box(await loadUserThreeBox(injectedEthereumMetamask));
+                setUsingProvider(injectedEthereumMetamask);
+            } else {
+                provider = new ethers.providers.JsonRpcProvider('http://localhost:8545');
+            }
             setIpfs(currentIpfs);
             setOrbitdb(currentOrbitdb);
             // const provider = new ethers.providers.JsonRpcProvider(process.env.REACT_APP_RPC_URL);
 
             // We connect to the Contract using a Provider, so we will only
             // have read-only access to the Contract
-            const network = await provider.getNetwork();
             const dlxContract = new ethers.Contract(
-                // TODO: improve next line
-                (DLXJSON.networks as any)[network.chainId].address,
-                DLXJSON.abi,
+                NetworkDevAddress.DLX,
+                DLXABI,
                 provider,
             ) as ethers.Contract & DLXInstance;
             setDLXInstance(dlxContract);
             const kudosCoreContract = new ethers.Contract(
-                // TODO: improve next line
-                (KudosJSON.networks as any)[network.chainId].address,
-                KudosJSON.abi,
+                NetworkDevAddress.Kudos,
+                KudosABI,
                 provider,
             ) as ethers.Contract & KudosInstance;
             setKudosInstance(kudosCoreContract);
 
-            setUserSigner(provider.getSigner(0));
             const db = await currentOrbitdb.keyvalue('test.local.dlx.meetups');
             await db.load();
             setDlxOrbitdb(db);
@@ -115,10 +121,7 @@ export default function App() {
                 });
             }
             setMeetups(loadingMeetups);
-            setUsingProvider(injectedEthereumMetamask);
             setLoadingContent(false);
-            setUser3BoxProfile(await ThreeBox.getProfile(injectedEthereumMetamask.selectedAddress));
-            setUser3Box(await loadUserThreeBox(injectedEthereumMetamask));
         };
         fetchData();
     }, []);
@@ -139,8 +142,8 @@ export default function App() {
         setIsOpenMeetup(true);
     };
 
-    const userAvatarSrc = user3boxProfile === undefined ?
-        'img/unknown_user.svg' : 'https://ipfs.io/ipfs/' + user3boxProfile.image[0].contentUrl['/'];
+    const userAvatarSrc = user3boxProfile !== undefined && user3boxProfile.image !== undefined ?
+        'https://ipfs.io/ipfs/' + user3boxProfile.image[0].contentUrl['/'] : 'img/unknown_user.svg';
 
     return (
         <Container>

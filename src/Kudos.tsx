@@ -6,7 +6,7 @@ import {
     Row,
 } from 'rsuite';
 
-import { KudosInstance } from 'dlx-contracts/types/truffle-contracts/index';
+import { KudosInstance } from './contracts/types/index';
 
 
 interface IKudosProps {
