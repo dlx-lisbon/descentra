@@ -7,7 +7,6 @@ import Emoji from 'react-emoji-render';
 
 import 'rsuite/dist/styles/rsuite-default.css';
 
-import ThreeBox from '3box';
 import {
     Avatar,
     Button,
@@ -45,8 +44,6 @@ export default function App() {
     const [loadingContent, setLoadingContent] = useState<boolean>(true);
     const [kudos, openKudos] = useState<boolean>(false);
     const [profile, openProfile] = useState<boolean>(false);
-    const [user3box, setUser3Box] = useState<any>(undefined);
-    const [user3boxProfile, setUser3BoxProfile] = useState<any>(undefined);
     const [mintKudo, openMintKudo] = useState<boolean>(false);
     const [practice, openPractice] = useState<boolean>(false);
     const [newContent, openNewContent] = useState<boolean>(false);
@@ -76,8 +73,6 @@ export default function App() {
                 await injectedEthereumMetamask.enable();
                 provider = new ethers.providers.Web3Provider(injectedEthereumMetamask);
                 setUserSigner(provider.getSigner(0));
-                setUser3BoxProfile(await ThreeBox.getProfile(injectedEthereumMetamask.selectedAddress));
-                // setUser3Box(await loadUserThreeBox(injectedEthereumMetamask));
                 setUsingProvider(injectedEthereumMetamask);
             } else {
                 provider = new ethers.providers.JsonRpcProvider('http://localhost:8545');
@@ -111,7 +106,7 @@ export default function App() {
                 const meetup = await dlxContract.contents(m);
                 const orbitMeetup = db.get(m.toString()) as IOrbitMeetupInfo;
                 loadingMeetups.set(m, {
-                    author: await ThreeBox.getProfile(meetup[0]),
+                    author: meetup[0],
                     date: orbitMeetup.date,
                     description: orbitMeetup.description,
                     id: m,
@@ -126,12 +121,6 @@ export default function App() {
         fetchData();
     }, []);
 
-    const loadUserThreeBox = async (provider: any) => {
-        const box = await ThreeBox.openBox(provider.selectedAddress, provider);
-        await box.syncDone;
-        return box;
-    };
-
     const closeAll = (event: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
         window.location.reload();
         event.preventDefault();
@@ -142,8 +131,7 @@ export default function App() {
         setIsOpenMeetup(true);
     };
 
-    const userAvatarSrc = user3boxProfile !== undefined && user3boxProfile.image !== undefined ?
-        'https://ipfs.io/ipfs/' + user3boxProfile.image[0].contentUrl['/'] : 'img/unknown_user.svg';
+    const userAvatarSrc = 'img/unknown_user.svg';
 
     return (
         <Container>
@@ -249,9 +237,7 @@ export default function App() {
                         </Drawer.Header>
                         <Drawer.Body>
                             <Suspense fallback={<div>A carregar...</div>}>
-                                <Profile
-                                    threeBoxProfile={user3boxProfile}
-                                />
+                                <Profile />
                             </Suspense>
                         </Drawer.Body>
                         <Drawer.Footer>

@@ -1,13 +1,10 @@
 import React from 'react';
 
 
-interface IProfileProps {
-    threeBoxProfile: any;
-}
-export default function Profile(props: IProfileProps) {
+export default function Profile() {
     return (
         <>
-            {JSON.stringify(props.threeBoxProfile)}
+            !
         </>
     );
 }
