@@ -34,7 +34,6 @@ import SinglePostItem from './SinglePostItem';
 
 const Kudos = React.lazy(() => import('./Kudos'));
 const Profile = React.lazy(() => import('./Profile'));
-const Chat = React.lazy(() => import('./Chat'));
 const NewContent = React.lazy(() => import('./NewContent'));
 const Meetup = React.lazy(() => import('./Meetup'));
 const MintKudo = React.lazy(() => import('./MintKudo'));
@@ -44,7 +43,6 @@ const Practice = React.lazy(() => import('./Practice'));
 export default function App() {
     // drawers and modals
     const [loadingContent, setLoadingContent] = useState<boolean>(true);
-    const [chat, openChat] = useState<boolean>(false);
     const [kudos, openKudos] = useState<boolean>(false);
     const [profile, openProfile] = useState<boolean>(false);
     const [user3box, setUser3Box] = useState<any>(undefined);
@@ -185,13 +183,6 @@ export default function App() {
                                 </Nav.Item>
                             </span>
                             <span
-                                onClick={() => openChat(true)}
-                            >
-                                <Nav.Item>
-                                    <Emoji text=":ghost:  Chat" />
-                                </Nav.Item>
-                            </span>
-                            <span
                                 onClick={() => openProfile(true)}
                                 style={{ cursor: 'pointer' }}
                             >
@@ -213,23 +204,6 @@ export default function App() {
                         info={meetup}
                         onClick={handleOpenMeetup}
                     />)}
-                    <Drawer placement={'right'} show={chat} onHide={() => openChat(false)}>
-                        <Drawer.Header>
-                            <Drawer.Title>Chat</Drawer.Title>
-                        </Drawer.Header>
-                        <Drawer.Body>
-                            <Suspense fallback={<div>A carregar...</div>}>
-                                <Chat
-                                    threeBox={user3box}
-                                />
-                            </Suspense>
-                        </Drawer.Body>
-                        <Drawer.Footer>
-                            <Button onClick={() => openChat(false)} appearance="subtle">
-                                Fechar
-                            </Button>
-                        </Drawer.Footer>
-                    </Drawer>
                     <Drawer full={true} placement={'bottom'} show={kudos} onHide={() => openKudos(false)}>
                         <Drawer.Header>
                             <Drawer.Title>Kudos</Drawer.Title>
