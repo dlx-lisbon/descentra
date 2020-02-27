@@ -38,6 +38,7 @@ const Chat = React.lazy(() => import('./Chat'));
 const NewContent = React.lazy(() => import('./NewContent'));
 const Meetup = React.lazy(() => import('./Meetup'));
 const MintKudo = React.lazy(() => import('./MintKudo'));
+const Practice = React.lazy(() => import('./Practice'));
 
 
 export default function App() {
@@ -49,6 +50,7 @@ export default function App() {
     const [user3box, setUser3Box] = useState<any>(undefined);
     const [user3boxProfile, setUser3BoxProfile] = useState<any>(undefined);
     const [mintKudo, openMintKudo] = useState<boolean>(false);
+    const [practice, openPractice] = useState<boolean>(false);
     const [newContent, openNewContent] = useState<boolean>(false);
     // open post
     const [openMeetup, setOpenMeetup] = useState<number>(-1);
@@ -162,6 +164,13 @@ export default function App() {
                     <Navbar.Body>
                         <Nav pullRight={true} style={{ height: '60px' }}>
                             <span
+                                onClick={() => openPractice(true)}
+                            >
+                                <Nav.Item>
+                                    <Emoji text=":muscle:  Praticar" />
+                                </Nav.Item>
+                            </span>
+                            <span
                                 onClick={() => openMintKudo(true)}
                             >
                                 <Nav.Item>
@@ -209,7 +218,7 @@ export default function App() {
                             <Drawer.Title>Chat</Drawer.Title>
                         </Drawer.Header>
                         <Drawer.Body>
-                            <Suspense fallback={<div>Loading...</div>}>
+                            <Suspense fallback={<div>A carregar...</div>}>
                                 <Chat
                                     threeBox={user3box}
                                 />
@@ -217,7 +226,7 @@ export default function App() {
                         </Drawer.Body>
                         <Drawer.Footer>
                             <Button onClick={() => openChat(false)} appearance="subtle">
-                                Close
+                                Fechar
                             </Button>
                         </Drawer.Footer>
                     </Drawer>
@@ -226,7 +235,7 @@ export default function App() {
                             <Drawer.Title>Kudos</Drawer.Title>
                         </Drawer.Header>
                         <Drawer.Body>
-                            <Suspense fallback={<div>Loading...</div>}>
+                            <Suspense fallback={<div>A carregar...</div>}>
                                 <Kudos
                                     kudosCore={kudosCoreInstance}
                                     userSigner={userSigner}
@@ -236,7 +245,27 @@ export default function App() {
                         </Drawer.Body>
                         <Drawer.Footer>
                             <Button onClick={() => openKudos(false)} appearance="subtle">
-                                Close
+                                Fechar
+                            </Button>
+                        </Drawer.Footer>
+                    </Drawer>
+                    <Drawer
+                        full={true}
+                        placement={'bottom'}
+                        show={practice}
+                        onHide={() => openPractice(false)}
+                    >
+                        <Drawer.Header>
+                            <Drawer.Title>Praticar</Drawer.Title>
+                        </Drawer.Header>
+                        <Drawer.Body>
+                            <Suspense fallback={<div>A carregar...</div>}>
+                                <Practice />
+                            </Suspense>
+                        </Drawer.Body>
+                        <Drawer.Footer>
+                            <Button onClick={() => openPractice(false)} appearance="subtle">
+                                Fechar
                             </Button>
                         </Drawer.Footer>
                     </Drawer>
@@ -245,7 +274,7 @@ export default function App() {
                             <Drawer.Title>Perfil</Drawer.Title>
                         </Drawer.Header>
                         <Drawer.Body>
-                            <Suspense fallback={<div>Loading...</div>}>
+                            <Suspense fallback={<div>A carregar...</div>}>
                                 <Profile
                                     threeBoxProfile={user3boxProfile}
                                 />
@@ -253,7 +282,7 @@ export default function App() {
                         </Drawer.Body>
                         <Drawer.Footer>
                             <Button onClick={() => openProfile(false)} appearance="subtle">
-                                Close
+                                Fechar
                             </Button>
                         </Drawer.Footer>
                     </Drawer>
@@ -262,7 +291,7 @@ export default function App() {
                             <Drawer.Title>Post</Drawer.Title>
                         </Drawer.Header>
                         <Drawer.Body>
-                            <Suspense fallback={<div>Loading...</div>}>
+                            <Suspense fallback={<div>A carregar...</div>}>
                                 <Meetup meetupData={meetups.get(openMeetup)!} />
                             </Suspense>
                         </Drawer.Body>
@@ -315,7 +344,7 @@ export default function App() {
                     </div>
                 </Sidebar>
             </Container>
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<div>A carregar...</div>}>
                 <NewContent
                     show={newContent}
                     setShow={openNewContent}
@@ -324,7 +353,7 @@ export default function App() {
                     dlxorbitdb={dlxorbitdb}
                 />
             </Suspense>
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<div>A carregar...</div>}>
                 <MintKudo
                     show={mintKudo}
                     setShow={openMintKudo}
