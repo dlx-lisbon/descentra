@@ -47,8 +47,13 @@ export default function NewContent(props: INewContentProps) {
                         location: newContentForm.location,
                         title: newContentForm.title,
                     };
-                    const result = await props.dlxorbitdb.put(id.toString(), orbitdbContent);
-                    console.log(orbitdbContent, result);
+
+                    // Listen for updates from peers
+                    props.dlxorbitdb.events.on('replicated', (address: any) => {
+                        console.log('replicated', address);
+                    });
+
+                    await props.dlxorbitdb.put(id.toString(), orbitdbContent);
                 }
             });
             await tx.wait();

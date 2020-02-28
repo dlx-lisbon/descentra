@@ -27,6 +27,7 @@ import {
 import DLXABI from './contracts/abi/DLX.json';
 import KudosABI from './contracts/abi/Kudos.json';
 import NetworkDevAddress from './contracts/network/development.json';
+import NetworkGoerliAddress from './contracts/network/goerli.json';
 import { DLXInstance, KudosInstance } from './contracts/types/index';
 import { IMeetupInfo, IOrbitMeetupInfo } from './interfaces';
 import SinglePostItem from './SinglePostItem';
@@ -67,36 +68,51 @@ export default function App() {
         const fetchData = async () => {
             const injectedEthereumMetamask = (window as any).ethereum;
             let provider;
-            const currentIpfs = await IPFS.create();
+            const currentIpfs = await IPFS.create({
+                config: { Addresses: { Swarm: [] }, Discovery: { MDNS: { Enabled: true } } },
+                repo: '/orbitdb/dlx/meetup/0.0.1',
+            });
+            await currentIpfs.config.set('Addresses', {
+                API: '/ip4/127.0.0.1/tcp/0',
+                Gateway: '/ip4/0.0.0.0/tcp/0',
+                Swarm: ['/dns4/ws-star.discovery.libp2p.io/tcp/443/wss/p2p-websocket-star'],
+            });
             const currentOrbitdb = await OrbitDB.createInstance(currentIpfs);
+            const dbAddress = await currentOrbitdb.determineAddress(
+                'test.local.dlx.meetups',
+                'keyvalue',
+                { accessController: { write: ['*'] } },
+            );
             if (injectedEthereumMetamask !== undefined) {
                 await injectedEthereumMetamask.enable();
                 provider = new ethers.providers.Web3Provider(injectedEthereumMetamask);
                 setUserSigner(provider.getSigner(0));
                 setUsingProvider(injectedEthereumMetamask);
             } else {
-                provider = new ethers.providers.JsonRpcProvider('http://localhost:8545');
+                provider = new ethers.providers.JsonRpcProvider(process.env.REACT_APP_RPC_URL);
             }
             setIpfs(currentIpfs);
             setOrbitdb(currentOrbitdb);
-            // const provider = new ethers.providers.JsonRpcProvider(process.env.REACT_APP_RPC_URL);
 
             // We connect to the Contract using a Provider, so we will only
             // have read-only access to the Contract
+            const networkId = (await provider.getNetwork()).chainId;
             const dlxContract = new ethers.Contract(
-                NetworkDevAddress.DLX,
+                networkId === 5 ? NetworkGoerliAddress.DLX : NetworkDevAddress.DLX,
                 DLXABI,
                 provider,
             ) as ethers.Contract & DLXInstance;
             setDLXInstance(dlxContract);
             const kudosCoreContract = new ethers.Contract(
-                NetworkDevAddress.Kudos,
+                networkId === 5 ? NetworkGoerliAddress.Kudos : NetworkDevAddress.Kudos,
                 KudosABI,
                 provider,
             ) as ethers.Contract & KudosInstance;
             setKudosInstance(kudosCoreContract);
 
-            const db = await currentOrbitdb.keyvalue('test.local.dlx.meetups');
+            const db = await currentOrbitdb.keyvalue(dbAddress, {
+                accessController: { write: ['*'] },
+            });
             await db.load();
             setDlxOrbitdb(db);
 

@@ -2,9 +2,3 @@
   base = "."
   publish = "build/"
   command = "yarn build"
-
-[context.production]
-  environment = { REACT_APP_RPC_URL = "RPC_URL_PROD" }
-
-[context.deploy-preview]
-  environment = { REACT_APP_RPC_URL = "RPC_URL_DEV" }
