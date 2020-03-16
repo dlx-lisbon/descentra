@@ -1094,13 +1094,6 @@
   dependencies:
     "@hapi/hoek" "8.x.x"
 
-"@hapi/ammo@^4.0.0":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@hapi/ammo/-/ammo-4.0.1.tgz#f8cbf4d37ab5057957b285a2e3ef1b1c72eb881a"
-  integrity sha512-k83PveRa/83srn3gkBcXWg0ulxlrNv8BurS1HChhIOaou6JcERyGVyUe6lZWpK8jRY5Ic1YATkP+UCSu7ybsjg==
-  dependencies:
-    "@hapi/hoek" "8.x.x"
-
 "@hapi/b64@4.x.x":
   version "4.2.1"
   resolved "https://registry.yarnpkg.com/@hapi/b64/-/b64-4.2.1.tgz#bf8418d7907c5e73463f2e3b5c6fca7e9f2a1357"
@@ -7367,12 +7360,12 @@ ipfs-utils@^0.7.0, ipfs-utils@^0.7.1, ipfs-utils@^0.7.2:
     ky-universal "^0.3.0"
     stream-to-it "^0.2.0"
 
-ipfs@0.41.0:
-  version "0.41.0"
-  resolved "https://registry.yarnpkg.com/ipfs/-/ipfs-0.41.0.tgz#7b3ee9360fae18ac67aa9628399d40f4f4afeefe"
-  integrity sha512-5L4clrbQrOdCc5iDr9FwOq0j7E73A/HfitJsmg1+A9mT465rbiEVJk0rJs3LFE4rE7DCtQsgmD9P+o4ErAWGQA==
+ipfs@0.41.2:
+  version "0.41.2"
+  resolved "https://registry.yarnpkg.com/ipfs/-/ipfs-0.41.2.tgz#c997df07a60ae435072171818a85c5f0c953d468"
+  integrity sha512-pEsQiNJSD6khGAG68z1f7/lb1OvBQeB9qW7O+m0b4mXEDgrmun593MqJMNjztlHLlqycJk2TgzKi7fToYCvYGA==
   dependencies:
-    "@hapi/ammo" "^4.0.0"
+    "@hapi/ammo" "^3.1.2"
     "@hapi/boom" "^7.4.3"
     "@hapi/hapi" "^18.3.2"
     "@hapi/joi" "^15.0.0"
