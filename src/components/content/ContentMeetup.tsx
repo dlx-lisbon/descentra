@@ -11,14 +11,14 @@ import {
     Icon,
     Panel,
 } from 'rsuite';
-import { IMeetupInfo } from './interfaces';
+import { IMeetupInfo } from '../../interfaces';
 
 
-interface ISinglePostItemProps {
-    info: IMeetupInfo;
-    onClick: (value: number) => void;
+interface IContentMeetupProps {
+    content: IMeetupInfo;
+    onClick: (value: string) => void;
 }
-export default function SinglePostItem(props: ISinglePostItemProps) {
+export default function ContentMeetup(props: IContentMeetupProps) {
     const mainPanelStyle = {
         display: 'inline-block',
         margin: '50px auto',
@@ -42,21 +42,21 @@ export default function SinglePostItem(props: ISinglePostItemProps) {
     `;
 
     const sendToMeetupId = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        props.onClick(props.info.id);
+        props.onClick(props.content._id);
         event.preventDefault();
     };
 
-    const coverImage = props.info.coverImage && <ImagePost>
-        <img src={props.info.coverImage} alt="presenting" style={{ width: '100%' }} />
+    const coverImage = props.content.coverImage && <ImagePost>
+        <img src={props.content.coverImage} alt="presenting" style={{ width: '100%' }} />
     </ImagePost>;
 
-    const userAvatarSrc = ''; // 'https://ipfs.io/ipfs/' + props.info.author.image[0].contentUrl['/'];
+    const userAvatarSrc = ''; // 'https://ipfs.io/ipfs/' + props.content.author.image[0].contentUrl['/'];
 
     return (
         <PostContainer onClick={sendToMeetupId}>
             <Panel shaded={true} bordered={true} bodyFill={true} style={mainPanelStyle}>
                 {coverImage}
-                <Panel header={props.info.title} >
+                <Panel header={props.content.title} >
                     <div className="show-grid">
 
                         <FlexboxGrid align="middle">
@@ -67,16 +67,16 @@ export default function SinglePostItem(props: ISinglePostItemProps) {
                             </FlexboxGrid.Item>
                             <FlexboxGrid.Item colspan={18}>
                                 <div style={{ lineHeight: 1.5 }}>
-                                    <p><b>{props.info.author.name}</b></p>
+                                    <p><b>{props.content.author}</b></p>
                                     <p>
                                         <Icon icon="calendar-check-o" />
-                                        &nbsp;{format('dd/MM/yyyy hh:mm', new Date(props.info.date * 1000))}
+                                        &nbsp;{format('dd/MM/yyyy hh:mm', new Date(props.content.date * 1000))}
                                     </p>
                                 </div>
                             </FlexboxGrid.Item>
                         </FlexboxGrid>
                     </div>
-                    {props.info.description.split('\n').map((i, index) => <p key={index}>{i}</p>)}
+                    {props.content.description.split('\n').map((i, index) => <p key={index}>{i}</p>)}
                     <Button>Continuar a ler</Button>
                 </Panel>
             </Panel>

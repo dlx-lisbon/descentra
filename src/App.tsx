@@ -1,6 +1,4 @@
 import { ethers } from 'ethers';
-import IPFS from 'ipfs';
-import OrbitDB from 'orbit-db';
 import React, { Suspense, useEffect, useState } from 'react';
 import Emoji from 'react-emoji-render';
 
@@ -24,115 +22,89 @@ import {
     Sidebar,
 } from 'rsuite';
 
-import DLXABI from './contracts/abi/DLX.json';
-import KudosABI from './contracts/abi/Kudos.json';
-import NetworkDevAddress from './contracts/network/development.json';
-import NetworkGoerliAddress from './contracts/network/goerli.json';
-import { DLXInstance, KudosInstance } from './contracts/types/index';
-import { IMeetupInfo, IOrbitMeetupInfo } from './interfaces';
-import SinglePostItem from './SinglePostItem';
+import ContentMeetup from './components/content/ContentMeetup';
+import ContentPost from './components/content/ContentPost';
+import Post from './components/drawers/Post';
+import DLXABI from './helpers/contracts/abi/DLX.json';
+import KudosABI from './helpers/contracts/abi/Kudos.json';
+import NetworkDevAddress from './helpers/contracts/network/development.json';
+import NetworkGoerliAddress from './helpers/contracts/network/goerli.json';
+import { DLXInstance, KudosInstance } from './helpers/contracts/types/index';
+import { startIpfsInstance } from './helpers/ipfsFactory';
+import PostModel from './helpers/orbitdb/PostModel';
+import { store } from './helpers/orbitdb/store';
+import { IMeetupInfo, IPostInfo } from './interfaces';
 
-const Kudos = React.lazy(() => import('./Kudos'));
-const Profile = React.lazy(() => import('./Profile'));
-const NewContent = React.lazy(() => import('./NewContent'));
-const Meetup = React.lazy(() => import('./Meetup'));
-const MintKudo = React.lazy(() => import('./MintKudo'));
-const Practice = React.lazy(() => import('./Practice'));
+const Kudos = React.lazy(() => import('./components/drawers/Kudos'));
+const Profile = React.lazy(() => import('./components/drawers/Profile'));
+const NewContent = React.lazy(() => import('./components/drawers/NewContent'));
+const Meetup = React.lazy(() => import('./components/drawers/Meetup'));
+const MintKudo = React.lazy(() => import('./components/drawers/MintKudo'));
+const Practice = React.lazy(() => import('./components/drawers/Practice'));
 
 
 export default function App() {
+    // loading
+    const [loadingPostModel, setLoadingPostModel] = useState<boolean>(true);
     // drawers and modals
-    const [loadingContent, setLoadingContent] = useState<boolean>(true);
     const [kudos, openKudos] = useState<boolean>(false);
     const [profile, openProfile] = useState<boolean>(false);
     const [mintKudo, openMintKudo] = useState<boolean>(false);
     const [practice, openPractice] = useState<boolean>(false);
     const [newContent, openNewContent] = useState<boolean>(false);
     // open post
-    const [openMeetup, setOpenMeetup] = useState<number>(-1);
-    const [isOpenMeetup, setIsOpenMeetup] = useState<boolean>(false);
+    const [openPost, setOpenPost] = useState<string>('');
+    const [isOpenPost, setIsOpenPost] = useState<boolean>(false);
     // blockchain variables
     const [userSigner, setUserSigner] = useState<ethers.providers.JsonRpcSigner>(undefined as any);
     const [dlxInstance, setDLXInstance]
         = useState<ethers.Contract & DLXInstance>(undefined as any);
     const [kudosCoreInstance, setKudosInstance]
         = useState<ethers.Contract & KudosInstance>(undefined as any);
-    const [meetups, setMeetups] = useState<Map<number, IMeetupInfo>>(new Map());
     const [usingProvider, setUsingProvider] = useState<any>(undefined);
-    const [orbitdb, setOrbitdb] = useState<any>(undefined);
-    const [dlxorbitdb, setDlxOrbitdb] = useState<any>(undefined);
+    // posts
+    const [posts, setPosts] = useState<[IPostInfo]>([] as any);
     const [ipfs, setIpfs] = useState<any>(undefined);
+    const [postModel, setPostModel] = useState<PostModel>(undefined as any);
 
 
     useEffect(() => {
         const fetchData = async () => {
-            const injectedEthereumMetamask = (window as any).ethereum;
-            let provider;
-            const currentIpfs = await IPFS.create({
-                config: { Addresses: { Swarm: [] }, Discovery: { MDNS: { Enabled: true } } },
-                repo: '/orbitdb/dlx/meetup/0.0.1',
+            // const injectedEthereumMetamask = (window as any).ethereum;
+            // let provider;
+            // // setup provider
+            // if (injectedEthereumMetamask !== undefined) {
+            //     await injectedEthereumMetamask.enable();
+            //     provider = new ethers.providers.Web3Provider(injectedEthereumMetamask);
+            //     setUserSigner(provider.getSigner(0));
+            //     setUsingProvider(injectedEthereumMetamask);
+            // } else {
+            //     provider = new ethers.providers.JsonRpcProvider(process.env.REACT_APP_RPC_URL);
+            // }
+            // // setup contracts
+            // const networkId = (await provider.getNetwork()).chainId;
+            // const dlxContract = new ethers.Contract(
+            //     networkId === 5 ? NetworkGoerliAddress.DLX : NetworkDevAddress.DLX,
+            //     DLXABI,
+            //     provider,
+            // ) as ethers.Contract & DLXInstance;
+            // setDLXInstance(dlxContract);
+            // const kudosCoreContract = new ethers.Contract(
+            //     networkId === 5 ? NetworkGoerliAddress.Kudos : NetworkDevAddress.Kudos,
+            //     KudosABI,
+            //     provider,
+            // ) as ethers.Contract & KudosInstance;
+            // setKudosInstance(kudosCoreContract);
+            // setup orbitdb
+            const ipfsInstance = await startIpfsInstance();
+            setIpfs(ipfsInstance);
+            const dbContentPost = await store(ipfsInstance, 'dlx.content.post');
+            const postM = new PostModel(dbContentPost, async () => {
+                setLoadingPostModel(false);
+                setPosts(postM.posts);
             });
-            await currentIpfs.config.set('Addresses', {
-                API: '/ip4/127.0.0.1/tcp/0',
-                Gateway: '/ip4/0.0.0.0/tcp/0',
-                Swarm: ['/dns4/ws-star.discovery.libp2p.io/tcp/443/wss/p2p-websocket-star'],
-            });
-            const currentOrbitdb = await OrbitDB.createInstance(currentIpfs);
-            const dbAddress = await currentOrbitdb.determineAddress(
-                'test.local.dlx.meetups',
-                'keyvalue',
-                { accessController: { write: ['*'] } },
-            );
-            if (injectedEthereumMetamask !== undefined) {
-                await injectedEthereumMetamask.enable();
-                provider = new ethers.providers.Web3Provider(injectedEthereumMetamask);
-                setUserSigner(provider.getSigner(0));
-                setUsingProvider(injectedEthereumMetamask);
-            } else {
-                provider = new ethers.providers.JsonRpcProvider(process.env.REACT_APP_RPC_URL);
-            }
-            setIpfs(currentIpfs);
-            setOrbitdb(currentOrbitdb);
-
-            // We connect to the Contract using a Provider, so we will only
-            // have read-only access to the Contract
-            const networkId = (await provider.getNetwork()).chainId;
-            const dlxContract = new ethers.Contract(
-                networkId === 5 ? NetworkGoerliAddress.DLX : NetworkDevAddress.DLX,
-                DLXABI,
-                provider,
-            ) as ethers.Contract & DLXInstance;
-            setDLXInstance(dlxContract);
-            const kudosCoreContract = new ethers.Contract(
-                networkId === 5 ? NetworkGoerliAddress.Kudos : NetworkDevAddress.Kudos,
-                KudosABI,
-                provider,
-            ) as ethers.Contract & KudosInstance;
-            setKudosInstance(kudosCoreContract);
-
-            const db = await currentOrbitdb.keyvalue(dbAddress, {
-                accessController: { write: ['*'] },
-            });
-            await db.load();
-            setDlxOrbitdb(db);
-
-            const totalContents = (await dlxContract.totalContents()).toNumber();
-            const loadingMeetups: Map<number, IMeetupInfo> = new Map();
-            for (let m = totalContents - 1; m >= 0; m -= 1) {
-                const meetup = await dlxContract.contents(m);
-                const orbitMeetup = db.get(m.toString()) as IOrbitMeetupInfo;
-                loadingMeetups.set(m, {
-                    author: meetup[0],
-                    date: orbitMeetup.date,
-                    description: orbitMeetup.description,
-                    id: m,
-                    location: orbitMeetup.location,
-                    status: await dlxContract.meetupCanceled(m),
-                    title: orbitMeetup.title,
-                });
-            }
-            setMeetups(loadingMeetups);
-            setLoadingContent(false);
+            postM.subscribe(() => setPosts(postM.posts));
+            setPostModel(postM);
         };
         fetchData();
     }, []);
@@ -142,9 +114,9 @@ export default function App() {
         event.preventDefault();
     };
 
-    const handleOpenMeetup = (id: number) => {
-        setOpenMeetup(id);
-        setIsOpenMeetup(true);
+    const handleOpenPost = (id: string) => {
+        setOpenPost(id);
+        setIsOpenPost(true);
     };
 
     const userAvatarSrc = 'img/unknown_user.svg';
@@ -172,13 +144,13 @@ export default function App() {
                                     <Emoji text=":muscle:  Praticar" />
                                 </Nav.Item>
                             </span>
-                            <span
+                            {/* <span
                                 onClick={() => openMintKudo(true)}
                             >
                                 <Nav.Item>
                                     <Emoji text=":construction_worker:  Mint Kudo" />
                                 </Nav.Item>
-                            </span>
+                            </span> */}
                             <span
                                 onClick={() => openKudos(true)}
                             >
@@ -202,24 +174,21 @@ export default function App() {
             </Header>
             <Container style={{ width: '100%', maxWidth: '1300px', margin: 'auto' }}>
                 <Content>
-                    {loadingContent && <img src="img/fish_loading.gif" />}
-                    {Array.from(meetups.values()).map((meetup) => <SinglePostItem
-                        key={meetup.id}
-                        info={meetup}
-                        onClick={handleOpenMeetup}
-                    />)}
+                    {(loadingPostModel) && <img src="img/fish_loading.gif" />}
+                    {posts.map((c) => <ContentPost key={c._id} content={c} onClick={handleOpenPost} />)}
                     <Drawer full={true} placement={'bottom'} show={kudos} onHide={() => openKudos(false)}>
                         <Drawer.Header>
                             <Drawer.Title>Kudos</Drawer.Title>
                         </Drawer.Header>
                         <Drawer.Body>
-                            <Suspense fallback={<div>A carregar...</div>}>
+                            Em construção!
+                            {/* <Suspense fallback={<div>A carregar...</div>}>
                                 <Kudos
                                     kudosCore={kudosCoreInstance}
                                     userSigner={userSigner}
                                     ipfs={ipfs}
                                 />
-                            </Suspense>
+                            </Suspense> */}
                         </Drawer.Body>
                         <Drawer.Footer>
                             <Button onClick={() => openKudos(false)} appearance="subtle">
@@ -262,13 +231,13 @@ export default function App() {
                             </Button>
                         </Drawer.Footer>
                     </Drawer>
-                    <Drawer full={true} placement={'bottom'} show={isOpenMeetup} onHide={() => setIsOpenMeetup(false)}>
+                    <Drawer full={true} placement={'bottom'} show={isOpenPost} onHide={() => setIsOpenPost(false)}>
                         <Drawer.Header>
                             <Drawer.Title>Post</Drawer.Title>
                         </Drawer.Header>
                         <Drawer.Body>
                             <Suspense fallback={<div>A carregar...</div>}>
-                                <Meetup meetupData={meetups.get(openMeetup)!} />
+                                <Post content={posts.find((p) => p._id === openPost)!} />
                             </Suspense>
                         </Drawer.Body>
                     </Drawer>
@@ -324,12 +293,10 @@ export default function App() {
                 <NewContent
                     show={newContent}
                     setShow={openNewContent}
-                    dlx={dlxInstance}
-                    userSigner={userSigner}
-                    dlxorbitdb={dlxorbitdb}
+                    postModel={postModel}
                 />
             </Suspense>
-            <Suspense fallback={<div>A carregar...</div>}>
+            {/* <Suspense fallback={<div>A carregar...</div>}>
                 <MintKudo
                     show={mintKudo}
                     setShow={openMintKudo}
@@ -337,7 +304,7 @@ export default function App() {
                     userSigner={userSigner}
                     ipfs={ipfs}
                 />
-            </Suspense>
+            </Suspense> */}
             <Footer
                 style={{ height: '35px', backgroundColor: 'black', color: 'white', padding: '5px' }}
             >

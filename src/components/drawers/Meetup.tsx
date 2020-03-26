@@ -16,11 +16,11 @@ import {
     Tag,
     TagGroup,
 } from 'rsuite';
-import { IMeetupInfo } from './interfaces';
+import { IMeetupInfo } from '../../interfaces';
 
 
 interface IMeetupProps {
-    meetupData: IMeetupInfo;
+    content: IMeetupInfo;
 }
 export default function Meetup(props: IMeetupProps) {
     const ImagePost = styled.div`
@@ -39,7 +39,7 @@ export default function Meetup(props: IMeetupProps) {
             <ImagePost>
                 <img src="img/posts/p2.jpg" alt="presenting" style={{ width: '100%' }} />
             </ImagePost>
-            <h2>{props.meetupData.title}</h2>
+            <h2>{props.content.title}</h2>
             <TagGroup>
                 <Tag color="red">Red</Tag>
                 <Tag color="orange">Orange</Tag>
@@ -59,25 +59,25 @@ export default function Meetup(props: IMeetupProps) {
                 <FlexboxGrid.Item colspan={18}>
                     <div style={{ lineHeight: 1.5 }}>
                         <p><b>ORGANIZADO POR</b></p>
-                        <p>{props.meetupData.author.name}</p>
+                        <p>{props.content.author}</p>
                     </div>
                 </FlexboxGrid.Item>
             </FlexboxGrid>
-            <p style={{ margin: '20px 0px' }}>{props.meetupData.description}</p>
+            <p style={{ margin: '20px 0px' }}>{props.content.description}</p>
             <Grid>
                 <Row className="show-grid">
                     <Col xs={8}>
                         <p>
                             <Icon icon="calendar" />
-                            &nbsp;{format('dd/MM/yyyy', new Date(props.meetupData.date * 1000))}
+                            &nbsp;{format('dd/MM/yyyy', new Date(props.content.date * 1000))}
                         </p>
                         <p>
                             <Icon icon="clock-o" />
-                            &nbsp;{format('hh:mm', new Date(props.meetupData.date * 1000))}
+                            &nbsp;{format('hh:mm', new Date(props.content.date * 1000))}
                         </p>
                         <p>
                             <Icon icon="map-marker" />
-                            &nbsp;{props.meetupData.location}
+                            &nbsp;{props.content.location}
                         </p>
                     </Col>
                     <Col xs={12}>

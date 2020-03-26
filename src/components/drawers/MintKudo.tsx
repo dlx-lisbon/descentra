@@ -6,7 +6,7 @@ import {
     Modal,
 } from 'rsuite';
 
-import { KudosInstance } from './contracts/types/index';
+import { KudosInstance } from '../../helpers/contracts/types/index';
 import PlaceholderParagraph from 'rsuite/lib/Placeholder/PlaceholderParagraph';
 
 

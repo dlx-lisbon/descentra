@@ -1,4 +1,3 @@
-import { ContractTransaction, ethers } from 'ethers';
 import React, { useState } from 'react';
 import {
     Button,
@@ -7,59 +6,36 @@ import {
     Modal,
 } from 'rsuite';
 
-import { DLXInstance } from './contracts/types/index';
-import { IOrbitMeetupInfo } from './interfaces';
+import PostModel from '../../helpers/orbitdb/PostModel';
 
 
 interface INewContent {
+    author: string;
     date: string;
     description: string;
-    location: string;
     title: string;
 }
 interface INewContentProps {
     show: boolean;
     setShow: React.Dispatch<React.SetStateAction<boolean>>;
-    dlx: ethers.Contract & DLXInstance;
-    userSigner: ethers.providers.JsonRpcSigner;
-    dlxorbitdb: any;
+    postModel: PostModel;
 }
 export default function NewContent(props: INewContentProps) {
     // new content variables
     const [newContentForm, setNewContentForm] = useState<INewContent>({
+        author: '',
         date: '',
         description: '',
-        location: '',
         title: '',
     });
 
     const postNewContent = (event: React.SyntheticEvent<Element, Event>) => {
-        const dlxWithSigner = props.dlx.connect(props.userSigner);
-
-        dlxWithSigner.newMeetup().then(async (tx: ContractTransaction) => {
-            dlxWithSigner.on('NewMeetup', async (id, eventEmit) => {
-                if (eventEmit.transactionHash === tx.hash) {
-                    // tslint:disable-next-line: no-empty
-                    dlxWithSigner.removeListener('NewMeetup', () => { });
-                    const orbitdbContent: IOrbitMeetupInfo = {
-                        date: parseInt(newContentForm.date, 10),
-                        description: newContentForm.description,
-                        location: newContentForm.location,
-                        title: newContentForm.title,
-                    };
-
-                    // Listen for updates from peers
-                    props.dlxorbitdb.events.on('replicated', (address: any) => {
-                        console.log('replicated', address);
-                    });
-
-                    await props.dlxorbitdb.put(id.toString(), orbitdbContent);
-                }
-            });
-            await tx.wait();
-            props.setShow(false);
-        });
-
+        props.postModel.add(
+            newContentForm.author,
+            newContentForm.description,
+            parseInt(newContentForm.date, 10),
+            newContentForm.title,
+        ).then(() => props.setShow(false));
         event.preventDefault();
     };
 
@@ -87,10 +63,10 @@ export default function NewContent(props: INewContentProps) {
                     title: value,
                 } as any);
                 break;
-            case 'location':
+            case 'author':
                 setNewContentForm({
                     ...newContentForm,
-                    location: value,
+                    author: value,
                 } as any);
                 break;
         }
@@ -105,14 +81,14 @@ export default function NewContent(props: INewContentProps) {
             <Modal.Body>
                 <Input
                     style={{ width: 450 }}
-                    placeholder="Title"
+                    placeholder="Titulo"
                     onChange={(v, e) => handleInputNewContentChange(v, 'title', e)}
                 /><br />
                 <Input
                     componentClass="textarea"
                     rows={3}
                     style={{ width: 450 }}
-                    placeholder="Description"
+                    placeholder="Descrição"
                     onChange={(v, e) => handleInputNewContentChange(v, 'description', e)}
                 /><br />
                 <DatePicker
@@ -121,15 +97,15 @@ export default function NewContent(props: INewContentProps) {
                     onChange={(v, e) => handleInputNewContentChange(v, 'date', e)}
                     ranges={[
                         {
-                            label: 'Now',
+                            label: 'Agora',
                             value: new Date(),
                         },
                     ]}
                 /><br /><br />
                 <Input
                     style={{ width: 450 }}
-                    placeholder="Location"
-                    onChange={(v, e) => handleInputNewContentChange(v, 'location', e)}
+                    placeholder="Autor"
+                    onChange={(v, e) => handleInputNewContentChange(v, 'author', e)}
                 /><br />
             </Modal.Body>
             <Modal.Footer>

@@ -1,37 +1,15 @@
-import { BigNumber } from 'ethers/utils';
-
-export interface IPostInfo {
-    id: number;
+interface IContentInfo {
+    _id: string;
     title: string;
     author: string;
-    date: string;
-    intro: string;
+    date: number;
+    coverImage?: string;
 }
-export interface IMeetupContractStruct {
-    status: BigNumber;
-    date: BigNumber;
-    seats: BigNumber;
-    ipfs: string;
+export interface IPostInfo extends IContentInfo {
+    content: string;
 }
-export interface IMeetupIPFSData {
-    title: string;
-    description: string;
-    location: string;
-}
-export interface IMeetupInfo {
-    id: number;
-    author: any;
+export interface IMeetupInfo extends IContentInfo {
     status: boolean;
-    date: number;
-    title: string;
     description: string;
     location: string;
-    coverImage?: string;
-}
-export interface IOrbitMeetupInfo {
-    date: number;
-    title: string;
-    description: string;
-    location: string;
-    coverImage?: string;
 }
