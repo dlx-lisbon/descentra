@@ -12,7 +12,8 @@ update_configs:
           dependency_name: "web3"
           dependency_name: "typescript"
           dependency_name: "react-scripts"
-          dependency_name: "eslint"
+          dependency_name: "ipfs"
+          dependency_name: "orbit-db"
     automerged_updates:
       - match:
           dependency_type: "all"
