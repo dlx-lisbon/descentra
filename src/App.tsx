@@ -1,4 +1,4 @@
-import { ethers } from 'ethers';
+// import { ethers } from 'ethers';
 import React, { Suspense, useEffect, useState } from 'react';
 import Emoji from 'react-emoji-render';
 
@@ -22,25 +22,25 @@ import {
     Sidebar,
 } from 'rsuite';
 
-import ContentMeetup from './components/content/ContentMeetup';
+// import ContentMeetup from './components/content/ContentMeetup';
 import ContentPost from './components/content/ContentPost';
-import Post from './components/drawers/Post';
-import DLXABI from './helpers/contracts/abi/DLX.json';
-import KudosABI from './helpers/contracts/abi/Kudos.json';
-import NetworkDevAddress from './helpers/contracts/network/development.json';
-import NetworkGoerliAddress from './helpers/contracts/network/goerli.json';
-import { DLXInstance, KudosInstance } from './helpers/contracts/types/index';
+// import DLXABI from './helpers/contracts/abi/DLX.json';
+// import KudosABI from './helpers/contracts/abi/Kudos.json';
+// import NetworkDevAddress from './helpers/contracts/network/development.json';
+// import NetworkGoerliAddress from './helpers/contracts/network/goerli.json';
+// import { DLXInstance, KudosInstance } from './helpers/contracts/types/index';
 import { startIpfsInstance } from './helpers/ipfsFactory';
 import PostModel from './helpers/orbitdb/PostModel';
 import { store } from './helpers/orbitdb/store';
-import { IMeetupInfo, IPostInfo } from './interfaces';
+import { IPostInfo } from './interfaces';
 
-const Kudos = React.lazy(() => import('./components/drawers/Kudos'));
+// const Kudos = React.lazy(() => import('./components/drawers/Kudos'));
 const Profile = React.lazy(() => import('./components/drawers/Profile'));
 const NewContent = React.lazy(() => import('./components/drawers/NewContent'));
-const Meetup = React.lazy(() => import('./components/drawers/Meetup'));
-const MintKudo = React.lazy(() => import('./components/drawers/MintKudo'));
+// const Meetup = React.lazy(() => import('./components/drawers/Meetup'));
+// const MintKudo = React.lazy(() => import('./components/drawers/MintKudo'));
 const Practice = React.lazy(() => import('./components/drawers/Practice'));
+const Post = React.lazy(() => import('./components/drawers/Post'));
 
 
 export default function App() {
@@ -56,12 +56,12 @@ export default function App() {
     const [openPost, setOpenPost] = useState<string>('');
     const [isOpenPost, setIsOpenPost] = useState<boolean>(false);
     // blockchain variables
-    const [userSigner, setUserSigner] = useState<ethers.providers.JsonRpcSigner>(undefined as any);
-    const [dlxInstance, setDLXInstance]
-        = useState<ethers.Contract & DLXInstance>(undefined as any);
-    const [kudosCoreInstance, setKudosInstance]
-        = useState<ethers.Contract & KudosInstance>(undefined as any);
-    const [usingProvider, setUsingProvider] = useState<any>(undefined);
+    // const [userSigner, setUserSigner] = useState<ethers.providers.JsonRpcSigner>(undefined as any);
+    // const [dlxInstance, setDLXInstance]
+    //     = useState<ethers.Contract & DLXInstance>(undefined as any);
+    // const [kudosCoreInstance, setKudosInstance]
+    //     = useState<ethers.Contract & KudosInstance>(undefined as any);
+    // const [usingProvider, setUsingProvider] = useState<any>(undefined);
     // posts
     const [posts, setPosts] = useState<[IPostInfo]>([] as any);
     const [ipfs, setIpfs] = useState<any>(undefined);
@@ -98,7 +98,12 @@ export default function App() {
             // setup orbitdb
             const ipfsInstance = await startIpfsInstance();
             setIpfs(ipfsInstance);
-            const dbContentPost = await store(ipfsInstance, 'dlx.content.post');
+            if (process.env.REACT_APP_ORBITDB_POST_NAME === undefined) {
+                setLoadingPostModel(false);
+                alert('process.env.REACT_APP_ORBITDB_POST_NAME is not defined!');
+                return;
+            }
+            const dbContentPost = await store(ipfsInstance, process.env.REACT_APP_ORBITDB_POST_NAME);
             const postM = new PostModel(dbContentPost, async () => {
                 setLoadingPostModel(false);
                 setPosts(postM.posts);
