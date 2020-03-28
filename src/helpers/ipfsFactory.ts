@@ -24,14 +24,12 @@ const ipfsConfig = {
     },
 };
 
-export async function startIpfsInstance() {
+export async function startIpfsInstance(): Promise<any> {
     return new Promise((resolve, reject) => {
         // Create IPFS instance
         const ipfs = new IPFS(ipfsConfig);
 
         ipfs.on('error', (e: any) => reject(e));
-        ipfs.on('ready', async () => {
-            resolve(ipfs);
-        });
+        ipfs.on('ready', async () => resolve(ipfs));
     });
 }

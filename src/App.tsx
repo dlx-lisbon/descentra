@@ -19,6 +19,7 @@ import {
     Nav,
     Navbar,
     Panel,
+    Progress,
     Sidebar,
 } from 'rsuite';
 
@@ -41,11 +42,13 @@ const NewContent = React.lazy(() => import('./components/drawers/NewContent'));
 // const MintKudo = React.lazy(() => import('./components/drawers/MintKudo'));
 const Practice = React.lazy(() => import('./components/drawers/Practice'));
 const Post = React.lazy(() => import('./components/drawers/Post'));
+const { Circle } = Progress;
 
 
 export default function App() {
     // loading
     const [loadingPostModel, setLoadingPostModel] = useState<boolean>(true);
+    const [replicatingProgress, setReplicatingProgress] = useState<number>(0);
     // drawers and modals
     const [kudos, openKudos] = useState<boolean>(false);
     const [profile, openProfile] = useState<boolean>(false);
@@ -104,11 +107,14 @@ export default function App() {
                 return;
             }
             const dbContentPost = await store(ipfsInstance, process.env.REACT_APP_ORBITDB_POST_NAME);
-            const postM = new PostModel(dbContentPost, async () => {
-                setLoadingPostModel(false);
-                setPosts(postM.posts);
-            });
+            const postM = new PostModel(
+                dbContentPost,
+                (progress) => console.log(progress),
+                (progress) => setReplicatingProgress(progress),
+            );
             postM.subscribe(() => setPosts(postM.posts));
+            await dbContentPost.load();
+            setLoadingPostModel(false);
             setPostModel(postM);
         };
         fetchData();
@@ -125,6 +131,12 @@ export default function App() {
     };
 
     const userAvatarSrc = 'img/unknown_user.svg';
+
+    const replicatingContent = (
+        <div style={{ width: 120, marginTop: 10 }}>
+            <Circle percent={replicatingProgress} strokeColor="#3385ff" />
+        </div>
+    );
 
     return (
         <Container>
@@ -179,7 +191,8 @@ export default function App() {
             </Header>
             <Container style={{ width: '100%', maxWidth: '1300px', margin: 'auto' }}>
                 <Content>
-                    {(loadingPostModel) && <img src="img/fish_loading.gif" />}
+                    {replicatingProgress > 0 && replicatingProgress !== 100 && replicatingContent}
+                    {loadingPostModel && <img src="img/fish_loading.gif" />}
                     {posts.map((c) => <ContentPost key={c._id} content={c} onClick={handleOpenPost} />)}
                     <Drawer full={true} placement={'bottom'} show={kudos} onHide={() => openKudos(false)}>
                         <Drawer.Header>

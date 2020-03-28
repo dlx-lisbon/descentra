@@ -11,29 +11,62 @@ export default class PostModel {
     // may not even be worth separating this logic
     // out, but we do this to demonstrate one way to
     // separate out parts of your application.
-    constructor(db: any, callbackWhenReady: any) {
+    constructor(
+        db: any,
+        loading: (progress: number) => void,
+        replicating: (progress: number) => void,
+    ) {
         this.readyOrReplicated = false;
         this.db = db;
         this.posts = [] as any;
         this.onChanges = [] as any;
         // When the database was loaded and is ready to use,
         // refresh our data model and set the state to ready
-        this.db.events.on('ready', () => {
-            if (!this.readyOrReplicated) {
-                this.getAll();
-                this.readyOrReplicated = true;
-                callbackWhenReady();
-            }
-
+        this.db.events.on('ready', (dbname: any, heads: any) => {
+            loading(100);
+            this.inform();
         });
         // When a remote peer updated the posts, refresh our data model
-        this.db.events.on('replicated', () => {
-            if (!this.readyOrReplicated) {
-                this.getAll();
-                this.readyOrReplicated = true;
-                callbackWhenReady();
-            }
+        this.db.events.on('replicated', (address: string) => {
+            replicating(100);
+            this.inform();
         });
+        // Emitted before replicating a part of the database with a peer.
+        this.db.events.on('replicate', (address: string) => {
+            replicating(0);
+        });
+        // Emitted while replicating a database.
+        // * address is id of the database that emitted the event.
+        // * hash is the multihash of the entry that was just loaded.
+        // * entry is the database operation entry.
+        // * progress is the current progress.
+        // * have is a map of database pieces we have.
+        this.db.events.on(
+            'replicate.progress',
+            (address: string, hash: string, entry: any, progress: number, have: number) => {
+                console.log('replicate.progress', address, hash, entry, progress, have);
+                replicating((progress / have) * 100);
+            });
+        // Emitted before loading the database.
+        this.db.events.on('load', (dbname: string) => {
+            loading(0);
+        });
+        // Emitted while loading the local database, once for each entry.
+        // * dbname is the name of the database that emitted the event.
+        // * hash is the multihash of the entry that was just loaded.
+        // * entry is the database operation entry.
+        // * progress is a sequential number starting from 0 upon calling load().
+        this.db.events.on(
+            'load.progress',
+            (address: string, hash: string, entry: any, progress: number, total: number) => {
+                console.log('load.progress', address, hash, entry, progress, total);
+                loading((progress / total) * 100);
+            });
+        // Emitted when a new peer connects via ipfs pubsub.
+        // * peer is a string containing the id of the new peer
+        this.db.events.on('peer', (peer: string) => console.log('peer', peer));
+        // also event 'write', (address: any, entry: any, heads: any)
+        // also event 'closed', (dbname: any)
     }
 
     public getAll() {

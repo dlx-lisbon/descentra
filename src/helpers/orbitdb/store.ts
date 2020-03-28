@@ -16,7 +16,7 @@ const dbConfig = {
     },
 };
 
-export async function store(ipfs: any, namespace: string) {
+export async function store(ipfs: any, namespace: string): Promise<any> {
     return new Promise(async (resolve, reject) => {
         try {
             // Create an OrbitDB instance
