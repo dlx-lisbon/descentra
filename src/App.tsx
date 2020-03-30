@@ -1,6 +1,4 @@
-// import { ethers } from 'ethers';
 import React, { Suspense, useEffect, useState } from 'react';
-import Emoji from 'react-emoji-render';
 
 
 import 'rsuite/dist/styles/rsuite-default.css';
@@ -13,14 +11,9 @@ import {
     Drawer,
     Footer,
     Header,
-    Icon,
-    Input,
-    InputGroup,
     Nav,
     Navbar,
-    Panel,
     Progress,
-    Sidebar,
 } from 'rsuite';
 
 // import ContentMeetup from './components/content/ContentMeetup';
@@ -52,7 +45,7 @@ export default function App() {
     // drawers and modals
     const [kudos, openKudos] = useState<boolean>(false);
     const [profile, openProfile] = useState<boolean>(false);
-    const [mintKudo, openMintKudo] = useState<boolean>(false);
+    // const [mintKudo, openMintKudo] = useState<boolean>(false);
     const [practice, openPractice] = useState<boolean>(false);
     const [newContent, openNewContent] = useState<boolean>(false);
     // open post
@@ -155,24 +148,34 @@ export default function App() {
                     <Navbar.Body>
                         <Nav pullRight={true} style={{ height: '60px' }}>
                             <span
+                                onClick={() => openNewContent(true)}
+                            >
+                                <Nav.Item>
+                                    <span role="img" aria-label="memo">📝</span>
+                                    Novo Conteudo
+                                </Nav.Item>
+                            </span>
+                            <span
                                 onClick={() => openPractice(true)}
                             >
                                 <Nav.Item>
-                                    <Emoji text=":muscle:  Praticar" />
+                                    <span role="img" aria-label="flexed-biceps">💪</span>
+                                    Praticar
                                 </Nav.Item>
                             </span>
                             {/* <span
                                 onClick={() => openMintKudo(true)}
-                            >
+                                >
                                 <Nav.Item>
-                                    <Emoji text=":construction_worker:  Mint Kudo" />
+                                <Emoji text=":construction_worker:  Mint Kudo" />
                                 </Nav.Item>
                             </span> */}
                             <span
                                 onClick={() => openKudos(true)}
                             >
                                 <Nav.Item>
-                                    <Emoji text=":hatching_chick:  Kudos" />
+                                    <span role="img" aria-label="hatching-chick">🐣</span>
+                                    Kudos
                                 </Nav.Item>
                             </span>
                             <span
@@ -192,7 +195,7 @@ export default function App() {
             <Container style={{ width: '100%', maxWidth: '1300px', margin: 'auto' }}>
                 <Content>
                     {replicatingProgress > 0 && replicatingProgress !== 100 && replicatingContent}
-                    {loadingPostModel && <img src="img/fish_loading.gif" />}
+                    {loadingPostModel && <img alt="loading fish" width="80%" src="img/fish_loading.gif" />}
                     {posts.map((c) => <ContentPost key={c._id} content={c} onClick={handleOpenPost} />)}
                     <Drawer full={true} placement={'bottom'} show={kudos} onHide={() => openKudos(false)}>
                         <Drawer.Header>
@@ -260,7 +263,7 @@ export default function App() {
                         </Drawer.Body>
                     </Drawer>
                 </Content>
-                <Sidebar width={400}>
+                {/* <Sidebar width={400}>
                     <Button
                         color="blue"
                         block={true}
@@ -305,7 +308,7 @@ export default function App() {
                             <img alt="placeholder" src="https://via.placeholder.com/350x240" height="240" />
                         </Panel>
                     </div>
-                </Sidebar>
+                </Sidebar> */}
             </Container>
             <Suspense fallback={<div>A carregar...</div>}>
                 <NewContent
@@ -326,7 +329,7 @@ export default function App() {
             <Footer
                 style={{ height: '35px', backgroundColor: 'black', color: 'white', padding: '5px' }}
             >
-                DLX 2020 <Emoji text=":ok_hand:" />
+                DLX 2020 <span role="img" aria-label="ok-hand">👌</span>
             </Footer>
         </Container>
     );
