@@ -1,17 +1,23 @@
-import React, { useState } from 'react';
+import DateFnsUtils from '@date-io/date-fns';
 import {
     Button,
-    DatePicker,
-    Input,
-    Modal,
-} from 'rsuite';
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    TextField,
+} from '@material-ui/core';
+import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
+import 'date-fns';
+import React, { useState } from 'react';
 
 import PostModel from '../../helpers/orbitdb/PostModel';
 
 
 interface INewContent {
     author: string;
-    date: string;
+    date: Date;
     description: string;
     title: string;
 }
@@ -21,10 +27,9 @@ interface INewContentProps {
     postModel: PostModel;
 }
 export default function NewContent(props: INewContentProps) {
-    // new content variables
     const [newContentForm, setNewContentForm] = useState<INewContent>({
         author: '',
-        date: '',
+        date: new Date(),
         description: '',
         title: '',
     });
@@ -33,89 +38,98 @@ export default function NewContent(props: INewContentProps) {
         props.postModel.add(
             newContentForm.author,
             newContentForm.description,
-            parseInt(newContentForm.date, 10),
+            newContentForm.date.getTime(),
             newContentForm.title,
         ).then(() => props.setShow(false));
         event.preventDefault();
     };
 
-    const handleInputNewContentChange = (
-        value: string | string[] | Date,
-        name: string,
-        event: React.SyntheticEvent<HTMLElement, Event>,
-    ) => {
-        switch (name) {
-            case 'date':
-                setNewContentForm({
-                    ...newContentForm,
-                    date: Math.floor(new Date(value as any).getTime() / 1000).toString(),
-                } as any);
-                break;
+    const handleInputContentChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        switch (event.target.name) {
             case 'description':
                 setNewContentForm({
                     ...newContentForm,
-                    description: value,
-                } as any);
+                    description: event.target.value,
+                });
                 break;
             case 'title':
                 setNewContentForm({
                     ...newContentForm,
-                    title: value,
-                } as any);
+                    title: event.target.value,
+                });
                 break;
             case 'author':
                 setNewContentForm({
                     ...newContentForm,
-                    author: value,
-                } as any);
+                    author: event.target.value,
+                });
                 break;
         }
         event.preventDefault();
     };
 
+    const handleInputDateContentChange = (date: MaterialUiPickersDate) => {
+        if (date !== null) {
+            setNewContentForm({
+                ...newContentForm,
+                date: new Date(date.getTime()),
+            });
+        }
+    };
+
     return (
-        <Modal full={true} show={props.show} onHide={() => props.setShow(false)}>
-            <Modal.Header>
-                <Modal.Title>Novo Conteudo</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Input
-                    style={{ width: 450 }}
-                    placeholder="Titulo"
-                    onChange={(v, e) => handleInputNewContentChange(v, 'title', e)}
-                /><br />
-                <Input
-                    componentClass="textarea"
-                    rows={3}
-                    style={{ width: 450 }}
-                    placeholder="Descrição"
-                    onChange={(v, e) => handleInputNewContentChange(v, 'description', e)}
-                /><br />
-                <DatePicker
-                    style={{ width: 450 }}
-                    format="YYYY-MM-DD HH:mm"
-                    onChange={(v, e) => handleInputNewContentChange(v, 'date', e)}
-                    ranges={[
-                        {
-                            label: 'Agora',
-                            value: new Date(),
-                        },
-                    ]}
+        <Dialog
+            open={props.show}
+            onClose={() => props.setShow(false)}
+            fullWidth={true}
+            maxWidth="sm"
+            aria-labelledby="form-dialog-title"
+        >
+            <DialogTitle id="form-dialog-title">Novo Conteudo</DialogTitle>
+            <DialogContent>
+                <TextField
+                    value={newContentForm.title}
+                    onChange={handleInputContentChange}
+                    name="title"
+                    label="Titulo"
+                    variant="outlined"
                 /><br /><br />
-                <Input
-                    style={{ width: 450 }}
-                    placeholder="Autor"
-                    onChange={(v, e) => handleInputNewContentChange(v, 'author', e)}
+                <TextField
+                    value={newContentForm.description}
+                    onChange={handleInputContentChange}
+                    name="description"
+                    label="Descricao"
+                    variant="outlined"
+                    multiline={true}
+                    rows="4"
+                    rowsMax="8"
+                /><br /><br />
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <DateTimePicker
+                        label="Data"
+                        name="date"
+                        inputVariant="outlined"
+                        value={newContentForm.date}
+                        onChange={handleInputDateContentChange}
+                    />
+                </MuiPickersUtilsProvider>
+                <br /><br />
+                <TextField
+                    value={newContentForm.author}
+                    onChange={handleInputContentChange}
+                    name="author"
+                    label="Autor"
+                    variant="outlined"
                 /><br />
-            </Modal.Body>
-            <Modal.Footer>
-                <Button onClick={postNewContent} appearance="primary">
-                    Post
-                    </Button>
-                <Button onClick={() => props.setShow(false)} appearance="subtle">
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={() => props.setShow(false)} color="primary">
                     Cancel
-                    </Button>
-            </Modal.Footer>
-        </Modal>
+                </Button>
+                <Button onClick={postNewContent} color="primary">
+                    Post
+                </Button>
+            </DialogActions>
+        </Dialog>
     );
 }

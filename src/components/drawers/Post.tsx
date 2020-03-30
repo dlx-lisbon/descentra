@@ -31,7 +31,6 @@ export default function Post(props: IPostProps) {
     `;
     const PostContainer = styled.div`
         max-width: 900px;
-        padding: 50px 80px;
     `;
 
     return (
