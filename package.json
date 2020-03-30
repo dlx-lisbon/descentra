@@ -22,7 +22,7 @@
         "date-fns": "2.11.1",
         "date-format": "3.0.0",
         "ethers": "4.0.42",
-        "ipfs": "~0.40.0",
+        "ipfs": "~0.41.2",
         "multicodec": "0.5.6",
         "orbit-db": "0.23.1",
         "react": "16.12.0",
