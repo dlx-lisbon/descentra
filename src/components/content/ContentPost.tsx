@@ -54,7 +54,7 @@ export default function ContentPost(props: IContentPostProps) {
     const classes = useStyles();
 
     const sendToMeetupId = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        props.onClick(props.content._id);
+        props.onClick(props.content._id as string);
         event.preventDefault();
     };
 

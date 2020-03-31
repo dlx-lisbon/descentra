@@ -42,7 +42,7 @@ export default function ContentMeetup(props: IContentMeetupProps) {
     `;
 
     const sendToMeetupId = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        props.onClick(props.content._id);
+        props.onClick(props.content._id as string);
         event.preventDefault();
     };
 

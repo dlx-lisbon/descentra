@@ -105,7 +105,7 @@ export default function App() {
                 (progress) => console.log(progress),
                 (progress) => setReplicatingProgress(progress),
             );
-            postM.subscribe(() => setPosts(postM.posts));
+            postM.subscribe(() => setPosts(postM.records));
             await dbContentPost.load();
             setLoadingPostModel(false);
             setPostModel(postM);

@@ -13,6 +13,7 @@ import 'date-fns';
 import React, { useState } from 'react';
 
 import PostModel from '../../helpers/orbitdb/PostModel';
+import {IPostInfo} from '../../interfaces';
 
 
 interface INewContent {
@@ -35,12 +36,13 @@ export default function NewContent(props: INewContentProps) {
     });
 
     const postNewContent = (event: React.SyntheticEvent<Element, Event>) => {
-        props.postModel.add(
-            newContentForm.author,
-            newContentForm.description,
-            newContentForm.date.getTime(),
-            newContentForm.title,
-        ).then(() => props.setShow(false));
+        const newPost: IPostInfo = {
+            author: newContentForm.author,
+            content: newContentForm.description,
+            date: newContentForm.date.getTime(),
+            title: newContentForm.title
+        }
+        props.postModel.add(newPost).then(() => props.setShow(false));
         event.preventDefault();
     };
 
