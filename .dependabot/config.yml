@@ -9,11 +9,18 @@ update_configs:
     ignored_updates:
       - match:
           dependency_name: "jest"
+      - match:
           dependency_name: "web3"
+      - match:
           dependency_name: "typescript"
+      - match:
           dependency_name: "react-scripts"
+      - match:
           dependency_name: "ipfs"
+      - match:
           dependency_name: "orbit-db"
+      - match:
+          dependency_name: "@date-io/date-fns"
     automerged_updates:
       - match:
           dependency_type: "all"
