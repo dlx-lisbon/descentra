@@ -14,10 +14,7 @@ import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import format from 'date-format';
 import React from 'react';
 
-
-
 import { IPostInfo } from '../../interfaces';
-
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

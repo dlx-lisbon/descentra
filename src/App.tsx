@@ -26,12 +26,15 @@ import ContentPost from './components/content/ContentPost';
 import { startIpfsInstance } from './helpers/ipfsFactory';
 import PostModel from './helpers/orbitdb/PostModel';
 import { store } from './helpers/orbitdb/store';
-import { IPostInfo } from './interfaces';
+import { IMeetupInfo, IPostInfo } from './interfaces';
+import MeetupModel from './helpers/orbitdb/MeetupModel';
+import ContentMeetup from './components/content/ContentMeetup';
+import {Grid} from '@material-ui/core';
 
 // const Kudos = React.lazy(() => import('./components/drawers/Kudos'));
 const Profile = React.lazy(() => import('./components/drawers/Profile'));
 const NewContent = React.lazy(() => import('./components/drawers/NewContent'));
-// const Meetup = React.lazy(() => import('./components/drawers/Meetup'));
+const NewMeetup = React.lazy(() => import('./components/drawers/NewMeetup'));
 // const MintKudo = React.lazy(() => import('./components/drawers/MintKudo'));
 const Practice = React.lazy(() => import('./components/drawers/Practice'));
 const Post = React.lazy(() => import('./components/drawers/Post'));
@@ -48,6 +51,7 @@ export default function App() {
     // const [mintKudo, openMintKudo] = useState<boolean>(false);
     const [practice, openPractice] = useState<boolean>(false);
     const [newContent, openNewContent] = useState<boolean>(false);
+    const [newMeetup, openNewMeetup] = useState<boolean>(false);
     // open post
     const [openPost, setOpenPost] = useState<string>('');
     const [isOpenPost, setIsOpenPost] = useState<boolean>(false);
@@ -60,9 +64,10 @@ export default function App() {
     // const [usingProvider, setUsingProvider] = useState<any>(undefined);
     // posts
     const [posts, setPosts] = useState<[IPostInfo]>([] as any);
+    const [meetups, setMeetups] = useState<[IMeetupInfo]>([] as any);
     const [ipfs, setIpfs] = useState<any>(undefined);
     const [postModel, setPostModel] = useState<PostModel>(undefined as any);
-
+    const [meetupModel, setMeetupModel] = useState<MeetupModel>(undefined as any);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -99,16 +104,24 @@ export default function App() {
                 alert('process.env.REACT_APP_ORBITDB_POST_NAME is not defined!');
                 return;
             }
-            const dbContentPost = await store(ipfsInstance, process.env.REACT_APP_ORBITDB_POST_NAME);
+            const { postsDb, meetupsDb } = await store(ipfsInstance, process.env.REACT_APP_ORBITDB_POST_NAME);
             const postM = new PostModel(
-                dbContentPost,
+                postsDb,
                 (progress) => console.log(progress),
                 (progress) => setReplicatingProgress(progress),
             );
             postM.subscribe(() => setPosts(postM.records));
-            await dbContentPost.load();
+            await postsDb.load();
+            const meetupM = new MeetupModel(
+                meetupsDb,
+                (progress) => console.log(progress),
+                (progress) => setReplicatingProgress(progress),
+            );
+            meetupM.subscribe(() => setMeetups(meetupM.records));
+            await meetupsDb.load();
             setLoadingPostModel(false);
             setPostModel(postM);
+            setMeetupModel(meetupM);
         };
         fetchData();
     }, []);
@@ -156,6 +169,14 @@ export default function App() {
                                 </Nav.Item>
                             </span>
                             <span
+                                onClick={() => openNewMeetup(true)}
+                            >
+                                <Nav.Item>
+                                    <span role="img" aria-label="memo">🤖</span>
+                                    Novo Meetup
+                                </Nav.Item>
+                            </span>
+                            <span
                                 onClick={() => openPractice(true)}
                             >
                                 <Nav.Item>
@@ -194,9 +215,22 @@ export default function App() {
             </Header>
             <Container style={{ width: '100%', maxWidth: '1300px', margin: 'auto' }}>
                 <Content>
+                    <Grid container spacing={3}>
+                        {
+                            loadingPostModel && (
+                                <Grid item xs={6}>
+                                    <img alt="loading fish" width="80%" src="img/fish_loading.gif" />
+                                </Grid>
+                            )
+                        }
+                        <Grid item xs={6}>
+                            {posts.map((c) => <ContentPost key={c._id} content={c} onClick={handleOpenPost} />)}
+                        </Grid>
+                        <Grid item xs={6}>
+                            {meetups.map((c) => <ContentMeetup key={c._id} content={c} onClick={handleOpenPost} />)}
+                        </Grid>
+                    </Grid>
                     {replicatingProgress > 0 && replicatingProgress !== 100 && replicatingContent}
-                    {loadingPostModel && <img alt="loading fish" width="80%" src="img/fish_loading.gif" />}
-                    {posts.map((c) => <ContentPost key={c._id} content={c} onClick={handleOpenPost} />)}
                     <Drawer full={true} placement={'bottom'} show={kudos} onHide={() => openKudos(false)}>
                         <Drawer.Header>
                             <Drawer.Title>Kudos</Drawer.Title>
@@ -315,6 +349,13 @@ export default function App() {
                     show={newContent}
                     setShow={openNewContent}
                     postModel={postModel}
+                />
+            </Suspense>
+            <Suspense fallback={<div>A carregar...</div>}>
+                <NewMeetup
+                    show={newMeetup}
+                    setShow={openNewMeetup}
+                    meetupModel={meetupModel}
                 />
             </Suspense>
             {/* <Suspense fallback={<div>A carregar...</div>}>
