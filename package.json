@@ -32,7 +32,7 @@
     "devDependencies": {
         "@types/node": "13.9.8",
         "@types/react": "16.9.19",
-        "@types/react-dom": "16.9.0",
+        "@types/react-dom": "16.9.6",
         "@types/styled-components": "4.4.3",
         "eslint": "^5.16.0",
         "react-scripts": "3.0.1",
