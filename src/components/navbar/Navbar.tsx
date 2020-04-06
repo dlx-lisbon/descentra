@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
-import { Link, Menu, MenuItem, AppBar, Toolbar, Typography, Avatar, IconButton, Button } from "@material-ui/core";
+import { Menu, MenuItem, AppBar, Toolbar, Typography, Avatar, IconButton, Button } from "@material-ui/core";
 import MoreIcon from '@material-ui/icons/MoreVert';
 import React from "react";
 
@@ -42,6 +42,7 @@ export interface NavbarItem {
 
 export interface NavbarProps {
     items: NavbarItem[]
+    onAvatarClick: () => void
 }
 
 export default function Navbar(props: NavbarProps) {
@@ -110,7 +111,7 @@ export default function Navbar(props: NavbarProps) {
                         </MenuItem>
                     ))}
                 </Menu>
-                <Avatar src={userAvatarSrc} />
+                <Avatar onClick={props.onAvatarClick} src={userAvatarSrc} />
             </Toolbar>
         </AppBar>
     );

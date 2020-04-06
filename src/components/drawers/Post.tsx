@@ -1,10 +1,10 @@
-// import format from 'date-format';
+import format from 'date-format';
 import React from 'react';
 import { IPostInfo } from '../../interfaces';
-import {List, ListItem, ListItemAvatar, Avatar, ListItemText, Typography, makeStyles, Divider} from '@material-ui/core';
+import {Card, CardHeader, Avatar, Typography, CardContent, makeStyles} from '@material-ui/core';
 
 interface IPostProps {
-    content: IPostInfo[];
+    content: IPostInfo;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -22,34 +22,24 @@ export default function Post(props: IPostProps) {
     const classes = useStyles()
 
     return (
-        <List>
-            {props.content.map((postContent: IPostInfo) => (
-                <>
-                    <ListItem alignItems="flex-start">
-                    <ListItemAvatar>
-                        <Avatar alt="username" src="img/blog/c1.jpg" />
-                    </ListItemAvatar>
-                    <ListItemText
-                        primary={postContent.title}
-                        secondary={
-                            <React.Fragment>
-                                <Typography
-                                    component="span"
-                                    variant="body2"
-                                    className={classes.inline}
-                                    color="textPrimary"
-                                >
-                                    {postContent.author}
-                                </Typography>
-                                {postContent.content}
-                            </React.Fragment>
-                        }
-                    />
-                    </ListItem>
-                    <Divider variant="inset" component="li" />
-                </>
-            ))}
-        </List>
+        <Card>
+            <CardHeader
+                avatar={ <Avatar alt="username" src="img/blog/c1.jpg" /> }
+                title={props.content.title}
+                subheader={format('dd/MM/yyyy', new Date(props.content.date))}
+            />
+            <CardContent>
+                <Typography
+                    component="span"
+                    variant="body2"
+                    className={classes.inline}
+                    color="textPrimary"
+                >
+                    {props.content.author}
+                </Typography>
+                {props.content.content}
+            </CardContent>
+        </Card>
     );
 
         /*<PostContainer>

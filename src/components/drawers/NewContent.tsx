@@ -15,25 +15,27 @@ import React, { useState } from 'react';
 import PostModel from '../../helpers/orbitdb/PostModel';
 import { IPostInfo } from '../../interfaces';
 
-
 interface INewContent {
     author: string;
     date: Date;
     description: string;
     title: string;
 }
+
 interface INewContentProps {
     show: boolean;
     setShow: React.Dispatch<React.SetStateAction<boolean>>;
     postModel: PostModel;
 }
+
 export default function NewContent(props: INewContentProps) {
-    const [newContentForm, setNewContentForm] = useState<INewContent>({
+    const emptyForm = {
         author: '',
         date: new Date(),
         description: '',
         title: '',
-    });
+    }
+    const [newContentForm, setNewContentForm] = useState<INewContent>(emptyForm);
 
     const postNewContent = (event: React.SyntheticEvent<Element, Event>) => {
         const newPost: IPostInfo = {
@@ -42,7 +44,10 @@ export default function NewContent(props: INewContentProps) {
             date: newContentForm.date.getTime(),
             title: newContentForm.title
         }
-        props.postModel.add(newPost).then(() => props.setShow(false));
+        props.postModel.add(newPost).then(() => {
+            props.setShow(false)
+            setNewContentForm(emptyForm)
+        });
         event.preventDefault();
     };
 

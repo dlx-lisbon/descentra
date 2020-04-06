@@ -21,17 +21,21 @@ interface INewContentProps {
     meetupModel: MeetupModel;
 }
 export default function NewContent(props: INewContentProps) {
-    const [newMeetupForm, setNewMeetupForm] = useState<IMeetupInfo>({
+    const emptyForm = {
         author: '',
         date: (new Date()).getTime(),
         description: '',
         title: '',
         location: '',
         status: false
-    });
+    }
+    const [newMeetupForm, setNewMeetupForm] = useState<IMeetupInfo>(emptyForm);
 
     const postNewContent = (event: React.SyntheticEvent<Element, Event>) => {
-        props.meetupModel.add(newMeetupForm).then(() => props.setShow(false));
+        props.meetupModel.add(newMeetupForm).then(() => {
+            props.setShow(false)
+            setNewMeetupForm(emptyForm)
+        });
         event.preventDefault();
     };
 
@@ -47,7 +51,7 @@ export default function NewContent(props: INewContentProps) {
             maxWidth="sm"
             aria-labelledby="form-dialog-title"
         >
-            <DialogTitle id="form-dialog-title">Novo Conteúdo</DialogTitle>
+            <DialogTitle id="form-dialog-title">Novo Meetup</DialogTitle>
             <DialogContent>
                 <TextField
                     value={newMeetupForm.title}
