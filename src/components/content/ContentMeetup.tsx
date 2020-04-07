@@ -69,7 +69,7 @@ export default function ContentMeetup(props: IContentPostProps) {
                         </Avatar>
                     }
                     title={props.content.title}
-                    subheader={format('MM dd, yyyy - hh:mm', new Date(props.content.date * 1000))}
+                    subheader={format('MM dd, yyyy - hh:mm', new Date(props.content.date))}
                 />
                 {props.content.coverImage && <CardMedia
                     className={classes.media}
