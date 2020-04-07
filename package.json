@@ -22,7 +22,7 @@
         "date-format": "3.0.0",
         "ethers": "4.0.46",
         "ipfs": "~0.40.0",
-        "multicodec": "1.0.1",
+        "multicodec": "0.5.6",
         "orbit-db": "0.23.1",
         "react": "16.13.1",
         "react-dom": "16.12.0"
