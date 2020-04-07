@@ -1,40 +1,48 @@
 import format from 'date-format';
 import React from 'react';
-import styled from 'styled-components';
-
-import 'rsuite/dist/styles/rsuite-default.css';
-
-import {
-    Avatar,
-    Button,
-    Col,
-    Divider,
-    FlexboxGrid,
-    Grid,
-    Icon,
-    Row,
-    Tag,
-    TagGroup,
-} from 'rsuite';
 import { IPostInfo } from '../../interfaces';
-
+import {Card, CardHeader, Avatar, Typography, CardContent, makeStyles} from '@material-ui/core';
 
 interface IPostProps {
     content: IPostInfo;
 }
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: '100%',
+    maxWidth: '36ch',
+    backgroundColor: theme.palette.background.paper,
+  },
+  inline: {
+    display: 'inline',
+  },
+}));
+
 export default function Post(props: IPostProps) {
-    const ImagePost = styled.div`
-        max-height: 240px,
-        object-fit: cover,
-        overflow: hidden,
-        width: 100%,
-    `;
-    const PostContainer = styled.div`
-        max-width: 900px;
-    `;
+    const classes = useStyles()
 
     return (
-        <PostContainer>
+        <Card>
+            <CardHeader
+                avatar={ <Avatar alt="username" src="img/blog/c1.jpg" /> }
+                title={props.content.title}
+                subheader={format('dd/MM/yyyy', new Date(props.content.date))}
+            />
+            <CardContent>
+                <Typography
+                    component="span"
+                    variant="body2"
+                    className={classes.inline}
+                    color="textPrimary"
+                >
+                    {props.content.author}
+                </Typography>
+                {props.content.content}
+            </CardContent>
+        </Card>
+    );
+
+        /*<PostContainer>
             <h2>{props.content.title}</h2>
             <TagGroup>
                 <Tag color="red">Red</Tag>
@@ -74,6 +82,5 @@ export default function Post(props: IPostProps) {
                     </Col>
                 </Row>
             </Grid>
-        </PostContainer>
-    );
+            </PostContainer>*/
 }

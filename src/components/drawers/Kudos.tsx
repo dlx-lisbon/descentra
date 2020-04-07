@@ -1,12 +1,7 @@
 import { ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
-import {
-    Col,
-    Grid,
-    Row,
-} from 'rsuite';
-
 import { KudosInstance } from '../../helpers/contracts/types/index';
+import {Grid} from '@material-ui/core';
 
 
 interface IKudosProps {
@@ -45,18 +40,18 @@ export default function Kudos(props: IKudosProps) {
 
     const kudosSpace = (kudo: IKudosMetadata) => {
         return (
-            <Col key={kudo.image} xs={4}>
+            <Grid item key={kudo.image} xs={4}>
                 <img height="100" width="100" src={kudo.image} alt={kudo.name} />
                 <div style={{ textAlign: 'center', fontFamily: 'monospace' }}>{kudo.name}</div>
-            </Col>
+            </Grid>
         );
     };
 
     const renderKudos = () => {
         return (
-            <Grid fluid={true} style={{ padding: '50px' }}>
-                {kudos.map((k, i) => <Row key={i} className="show-grid">{k.map((k1) => kudosSpace(k1))}</Row>)}
-            </Grid>
+            <>
+                {kudos.map((k, i) => <Grid container key={i} className="show-grid">{k.map((k1) => kudosSpace(k1))}</Grid>)}
+            </>
         );
     };
 

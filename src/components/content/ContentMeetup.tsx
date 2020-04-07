@@ -1,85 +1,92 @@
-import format from 'date-format';
-import React from 'react';
-import styled from 'styled-components';
-
-import 'rsuite/dist/styles/rsuite-default.css';
-
 import {
     Avatar,
-    Button,
-    FlexboxGrid,
-    Icon,
-    Panel,
-} from 'rsuite';
+    Card,
+    CardActions,
+    CardContent,
+    CardHeader,
+    CardMedia,
+    IconButton,
+    Typography,
+} from '@material-ui/core';
+import { red } from '@material-ui/core/colors';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import format from 'date-format';
+import React from 'react';
+
 import { IMeetupInfo } from '../../interfaces';
 
 
-interface IContentMeetupProps {
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        avatar: {
+            backgroundColor: red[500],
+        },
+        button: {
+            margin: theme.spacing(1),
+        },
+        expand: {
+            marginLeft: 'auto',
+            transform: 'rotate(0deg)',
+            transition: theme.transitions.create('transform', {
+                duration: theme.transitions.duration.shortest,
+            }),
+        },
+        expandOpen: {
+            transform: 'rotate(180deg)',
+        },
+        media: {
+            height: 0,
+            paddingTop: '56.25%', // 16:9
+        },
+        root: {
+            maxWidth: 345,
+        },
+    }),
+);
+interface IContentPostProps {
     content: IMeetupInfo;
     onClick: (value: string) => void;
 }
-export default function ContentMeetup(props: IContentMeetupProps) {
-    const mainPanelStyle = {
-        display: 'inline-block',
-        margin: '50px auto',
-        maxWidth: '700px',
-        width: '100%',
-    };
-    const ImagePost = styled.div`
-        max-height: 240px,
-        object-fit: cover,
-        overflow: hidden,
-        width: 100%,
-    `;
-    const PostContainer = styled.div`
-        align-items: center;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-        width: 100%;
-        cursor: pointer;
-    `;
+export default function ContentMeetup(props: IContentPostProps) {
+    const classes = useStyles();
 
     const sendToMeetupId = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        props.onClick(props.content._id);
+        props.onClick(props.content._id as string);
         event.preventDefault();
     };
 
-    const coverImage = props.content.coverImage && <ImagePost>
-        <img src={props.content.coverImage} alt="presenting" style={{ width: '100%' }} />
-    </ImagePost>;
-
-    const userAvatarSrc = ''; // 'https://ipfs.io/ipfs/' + props.content.author.image[0].contentUrl['/'];
-
     return (
-        <PostContainer onClick={sendToMeetupId}>
-            <Panel shaded={true} bordered={true} bodyFill={true} style={mainPanelStyle}>
-                {coverImage}
-                <Panel header={props.content.title} >
-                    <div className="show-grid">
-
-                        <FlexboxGrid align="middle">
-                            <FlexboxGrid.Item colspan={3}>
-                                <div style={{ lineHeight: 0 }}>
-                                    <Avatar circle={true} src={userAvatarSrc} />
-                                </div>
-                            </FlexboxGrid.Item>
-                            <FlexboxGrid.Item colspan={18}>
-                                <div style={{ lineHeight: 1.5 }}>
-                                    <p><b>{props.content.author}</b></p>
-                                    <p>
-                                        <Icon icon="calendar-check-o" />
-                                        &nbsp;{format('dd/MM/yyyy hh:mm', new Date(props.content.date * 1000))}
-                                    </p>
-                                </div>
-                            </FlexboxGrid.Item>
-                        </FlexboxGrid>
-                    </div>
-                    {props.content.description.split('\n').map((i, index) => <p key={index}>{i}</p>)}
-                    <Button>Continuar a ler</Button>
-                </Panel>
-            </Panel>
-        </PostContainer>
+        <div style={{ margin: '50px' }} onClick={sendToMeetupId}>
+            <Card className={classes.root}>
+                <CardHeader
+                    avatar={
+                        <Avatar
+                            aria-label="recipe"
+                            className={classes.avatar}
+                        >
+                            {props.content.author.substr(0, 2)}
+                        </Avatar>
+                    }
+                    title={props.content.title}
+                    subheader={format('MM dd, yyyy - hh:mm', new Date(props.content.date))}
+                />
+                {props.content.coverImage && <CardMedia
+                    className={classes.media}
+                    image={props.content.coverImage}
+                    title={props.content.title}
+                />}
+                <CardContent>
+                    <Typography variant="body2" color="textSecondary" component="p">
+                        {props.content.description}
+                    </Typography>
+                </CardContent>
+                <CardActions disableSpacing={true}>
+                    <IconButton aria-label="open">
+                        <NavigateNextIcon />
+                    </IconButton>
+                </CardActions>
+            </Card>
+        </div>
     );
 }

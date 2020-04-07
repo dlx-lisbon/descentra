@@ -12,76 +12,35 @@ import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import 'date-fns';
 import React, { useState } from 'react';
 
-import PostModel from '../../helpers/orbitdb/PostModel';
-import { IPostInfo } from '../../interfaces';
-
-interface INewContent {
-    author: string;
-    date: Date;
-    description: string;
-    title: string;
-}
+import MeetupModel from '../../helpers/orbitdb/MeetupModel';
+import {IMeetupInfo} from '../../interfaces';
 
 interface INewContentProps {
     show: boolean;
     setShow: React.Dispatch<React.SetStateAction<boolean>>;
-    postModel: PostModel;
+    meetupModel: MeetupModel;
 }
-
 export default function NewContent(props: INewContentProps) {
     const emptyForm = {
         author: '',
-        date: new Date(),
+        date: (new Date()).getTime(),
         description: '',
         title: '',
+        location: '',
+        status: false
     }
-    const [newContentForm, setNewContentForm] = useState<INewContent>(emptyForm);
+    const [newMeetupForm, setNewMeetupForm] = useState<IMeetupInfo>(emptyForm);
 
     const postNewContent = (event: React.SyntheticEvent<Element, Event>) => {
-        const newPost: IPostInfo = {
-            author: newContentForm.author,
-            content: newContentForm.description,
-            date: newContentForm.date.getTime(),
-            title: newContentForm.title
-        }
-        props.postModel.add(newPost).then(() => {
+        props.meetupModel.add(newMeetupForm).then(() => {
             props.setShow(false)
-            setNewContentForm(emptyForm)
+            setNewMeetupForm(emptyForm)
         });
         event.preventDefault();
     };
 
-    const handleInputContentChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        switch (event.target.name) {
-            case 'description':
-                setNewContentForm({
-                    ...newContentForm,
-                    description: event.target.value,
-                });
-                break;
-            case 'title':
-                setNewContentForm({
-                    ...newContentForm,
-                    title: event.target.value,
-                });
-                break;
-            case 'author':
-                setNewContentForm({
-                    ...newContentForm,
-                    author: event.target.value,
-                });
-                break;
-        }
-        event.preventDefault();
-    };
-
-    const handleInputDateContentChange = (date: MaterialUiPickersDate) => {
-        if (date !== null) {
-            setNewContentForm({
-                ...newContentForm,
-                date: new Date(date.getTime()),
-            });
-        }
+    const handleInputContentChange = (key: string, value: string | number) => {
+        setNewMeetupForm({ ...newMeetupForm, [key]: value });
     };
 
     return (
@@ -92,20 +51,20 @@ export default function NewContent(props: INewContentProps) {
             maxWidth="sm"
             aria-labelledby="form-dialog-title"
         >
-            <DialogTitle id="form-dialog-title">Novo Conteudo</DialogTitle>
+            <DialogTitle id="form-dialog-title">Novo Meetup</DialogTitle>
             <DialogContent>
                 <TextField
-                    value={newContentForm.title}
-                    onChange={handleInputContentChange}
+                    value={newMeetupForm.title}
+                    onChange={e => handleInputContentChange('title', e.target.value)}
                     name="title"
                     label="Titulo"
                     variant="outlined"
                 /><br /><br />
                 <TextField
-                    value={newContentForm.description}
-                    onChange={handleInputContentChange}
+                    value={newMeetupForm.description}
+                    onChange={e => handleInputContentChange('description', e.target.value)}
                     name="description"
-                    label="Descricao"
+                    label="Descrição"
                     variant="outlined"
                     multiline={true}
                     rows="4"
@@ -116,14 +75,16 @@ export default function NewContent(props: INewContentProps) {
                         label="Data"
                         name="date"
                         inputVariant="outlined"
-                        value={newContentForm.date}
-                        onChange={handleInputDateContentChange}
+                        value={new Date(newMeetupForm.date)}
+                        onChange={
+                            (date: MaterialUiPickersDate) => date !== null && handleInputContentChange('date', date.getTime())
+                        }
                     />
                 </MuiPickersUtilsProvider>
                 <br /><br />
                 <TextField
-                    value={newContentForm.author}
-                    onChange={handleInputContentChange}
+                    value={newMeetupForm.author}
+                    onChange={e => handleInputContentChange('author', e.target.value)}
                     name="author"
                     label="Autor"
                     variant="outlined"

@@ -1,6 +1,5 @@
 import React from 'react';
-import { List } from 'rsuite';
-
+import { List, ListItemText, ListItem } from '@material-ui/core';
 
 export default function Practice() {
     const online = [
@@ -29,17 +28,17 @@ export default function Practice() {
             <h1>Online</h1>
             <List>
                 {online.map((item, index) =>
-                    <List.Item key={index} index={index}>
-                        <a href={item.url}>{item.title}</a>
-                    </List.Item>,
+                    <ListItem key={index} component="a" href={item.url}>
+                        <ListItemText>{item.title}</ListItemText>
+                    </ListItem>
                 )}
             </List>
             <h1>Nossos desafios</h1>
             <List>
                 {challenges.map((item, index) =>
-                    <List.Item key={index} index={index}>
+                    <ListItem key={index}>
                         {item.title}
-                    </List.Item>,
+                    </ListItem>,
                 )}
             </List>
         </>

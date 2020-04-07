@@ -14,10 +14,7 @@ import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import format from 'date-format';
 import React from 'react';
 
-
-
 import { IPostInfo } from '../../interfaces';
-
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -54,7 +51,7 @@ export default function ContentPost(props: IContentPostProps) {
     const classes = useStyles();
 
     const sendToMeetupId = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        props.onClick(props.content._id);
+        props.onClick(props.content._id as string);
         event.preventDefault();
     };
 
@@ -72,7 +69,7 @@ export default function ContentPost(props: IContentPostProps) {
                         </Avatar>
                     }
                     title={props.content.title}
-                    subheader={format('MM dd, yyyy - hh:mm', new Date(props.content.date * 1000))}
+                    subheader={format('MM dd, yyyy - hh:mm', new Date(props.content.date))}
                 />
                 {props.content.coverImage && <CardMedia
                     className={classes.media}
