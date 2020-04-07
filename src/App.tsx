@@ -7,7 +7,7 @@ import { IMeetupInfo, IPostInfo } from './interfaces';
 import MeetupModel from './helpers/orbitdb/MeetupModel';
 import ContentMeetup from './components/content/ContentMeetup';
 import { Grid, Container, CssBaseline, makeStyles, Drawer } from '@material-ui/core';
-import Navbar, {NavbarItem} from './components/navbar/Navbar';
+import Navbar, { NavbarItem } from './components/navbar/Navbar';
 
 const Profile = React.lazy(() => import('./components/drawers/Profile'));
 const NewContent = React.lazy(() => import('./components/drawers/NewContent'));
@@ -17,9 +17,9 @@ const Post = React.lazy(() => import('./components/drawers/Post'));
 const Meetup = React.lazy(() => import('./components/drawers/Meetup'));
 
 const useStyles = makeStyles((_theme) => ({
-  root: {
-    padding: 0,
-  },
+    root: {
+        padding: 0,
+    },
 }));
 
 export default function App() {
@@ -75,6 +75,7 @@ export default function App() {
 
     const navbarItems: NavbarItem[] = [
         {
+            key: 'novo-conteudo',
             onClick: () => openNewContent(true),
             children: (<>
                 <span role="img" aria-label="memo">📝</span>
@@ -82,6 +83,7 @@ export default function App() {
             </>),
         },
         {
+            key: 'novo-meetup',
             onClick: () => openNewMeetup(true),
             children: (<>
                 <span role="img" aria-label="memo">🤖</span>
@@ -89,6 +91,7 @@ export default function App() {
             </>),
         },
         {
+            key: 'praticar',
             onClick: () => openPractice(true),
             children: (<>
                 <span role="img" aria-label="flexed-biceps">💪</span>
@@ -96,6 +99,7 @@ export default function App() {
             </>),
         },
         {
+            key: 'kudos',
             onClick: () => openKudos(true),
             children: (<>
                 <span role="img" aria-label="hatching-chick">🐣</span>
@@ -108,7 +112,7 @@ export default function App() {
         <React.Fragment>
             <CssBaseline />
             <Container maxWidth='xl' className={classes.root}>
-                <Navbar items={navbarItems}  onAvatarClick={() => openProfile(true)} />
+                <Navbar items={navbarItems} onAvatarClick={() => openProfile(true)} />
                 <Grid container spacing={0}>
                     {
                         loadingPostModel && (
@@ -166,7 +170,14 @@ export default function App() {
                     </Suspense>
                 </Drawer>
             </Container>
-            <Container maxWidth='xl' style={{ height: '35px', backgroundColor: 'black', color: 'white', padding: '5px' }}>
+            <Container maxWidth='xl' style={{
+                height: '35px',
+                backgroundColor: 'black',
+                color: 'white',
+                padding: '5px',
+                bottom: 0,
+                position: 'absolute',
+            }}>
                 DLX 2020 <span role="img" aria-label="ok-hand">👌</span>
             </Container>
         </React.Fragment>

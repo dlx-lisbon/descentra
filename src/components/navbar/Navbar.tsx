@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme) => ({
     root: {
         position: "absolute",
         right: 0,
-    }, 
+    },
     grow: {
         flexGrow: 1,
     },
@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export interface NavbarItem {
+    key: string;
     onClick: () => void
     children: React.ReactNode
 }
@@ -79,7 +80,7 @@ export default function Navbar(props: NavbarProps) {
                 <div className={classes.grow} />
                 <div className={classes.sectionDesktop}>
                     {props.items.map((navItem: NavbarItem) => (
-                        <Button onClick={navItem.onClick}>
+                        <Button key={navItem.key} onClick={navItem.onClick}>
                             {navItem.children}
                         </Button>
                     ))}
@@ -103,8 +104,8 @@ export default function Navbar(props: NavbarProps) {
                     onClose={handleClose}
                 >
                     {props.items.map((navItem: NavbarItem) => (
-                        <MenuItem onClick={() => {
-                            handleClose() 
+                        <MenuItem key={navItem.key} onClick={() => {
+                            handleClose()
                             navItem.onClick()
                         }}>
                             {navItem.children}
