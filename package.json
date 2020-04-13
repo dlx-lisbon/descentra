@@ -14,7 +14,7 @@
         "analyze": "source-map-explorer build/static/js/2.*.js"
     },
     "dependencies": {
-        "@date-io/date-fns": "1.x",
+        "@date-io/date-fns": "2.x",
         "@material-ui/core": "4.9.8",
         "@material-ui/icons": "4.9.1",
         "@material-ui/pickers": "3.2.10",
