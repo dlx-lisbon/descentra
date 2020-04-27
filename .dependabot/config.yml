@@ -8,20 +8,25 @@ update_configs:
       - "obernardovieira"
     ignored_updates:
       - match:
-          dependency_name: "jest"
+          dependency_name: "@date-io/core"
+          version_requirement: "^1.3.6"
       - match:
-          dependency_name: "web3"
-      - match:
-          dependency_name: "typescript"
+          dependency_name: "prop-types"
+          version_requirement: "^13.6.0"
       - match:
           dependency_name: "react-scripts"
       - match:
           dependency_name: "ipfs"
+          version_requirement: "~0.40.0"
       - match:
           dependency_name: "orbit-db"
       - match:
           dependency_name: "@date-io/date-fns"
+          version_requirement: "1.x"
     automerged_updates:
       - match:
-          dependency_type: "all"
+          dependency_type: "development"
           update_type: "all"
+      - match:
+          dependency_type: "production"
+          update_type: "semver:patch"
