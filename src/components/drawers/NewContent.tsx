@@ -20,12 +20,13 @@ interface INewContent {
     date: Date;
     description: string;
     title: string;
+    coverImage: string;
 }
 
 interface INewContentProps {
     show: boolean;
     setShow: React.Dispatch<React.SetStateAction<boolean>>;
-    postModel: PostModel;
+    postModel?: PostModel;
 }
 
 export default function NewContent(props: INewContentProps) {
@@ -34,20 +35,31 @@ export default function NewContent(props: INewContentProps) {
         date: new Date(),
         description: '',
         title: '',
+        coverImage: '',
     }
     const [newContentForm, setNewContentForm] = useState<INewContent>(emptyForm);
 
     const postNewContent = (event: React.SyntheticEvent<Element, Event>) => {
-        const newPost: IPostInfo = {
-            author: newContentForm.author,
-            content: newContentForm.description,
-            date: newContentForm.date.getTime(),
-            title: newContentForm.title
+        if (props.postModel === undefined) {
+            // TODO: show error!
+        } else {
+            // TODO: gerar slug utilizando timestamp e o titulo e assinar com web3 wallet
+            // guardar também assinatura. Ao guardar assinatura, o autor passa a ser o endereço
+            // de sem assinou o post.
+            const newPost: IPostInfo = {
+                author: newContentForm.author,
+                content: newContentForm.description,
+                date: newContentForm.date.getTime(),
+                title: newContentForm.title
+            }
+            if (newContentForm.coverImage.length > 0) {
+                newPost.coverImage = newContentForm.coverImage;
+            }
+            props.postModel.add(newPost).then(() => {
+                props.setShow(false)
+                setNewContentForm(emptyForm)
+            });
         }
-        props.postModel.add(newPost).then(() => {
-            props.setShow(false)
-            setNewContentForm(emptyForm)
-        });
         event.preventDefault();
     };
 
@@ -69,6 +81,12 @@ export default function NewContent(props: INewContentProps) {
                 setNewContentForm({
                     ...newContentForm,
                     author: event.target.value,
+                });
+                break;
+            case 'coverImage':
+                setNewContentForm({
+                    ...newContentForm,
+                    coverImage: event.target.value,
                 });
                 break;
         }
@@ -100,22 +118,25 @@ export default function NewContent(props: INewContentProps) {
                     name="title"
                     label="Titulo"
                     variant="outlined"
-                /><br /><br />
+                    required={true}
+                    /><br /><br />
                 <TextField
                     value={newContentForm.description}
                     onChange={handleInputContentChange}
                     name="description"
                     label="Descricao"
                     variant="outlined"
+                    required={true}
                     multiline={true}
                     rows="4"
                     rowsMax="8"
-                /><br /><br />
+                    /><br /><br />
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <DateTimePicker
                         label="Data"
                         name="date"
                         inputVariant="outlined"
+                        required={true}
                         value={newContentForm.date}
                         onChange={handleInputDateContentChange}
                     />
@@ -126,6 +147,13 @@ export default function NewContent(props: INewContentProps) {
                     onChange={handleInputContentChange}
                     name="author"
                     label="Autor"
+                    variant="outlined"
+                /><br /><br />
+                <TextField
+                    value={newContentForm.coverImage}
+                    onChange={handleInputContentChange}
+                    name="coverImage"
+                    label="Imagem de apresentação"
                     variant="outlined"
                 /><br />
             </DialogContent>
