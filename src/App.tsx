@@ -6,8 +6,9 @@ import { store } from './helpers/orbitdb/store';
 import { IMeetupInfo, IPostInfo } from './interfaces';
 import MeetupModel from './helpers/orbitdb/MeetupModel';
 import ContentMeetup from './components/content/ContentMeetup';
-import { Grid, Container, CssBaseline, makeStyles, Drawer } from '@material-ui/core';
+import { Grid, Container, CssBaseline, makeStyles, Drawer, Typography } from '@material-ui/core';
 import Navbar, { NavbarItem } from './components/navbar/Navbar';
+import StackGrid, { transitions, easings } from "react-stack-grid";
 
 const Profile = React.lazy(() => import('./components/drawers/Profile'));
 const NewContent = React.lazy(() => import('./components/drawers/NewContent'));
@@ -16,28 +17,33 @@ const Practice = React.lazy(() => import('./components/drawers/Practice'));
 const Post = React.lazy(() => import('./components/drawers/Post'));
 const Meetup = React.lazy(() => import('./components/drawers/Meetup'));
 
-const useStyles = makeStyles((_theme) => ({
+const columnWidth = 350;
+const useStyles = makeStyles((theme) => ({
     root: {
         padding: 0,
     },
+    gridElement: {
+        height: 250,
+        width: columnWidth,
+    }
 }));
 
 export default function App() {
-    const classes = useStyles()
+    const styles = useStyles();
     // loading
     const [loadingPostModel, setLoadingPostModel] = useState<boolean>(true);
     const [, setReplicatingProgress] = useState<number>(0);
     // orbitdb
     const [, setIpfs] = useState<any>(undefined);
-    const [postModel, setPostModel] = useState<PostModel>(undefined as any);
-    const [meetupModel, setMeetupModel] = useState<MeetupModel>(undefined as any);
+    const [postModel, setPostModel] = useState<PostModel>();
+    const [meetupModel, setMeetupModel] = useState<MeetupModel>();
     // drawers and modals
     const [kudos, openKudos] = useState<boolean>(false);
     const [profile, openProfile] = useState<boolean>(false);
     const [practice, openPractice] = useState<boolean>(false);
     const [newContent, openNewContent] = useState<boolean>(false);
     const [newMeetup, openNewMeetup] = useState<boolean>(false);
-    const [posts, setPosts] = useState<[IPostInfo]>([] as any);
+    const [posts, setPosts] = useState<IPostInfo[]>([] as any);
     const [openPost, setOpenPost] = useState<IPostInfo>();
     const [meetups, setMeetups] = useState<[IMeetupInfo]>([] as any);
     const [openMeetup, setOpenMeetup] = useState<IMeetupInfo>();
@@ -70,7 +76,49 @@ export default function App() {
             setPostModel(postM);
             setMeetupModel(meetupM);
         };
-        fetchData();
+        // fetchData();
+        setPosts([
+            {
+                author: 'M',
+                content: 'SOme contentt here',
+                date: 1588505905,
+                title: 'yooo',
+                _id: '18937982',
+                coverImage: 'https://c4.wallpaperflare.com/wallpaper/500/442/354/outrun-vaporwave-hd-wallpaper-preview.jpg',
+            },
+            {
+                author: 'M',
+                content: 'SOme contentt here',
+                date: 1588505905,
+                title: '23eqww',
+                _id: '28937982',
+                coverImage: 'https://c4.wallpaperflare.com/wallpaper/500/442/354/outrun-vaporwave-hd-wallpaper-preview.jpg',
+            },
+            {
+                author: 'M',
+                content: 'SOme contentt here',
+                date: 1588505905,
+                title: 'yn8iy',
+                _id: '38937982',
+                coverImage: 'https://c4.wallpaperflare.com/wallpaper/500/442/354/outrun-vaporwave-hd-wallpaper-preview.jpg',
+            },
+            {
+                author: 'M',
+                content: 'SOme contentt here',
+                date: 1588505905,
+                title: 'ertber',
+                _id: '48937982',
+            },
+            {
+                author: 'M',
+                content: 'SOme contentt here',
+                date: 1588505905,
+                title: 'qs2qexq',
+                _id: '58937982',
+                coverImage: 'https://c4.wallpaperflare.com/wallpaper/500/442/354/outrun-vaporwave-hd-wallpaper-preview.jpg',
+            },
+        ]);
+        setLoadingPostModel(false);
     }, []);
 
     const navbarItems: NavbarItem[] = [
@@ -108,78 +156,114 @@ export default function App() {
         },
     ]
 
+    const transition = transitions['fadeDown'];
     return (
         <React.Fragment>
-            <CssBaseline />
-            <Container maxWidth='xl' className={classes.root}>
-                <Navbar items={navbarItems} onAvatarClick={() => openProfile(true)} />
-                <Grid container spacing={0}>
-                    {
-                        loadingPostModel && (
-                            <Grid item xs={6}>
-                                <img alt="loading fish" width="80%" src="img/fish_loading.gif" />
-                            </Grid>
-                        )
-                    }
-                    <Grid item xs={12} sm={12} md={6}>
-                        {posts.map((c) => <ContentPost key={c._id} content={c} onClick={(id) => setOpenPost(
-                            posts.find(el => el._id === id)
-                        )} />)}
+            <Navbar items={navbarItems} onAvatarClick={() => openProfile(true)} />
+            <div style={{ textAlign: 'center' }}>
+                <img alt="loading fish" src="img/sardy.webp" style={{ maxWidth: '100%', margin: '6% 0px' }} />
+            </div>
+            <div>
+                <StackGrid
+                    duration={480}
+                    columnWidth={columnWidth}
+                    gutterWidth={5}
+                    gutterHeight={5}
+                    easing={easings.quartOut}
+                    appear={transition.appear}
+                    appeared={transition.appeared}
+                    enter={transition.enter}
+                    entered={transition.entered}
+                    leaved={transition.leaved}
+                    rtl={false}
+                >
+                    {posts.map((c) => <div key={c._id} style={{ height: 250, width: columnWidth }}>
+                        {c.coverImage !== undefined && <div style={{
+                            background: `url("${c.coverImage}")`,
+                            backgroundRepeat: 'no-repeat',
+                            backgroundSize: `${columnWidth}px auto`,
+                            backgroundPosition: 'center',
+                            height: '200px'
+                        }} />}
+                        <Typography variant="h2" component="h2" gutterBottom>
+                            {c.title}
+                        </Typography>
+                        <Typography variant="overline" display="block" gutterBottom style={{ color: 'grey' }}>
+                            by {c.author}, {c.date}
+                        </Typography>
+                        <Typography variant="body2" gutterBottom>
+                            body2. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
+                            unde suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam
+                            dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.
+                        </Typography>
+                    </div>)}
+
+                </StackGrid>
+            </div>
+            {
+                loadingPostModel && (
+                    <Grid item xs={6}>
+                        <img alt="loading fish" width="80%" src="img/fish_loading.gif" />
                     </Grid>
-                    <Grid item xs={12} sm={12} md={6}>
-                        {meetups.map((c) => <ContentMeetup key={c._id} content={c} onClick={(id) => setOpenMeetup(
-                            meetups.find(el => el._id === id)
-                        )} />)}
-                    </Grid>
-                </Grid>
+                )
+            }
+            {/* <Grid item xs={12} sm={12} md={6}>
+                {posts.map((c) => <ContentPost key={c._id} content={c} onClick={(id) => setOpenPost(
+                    posts.find(el => el._id === id)
+                )} />)}
+            </Grid>
+            <Grid item xs={12} sm={12} md={6}>
+                {meetups.map((c) => <ContentMeetup key={c._id} content={c} onClick={(id) => setOpenMeetup(
+                    meetups.find(el => el._id === id)
+                )} />)}
+            </Grid> */}
+            <Suspense fallback={<div>A carregar...</div>}>
+                <NewContent
+                    show={newContent}
+                    setShow={openNewContent}
+                    postModel={postModel}
+                />
+            </Suspense>
+            <Suspense fallback={<div>A carregar...</div>}>
+                <NewMeetup
+                    show={newMeetup}
+                    setShow={openNewMeetup}
+                    meetupModel={meetupModel}
+                />
+            </Suspense>
+            <Drawer anchor="bottom" open={kudos} onClose={() => openKudos(false)}>
+                Em construção
+            </Drawer>
+            <Drawer anchor="bottom" open={profile} onClose={() => openProfile(false)}>
                 <Suspense fallback={<div>A carregar...</div>}>
-                    <NewContent
-                        show={newContent}
-                        setShow={openNewContent}
-                        postModel={postModel}
-                    />
+                    <Profile />
                 </Suspense>
+            </Drawer>
+            <Drawer anchor="bottom" open={practice} onClose={() => openPractice(false)}>
                 <Suspense fallback={<div>A carregar...</div>}>
-                    <NewMeetup
-                        show={newMeetup}
-                        setShow={openNewMeetup}
-                        meetupModel={meetupModel}
-                    />
+                    <Practice />
                 </Suspense>
-                <Drawer anchor="bottom" open={kudos} onClose={() => openKudos(false)}>
-                    Em construção
-                </Drawer>
-                <Drawer anchor="bottom" open={profile} onClose={() => openProfile(false)}>
-                    <Suspense fallback={<div>A carregar...</div>}>
-                        <Profile />
-                    </Suspense>
-                </Drawer>
-                <Drawer anchor="bottom" open={practice} onClose={() => openPractice(false)}>
-                    <Suspense fallback={<div>A carregar...</div>}>
-                        <Practice />
-                    </Suspense>
-                </Drawer>
-                <Drawer anchor="bottom" open={!!openPost || false} onClose={() => setOpenPost(undefined)}>
-                    <Suspense fallback={<div>A carregar...</div>}>
-                        {!!openPost && <Post content={openPost as IPostInfo} />}
-                    </Suspense>
-                </Drawer>
-                <Drawer anchor="bottom" open={!!openMeetup || false} onClose={() => setOpenMeetup(undefined)}>
-                    <Suspense fallback={<div>A carregar...</div>}>
-                        {!!openMeetup && <Meetup content={openMeetup as IMeetupInfo} />}
-                    </Suspense>
-                </Drawer>
-            </Container>
-            <Container maxWidth='xl' style={{
+            </Drawer>
+            <Drawer anchor="bottom" open={!!openPost || false} onClose={() => setOpenPost(undefined)}>
+                <Suspense fallback={<div>A carregar...</div>}>
+                    {!!openPost && <Post content={openPost as IPostInfo} />}
+                </Suspense>
+            </Drawer>
+            <Drawer anchor="bottom" open={!!openMeetup || false} onClose={() => setOpenMeetup(undefined)}>
+                <Suspense fallback={<div>A carregar...</div>}>
+                    {!!openMeetup && <Meetup content={openMeetup as IMeetupInfo} />}
+                </Suspense>
+            </Drawer>
+            {/* <Container maxWidth='xl' style={{
                 height: '35px',
                 backgroundColor: 'black',
                 color: 'white',
                 padding: '5px',
                 bottom: 0,
-                position: 'absolute',
+                position: 'fixed',
             }}>
                 DLX 2020 <span role="img" aria-label="ok-hand">👌</span>
-            </Container>
+            </Container> */}
         </React.Fragment>
     );
 }
