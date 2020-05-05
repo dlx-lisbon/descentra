@@ -15,7 +15,7 @@ import React, { useState } from 'react';
 import PostModel from '../../helpers/orbitdb/PostModel';
 import { IPostInfo } from '../../interfaces';
 
-interface INewContent {
+interface INewPost {
     author: string;
     date: Date;
     description: string;
@@ -23,13 +23,13 @@ interface INewContent {
     coverImage: string;
 }
 
-interface INewContentProps {
+interface INewPostProps {
     show: boolean;
     setShow: React.Dispatch<React.SetStateAction<boolean>>;
     postModel?: PostModel;
 }
 
-export default function NewContent(props: INewContentProps) {
+export default function NewPost(props: INewPostProps) {
     const emptyForm = {
         author: '',
         date: new Date(),
@@ -37,9 +37,9 @@ export default function NewContent(props: INewContentProps) {
         title: '',
         coverImage: '',
     }
-    const [newContentForm, setNewContentForm] = useState<INewContent>(emptyForm);
+    const [newContentForm, setNewPostForm] = useState<INewPost>(emptyForm);
 
-    const postNewContent = (event: React.SyntheticEvent<Element, Event>) => {
+    const postNewPost = (event: React.SyntheticEvent<Element, Event>) => {
         if (props.postModel === undefined) {
             // TODO: show error!
         } else {
@@ -57,7 +57,7 @@ export default function NewContent(props: INewContentProps) {
             }
             props.postModel.add(newPost).then(() => {
                 props.setShow(false)
-                setNewContentForm(emptyForm)
+                setNewPostForm(emptyForm)
             });
         }
         event.preventDefault();
@@ -66,25 +66,25 @@ export default function NewContent(props: INewContentProps) {
     const handleInputContentChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         switch (event.target.name) {
             case 'description':
-                setNewContentForm({
+                setNewPostForm({
                     ...newContentForm,
                     description: event.target.value,
                 });
                 break;
             case 'title':
-                setNewContentForm({
+                setNewPostForm({
                     ...newContentForm,
                     title: event.target.value,
                 });
                 break;
             case 'author':
-                setNewContentForm({
+                setNewPostForm({
                     ...newContentForm,
                     author: event.target.value,
                 });
                 break;
             case 'coverImage':
-                setNewContentForm({
+                setNewPostForm({
                     ...newContentForm,
                     coverImage: event.target.value,
                 });
@@ -95,7 +95,7 @@ export default function NewContent(props: INewContentProps) {
 
     const handleInputDateContentChange = (date: MaterialUiPickersDate) => {
         if (date !== null) {
-            setNewContentForm({
+            setNewPostForm({
                 ...newContentForm,
                 date: new Date(date.getTime()),
             });
@@ -161,7 +161,7 @@ export default function NewContent(props: INewContentProps) {
                 <Button onClick={() => props.setShow(false)} color="primary">
                     Cancel
                 </Button>
-                <Button onClick={postNewContent} color="primary">
+                <Button onClick={postNewPost} color="primary">
                     Post
                 </Button>
             </DialogActions>

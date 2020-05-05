@@ -14,7 +14,7 @@ import 'moment/locale/pt';
 
 
 const Profile = React.lazy(() => import('./components/drawers/Profile'));
-const NewContent = React.lazy(() => import('./components/drawers/NewContent'));
+const NewPost = React.lazy(() => import('./components/drawers/NewPost'));
 const NewMeetup = React.lazy(() => import('./components/drawers/NewMeetup'));
 const Practice = React.lazy(() => import('./components/drawers/Practice'));
 const Post = React.lazy(() => import('./components/drawers/Post'));
@@ -44,7 +44,7 @@ export default function App() {
     const [kudos, openKudos] = useState<boolean>(false);
     const [profile, openProfile] = useState<boolean>(false);
     const [practice, openPractice] = useState<boolean>(false);
-    const [newContent, openNewContent] = useState<boolean>(false);
+    const [newPost, openNewPost] = useState<boolean>(false);
     const [newMeetup, openNewMeetup] = useState<boolean>(false);
     const [posts, setPosts] = useState<IPostInfo[]>([] as any);
     const [openPost, setOpenPost] = useState<IPostInfo>();
@@ -127,7 +127,7 @@ export default function App() {
     const navbarItems: NavbarItem[] = [
         {
             key: 'novo-conteudo',
-            onClick: () => openNewContent(true),
+            onClick: () => openNewPost(true),
             children: (<>
                 <span role="img" aria-label="memo">📝</span>
                 &nbsp;Novo Conteúdo
@@ -217,9 +217,9 @@ export default function App() {
                 )} />)}
             </Grid> */}
             <Suspense fallback={<div>A carregar...</div>}>
-                <NewContent
-                    show={newContent}
-                    setShow={openNewContent}
+                <NewPost
+                    show={newPost}
+                    setShow={openNewPost}
                     postModel={postModel}
                 />
             </Suspense>
