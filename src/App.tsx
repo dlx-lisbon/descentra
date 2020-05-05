@@ -9,6 +9,9 @@ import ContentMeetup from './components/content/ContentMeetup';
 import { Grid, Container, CssBaseline, makeStyles, Drawer, Typography } from '@material-ui/core';
 import Navbar, { NavbarItem } from './components/navbar/Navbar';
 import StackGrid, { transitions, easings } from "react-stack-grid";
+import moment from 'moment';
+import 'moment/locale/pt';
+
 
 const Profile = React.lazy(() => import('./components/drawers/Profile'));
 const NewContent = React.lazy(() => import('./components/drawers/NewContent'));
@@ -79,40 +82,40 @@ export default function App() {
         // fetchData();
         setPosts([
             {
-                author: 'M',
+                author: '0xA6b94Ce98D6CD4f447a9C6788F169DD17f65f747',
                 content: 'SOme contentt here',
-                date: 1588505905,
+                date: 1588505905000,
                 title: 'yooo',
                 _id: '18937982',
                 coverImage: 'https://c4.wallpaperflare.com/wallpaper/500/442/354/outrun-vaporwave-hd-wallpaper-preview.jpg',
             },
             {
-                author: 'M',
+                author: '0xA6b94Ce98D6CD4f447a9C6788F169DD17f65f747',
                 content: 'SOme contentt here',
-                date: 1588505905,
+                date: 1588505905000,
                 title: '23eqww',
                 _id: '28937982',
                 coverImage: 'https://c4.wallpaperflare.com/wallpaper/500/442/354/outrun-vaporwave-hd-wallpaper-preview.jpg',
             },
             {
-                author: 'M',
+                author: '0xA6b94Ce98D6CD4f447a9C6788F169DD17f65f747',
                 content: 'SOme contentt here',
-                date: 1588505905,
+                date: 1588505905000,
                 title: 'yn8iy',
                 _id: '38937982',
                 coverImage: 'https://c4.wallpaperflare.com/wallpaper/500/442/354/outrun-vaporwave-hd-wallpaper-preview.jpg',
             },
             {
-                author: 'M',
+                author: '0xA6b94Ce98D6CD4f447a9C6788F169DD17f65f747',
                 content: 'SOme contentt here',
-                date: 1588505905,
+                date: 1588505905000,
                 title: 'ertber',
                 _id: '48937982',
             },
             {
-                author: 'M',
+                author: '0xA6b94Ce98D6CD4f447a9C6788F169DD17f65f747',
                 content: 'SOme contentt here',
-                date: 1588505905,
+                date: 1588505905000,
                 title: 'qs2qexq',
                 _id: '58937982',
                 coverImage: 'https://c4.wallpaperflare.com/wallpaper/500/442/354/outrun-vaporwave-hd-wallpaper-preview.jpg',
@@ -127,7 +130,7 @@ export default function App() {
             onClick: () => openNewContent(true),
             children: (<>
                 <span role="img" aria-label="memo">📝</span>
-                Novo Conteúdo
+                &nbsp;Novo Conteúdo
             </>),
         },
         {
@@ -135,7 +138,7 @@ export default function App() {
             onClick: () => openNewMeetup(true),
             children: (<>
                 <span role="img" aria-label="memo">🤖</span>
-                Novo Meetup
+                &nbsp;Novo Meetup
             </>),
         },
         {
@@ -143,7 +146,7 @@ export default function App() {
             onClick: () => openPractice(true),
             children: (<>
                 <span role="img" aria-label="flexed-biceps">💪</span>
-                Praticar
+                &nbsp;Praticar
             </>),
         },
         {
@@ -151,7 +154,7 @@ export default function App() {
             onClick: () => openKudos(true),
             children: (<>
                 <span role="img" aria-label="hatching-chick">🐣</span>
-                Kudos
+                &nbsp;Kudos
             </>),
         },
     ]
@@ -189,13 +192,9 @@ export default function App() {
                             {c.title}
                         </Typography>
                         <Typography variant="overline" display="block" gutterBottom style={{ color: 'grey' }}>
-                            by {c.author}, {c.date}
+                            by {c.author.substr(0, 7)}...{c.author.substr(35, 42)}, {moment(c.date).fromNow()}
                         </Typography>
-                        <Typography variant="body2" gutterBottom>
-                            body2. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
-                            unde suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam
-                            dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.
-                        </Typography>
+                        <Typography variant="body2" gutterBottom>{c.content}</Typography>
                     </div>)}
 
                 </StackGrid>
