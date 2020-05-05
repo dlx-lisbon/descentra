@@ -12,8 +12,8 @@ import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import 'date-fns';
 import React, { useState } from 'react';
 
-import MeetupModel from '../../helpers/orbitdb/MeetupModel';
-import {IMeetupInfo} from '../../interfaces';
+import MeetupModel from '../../../helpers/orbitdb/MeetupModel';
+import {IMeetupInfo} from '../../../interfaces';
 
 interface INewContentProps {
     show: boolean;

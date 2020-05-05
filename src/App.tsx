@@ -14,8 +14,8 @@ import 'moment/locale/pt';
 
 
 const Profile = React.lazy(() => import('./components/drawers/Profile'));
-const NewPost = React.lazy(() => import('./components/drawers/NewPost'));
-const NewMeetup = React.lazy(() => import('./components/drawers/NewMeetup'));
+const NewPost = React.lazy(() => import('./components/drawers/admin/NewPost'));
+const NewMeetup = React.lazy(() => import('./components/drawers/admin/NewMeetup'));
 const Practice = React.lazy(() => import('./components/drawers/Practice'));
 const Post = React.lazy(() => import('./components/drawers/Post'));
 const Meetup = React.lazy(() => import('./components/drawers/Meetup'));

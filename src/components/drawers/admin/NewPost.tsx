@@ -12,8 +12,8 @@ import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import 'date-fns';
 import React, { useState } from 'react';
 
-import PostModel from '../../helpers/orbitdb/PostModel';
-import { IPostInfo } from '../../interfaces';
+import PostModel from '../../../helpers/orbitdb/PostModel';
+import { IPostInfo } from '../../../interfaces';
 
 interface INewPost {
     author: string;
