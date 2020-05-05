@@ -11,7 +11,7 @@ import {
 import { red } from '@material-ui/core/colors';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import format from 'date-format';
+import moment from 'moment';
 import React from 'react';
 
 import { IPostInfo } from '../../interfaces';
@@ -69,7 +69,7 @@ export default function ContentPost(props: IContentPostProps) {
                         </Avatar>
                     }
                     title={props.content.title}
-                    subheader={format('MM dd, yyyy - hh:mm', new Date(props.content.date))}
+                    subheader={moment(props.content.date).fromNow()}
                 />
                 {props.content.coverImage && <CardMedia
                     className={classes.media}

@@ -1,4 +1,4 @@
-import format from 'date-format';
+import moment from 'moment';
 import React from 'react';
 import { IMeetupInfo } from '../../interfaces';
 import { Card, CardHeader, Avatar, Typography, CardContent, makeStyles } from '@material-ui/core';
@@ -26,7 +26,7 @@ export default function Meetup(props: IMeetupProps) {
             <CardHeader
                 avatar={<Avatar alt="username" src="img/blog/c1.jpg" /> }
                 title={props.content.title}
-                subheader={format('dd/MM/yyyy', new Date(props.content.date))}
+                subheader={moment(props.content.date).fromNow()}
             />
             <CardContent>
                 <Typography
