@@ -11,11 +11,14 @@ import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import 'date-fns';
 import React, { useState } from 'react';
+import slug from 'slug';
+import { ethers } from 'ethers';
 
 import PostModel from '../../../helpers/orbitdb/PostModel';
 import { IPostInfo } from '../../../interfaces';
 
 interface INewPost {
+    slug: string;
     author: string;
     date: Date;
     description: string;
@@ -31,6 +34,7 @@ interface INewPostProps {
 
 export default function NewPost(props: INewPostProps) {
     const emptyForm = {
+        slug: '',
         author: '',
         date: new Date(),
         description: '',
@@ -40,25 +44,37 @@ export default function NewPost(props: INewPostProps) {
     const [newContentForm, setNewPostForm] = useState<INewPost>(emptyForm);
 
     const postNewPost = (event: React.SyntheticEvent<Element, Event>) => {
+        console.log(props.postModel);
         if (props.postModel === undefined) {
+            console.log('1');
             // TODO: show error!
         } else {
             // TODO: gerar slug utilizando timestamp e o titulo e assinar com web3 wallet
             // guardar também assinatura. Ao guardar assinatura, o autor passa a ser o endereço
             // de sem assinou o post.
-            const newPost: IPostInfo = {
-                author: newContentForm.author,
-                content: newContentForm.description,
-                date: newContentForm.date.getTime(),
-                title: newContentForm.title
-            }
-            if (newContentForm.coverImage.length > 0) {
-                newPost.coverImage = newContentForm.coverImage;
-            }
-            props.postModel.add(newPost).then(() => {
-                props.setShow(false)
-                setNewPostForm(emptyForm)
-            });
+            const postSlug = `${(new Date()).getTime().toString()}-${slug(newContentForm.title, { lower: true })}`
+            console.log(postSlug);
+            const provider = new ethers.providers.Web3Provider((window as any).ethereum);
+            const signer = provider.getSigner();
+            console.log(postSlug);
+            signer.signMessage(postSlug)
+                .then((signature) => {
+                    const newPost: IPostInfo = {
+                        author: signature,
+                        content: newContentForm.description,
+                        date: newContentForm.date.getTime(),
+                        title: newContentForm.title,
+                        slug: postSlug,
+                    }
+                    if (newContentForm.coverImage.length > 0) {
+                        newPost.coverImage = newContentForm.coverImage;
+                    }
+                    props.postModel!.add(newPost).then(() => {
+                        props.setShow(false)
+                        setNewPostForm(emptyForm)
+                    });
+                });
+
         }
         event.preventDefault();
     };
@@ -75,12 +91,6 @@ export default function NewPost(props: INewPostProps) {
                 setNewPostForm({
                     ...newContentForm,
                     title: event.target.value,
-                });
-                break;
-            case 'author':
-                setNewPostForm({
-                    ...newContentForm,
-                    author: event.target.value,
                 });
                 break;
             case 'coverImage':
@@ -110,7 +120,7 @@ export default function NewPost(props: INewPostProps) {
             maxWidth="sm"
             aria-labelledby="form-dialog-title"
         >
-            <DialogTitle id="form-dialog-title">Novo Conteudo</DialogTitle>
+            <DialogTitle id="form-dialog-title">Nova Publicação</DialogTitle>
             <DialogContent>
                 <TextField
                     value={newContentForm.title}
@@ -119,7 +129,7 @@ export default function NewPost(props: INewPostProps) {
                     label="Titulo"
                     variant="outlined"
                     required={true}
-                    /><br /><br />
+                /><br /><br />
                 <TextField
                     value={newContentForm.description}
                     onChange={handleInputContentChange}
@@ -130,7 +140,7 @@ export default function NewPost(props: INewPostProps) {
                     multiline={true}
                     rows="4"
                     rowsMax="8"
-                    /><br /><br />
+                /><br /><br />
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <DateTimePicker
                         label="Data"
@@ -142,13 +152,6 @@ export default function NewPost(props: INewPostProps) {
                     />
                 </MuiPickersUtilsProvider>
                 <br /><br />
-                <TextField
-                    value={newContentForm.author}
-                    onChange={handleInputContentChange}
-                    name="author"
-                    label="Autor"
-                    variant="outlined"
-                /><br /><br />
                 <TextField
                     value={newContentForm.coverImage}
                     onChange={handleInputContentChange}

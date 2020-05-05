@@ -1,5 +1,6 @@
 interface IContentInfo {
     _id?: string;
+    slug: string;
     title: string;
     author: string;
     date: number;

@@ -22,6 +22,7 @@ interface INewContentProps {
 }
 export default function NewContent(props: INewContentProps) {
     const emptyForm = {
+        slug: '',
         author: '',
         date: (new Date()).getTime(),
         description: '',

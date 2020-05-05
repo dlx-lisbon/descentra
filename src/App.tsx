@@ -11,6 +11,7 @@ import Navbar, { NavbarItem } from './components/navbar/Navbar';
 import StackGrid, { transitions, easings } from "react-stack-grid";
 import moment from 'moment';
 import 'moment/locale/pt';
+import { ethers } from 'ethers';
 
 
 const Profile = React.lazy(() => import('./components/drawers/Profile'));
@@ -82,7 +83,8 @@ export default function App() {
         // fetchData();
         setPosts([
             {
-                author: '0xA6b94Ce98D6CD4f447a9C6788F169DD17f65f747',
+                slug: '1588505905000-yoo',
+                author: '0xbb72093ed950f77f24a637eb5c5f4f74595e19372b0d1a022568996df8474e4c6015f908e6c482de5932299697cbc6c87c37cad4cc19971931919abae34c150a1b',
                 content: 'SOme contentt here',
                 date: 1588505905000,
                 title: 'yooo',
@@ -90,7 +92,8 @@ export default function App() {
                 coverImage: 'https://c4.wallpaperflare.com/wallpaper/500/442/354/outrun-vaporwave-hd-wallpaper-preview.jpg',
             },
             {
-                author: '0xA6b94Ce98D6CD4f447a9C6788F169DD17f65f747',
+                slug: '1588505905000-23eqww',
+                author: '0xbb72093ed950f77f24a637eb5c5f4f74595e19372b0d1a022568996df8474e4c6015f908e6c482de5932299697cbc6c87c37cad4cc19971931919abae34c150a1b',
                 content: 'SOme contentt here',
                 date: 1588505905000,
                 title: '23eqww',
@@ -98,7 +101,8 @@ export default function App() {
                 coverImage: 'https://c4.wallpaperflare.com/wallpaper/500/442/354/outrun-vaporwave-hd-wallpaper-preview.jpg',
             },
             {
-                author: '0xA6b94Ce98D6CD4f447a9C6788F169DD17f65f747',
+                slug: '1588505905000-yn8iy',
+                author: '0xbb72093ed950f77f24a637eb5c5f4f74595e19372b0d1a022568996df8474e4c6015f908e6c482de5932299697cbc6c87c37cad4cc19971931919abae34c150a1b',
                 content: 'SOme contentt here',
                 date: 1588505905000,
                 title: 'yn8iy',
@@ -106,14 +110,16 @@ export default function App() {
                 coverImage: 'https://c4.wallpaperflare.com/wallpaper/500/442/354/outrun-vaporwave-hd-wallpaper-preview.jpg',
             },
             {
-                author: '0xA6b94Ce98D6CD4f447a9C6788F169DD17f65f747',
+                slug: '1588505905000-ertber',
+                author: '0xbb72093ed950f77f24a637eb5c5f4f74595e19372b0d1a022568996df8474e4c6015f908e6c482de5932299697cbc6c87c37cad4cc19971931919abae34c150a1b',
                 content: 'SOme contentt here',
                 date: 1588505905000,
                 title: 'ertber',
                 _id: '48937982',
             },
             {
-                author: '0xA6b94Ce98D6CD4f447a9C6788F169DD17f65f747',
+                slug: '1588505905000-qs2qexq',
+                author: '0xbb72093ed950f77f24a637eb5c5f4f74595e19372b0d1a022568996df8474e4c6015f908e6c482de5932299697cbc6c87c37cad4cc19971931919abae34c150a1b',
                 content: 'SOme contentt here',
                 date: 1588505905000,
                 title: 'qs2qexq',
@@ -180,22 +186,25 @@ export default function App() {
                     leaved={transition.leaved}
                     rtl={false}
                 >
-                    {posts.map((c) => <div key={c._id} style={{ height: 250, width: columnWidth }}>
-                        {c.coverImage !== undefined && <div style={{
-                            background: `url("${c.coverImage}")`,
-                            backgroundRepeat: 'no-repeat',
-                            backgroundSize: `${columnWidth}px auto`,
-                            backgroundPosition: 'center',
-                            height: '200px'
-                        }} />}
-                        <Typography variant="h2" component="h2" gutterBottom>
-                            {c.title}
-                        </Typography>
-                        <Typography variant="overline" display="block" gutterBottom style={{ color: 'grey' }}>
-                            by {c.author.substr(0, 7)}...{c.author.substr(35, 42)}, {moment(c.date).fromNow()}
-                        </Typography>
-                        <Typography variant="body2" gutterBottom>{c.content}</Typography>
-                    </div>)}
+                    {posts.map((c) => {
+                        const authorAddress = ethers.utils.verifyMessage(c.slug, c.author);
+                        return <div key={c._id} style={{ height: 250, width: columnWidth }}>
+                            {c.coverImage !== undefined && <div style={{
+                                background: `url("${c.coverImage}")`,
+                                backgroundRepeat: 'no-repeat',
+                                backgroundSize: `${columnWidth}px auto`,
+                                backgroundPosition: 'center',
+                                height: '200px'
+                            }} />}
+                            <Typography variant="h2" component="h2" gutterBottom>
+                                {c.title}
+                            </Typography>
+                            <Typography variant="overline" display="block" gutterBottom style={{ color: 'grey' }}>
+                                by {authorAddress.substr(0, 7)}...{authorAddress.substr(35, 42)}, {moment(c.date).fromNow()}
+                            </Typography>
+                            <Typography variant="body2" gutterBottom>{c.content}</Typography>
+                        </div>
+                    })}
 
                 </StackGrid>
             </div>
