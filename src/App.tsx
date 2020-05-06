@@ -118,6 +118,11 @@ export default function App() {
         },
     ]
 
+    const handleClickOpenPost = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        setOpenPost(posts.find(el => el._id === event.currentTarget.id));
+        event.preventDefault();
+    }
+
     const transition = transitions['fadeDown'];
     return (
         <React.Fragment>
@@ -141,7 +146,12 @@ export default function App() {
                 >
                     {posts.map((c) => {
                         const authorAddress = ethers.utils.verifyMessage(c.slug, c.author);
-                        return <div key={c._id} style={{ height: 250, width: columnWidth }}>
+                        return <div
+                            key={c._id}
+                            id={c._id}
+                            style={{ height: 250, width: columnWidth }}
+                            onClick={handleClickOpenPost}
+                        >
                             {c.coverImage !== undefined && <div style={{
                                 background: `url("${c.coverImage}")`,
                                 backgroundRepeat: 'no-repeat',
