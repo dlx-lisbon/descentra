@@ -68,66 +68,19 @@ export default function App() {
                 (progress) => setReplicatingProgress(progress),
             );
             postM.subscribe(() => setPosts(postM.records));
-            await postsDb.load();
+            postsDb.load();
             const meetupM = new MeetupModel(
                 meetupsDb,
                 (progress) => console.log(progress),
                 (progress) => setReplicatingProgress(progress),
             );
             meetupM.subscribe(() => setMeetups(meetupM.records));
-            await meetupsDb.load();
+            meetupsDb.load();
             setLoadingPostModel(false);
             setPostModel(postM);
             setMeetupModel(meetupM);
         };
-        // fetchData();
-        setPosts([
-            {
-                slug: '1588505905000-yoo',
-                author: '0xbb72093ed950f77f24a637eb5c5f4f74595e19372b0d1a022568996df8474e4c6015f908e6c482de5932299697cbc6c87c37cad4cc19971931919abae34c150a1b',
-                content: 'SOme contentt here',
-                date: 1588505905000,
-                title: 'yooo',
-                _id: '18937982',
-                coverImage: 'https://c4.wallpaperflare.com/wallpaper/500/442/354/outrun-vaporwave-hd-wallpaper-preview.jpg',
-            },
-            {
-                slug: '1588505905000-23eqww',
-                author: '0xbb72093ed950f77f24a637eb5c5f4f74595e19372b0d1a022568996df8474e4c6015f908e6c482de5932299697cbc6c87c37cad4cc19971931919abae34c150a1b',
-                content: 'SOme contentt here',
-                date: 1588505905000,
-                title: '23eqww',
-                _id: '28937982',
-                coverImage: 'https://c4.wallpaperflare.com/wallpaper/500/442/354/outrun-vaporwave-hd-wallpaper-preview.jpg',
-            },
-            {
-                slug: '1588505905000-yn8iy',
-                author: '0xbb72093ed950f77f24a637eb5c5f4f74595e19372b0d1a022568996df8474e4c6015f908e6c482de5932299697cbc6c87c37cad4cc19971931919abae34c150a1b',
-                content: 'SOme contentt here',
-                date: 1588505905000,
-                title: 'yn8iy',
-                _id: '38937982',
-                coverImage: 'https://c4.wallpaperflare.com/wallpaper/500/442/354/outrun-vaporwave-hd-wallpaper-preview.jpg',
-            },
-            {
-                slug: '1588505905000-ertber',
-                author: '0xbb72093ed950f77f24a637eb5c5f4f74595e19372b0d1a022568996df8474e4c6015f908e6c482de5932299697cbc6c87c37cad4cc19971931919abae34c150a1b',
-                content: 'SOme contentt here',
-                date: 1588505905000,
-                title: 'ertber',
-                _id: '48937982',
-            },
-            {
-                slug: '1588505905000-qs2qexq',
-                author: '0xbb72093ed950f77f24a637eb5c5f4f74595e19372b0d1a022568996df8474e4c6015f908e6c482de5932299697cbc6c87c37cad4cc19971931919abae34c150a1b',
-                content: 'SOme contentt here',
-                date: 1588505905000,
-                title: 'qs2qexq',
-                _id: '58937982',
-                coverImage: 'https://c4.wallpaperflare.com/wallpaper/500/442/354/outrun-vaporwave-hd-wallpaper-preview.jpg',
-            },
-        ]);
-        setLoadingPostModel(false);
+        fetchData();
     }, []);
 
     const navbarItems: NavbarItem[] = [
@@ -209,11 +162,7 @@ export default function App() {
                 </StackGrid>
             </div>
             {
-                loadingPostModel && (
-                    <Grid item xs={6}>
-                        <img alt="loading fish" width="80%" src="img/fish_loading.gif" />
-                    </Grid>
-                )
+                loadingPostModel && <Typography variant="overline" display="block" gutterBottom>Loading....</Typography>
             }
             {/* <Grid item xs={12} sm={12} md={6}>
                 {posts.map((c) => <ContentPost key={c._id} content={c} onClick={(id) => setOpenPost(
