@@ -1,20 +1,22 @@
-import { Menu, MenuItem, AppBar, Toolbar, Typography, Avatar, IconButton, Button } from "@material-ui/core";
-import MoreIcon from '@material-ui/icons/MoreVert';
+import {
+    AppBar,
+    Toolbar,
+    Avatar,
+    IconButton,
+    Button,
+    Drawer,
+    Divider,
+    List,
+    ListItem,
+    ListItemText
+} from "@material-ui/core";
 import React from "react";
-
-import { makeStyles, useTheme, Theme, createStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import {
+    Menu as MenuIcon,
+    ChevronLeft as ChevronLeftIcon,
+    ChevronRight as ChevronRightIcon,
+} from '@material-ui/icons';
 
 
 const drawerWidth = 240;

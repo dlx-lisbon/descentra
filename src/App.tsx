@@ -1,12 +1,10 @@
 import React, { useEffect, useState, Suspense } from 'react';
-import ContentPost from './components/content/ContentPost';
 import { startIpfsInstance } from './helpers/ipfsFactory';
 import PostModel from './helpers/orbitdb/PostModel';
 import { store } from './helpers/orbitdb/store';
 import { IMeetupInfo, IPostInfo } from './interfaces';
 import MeetupModel from './helpers/orbitdb/MeetupModel';
-import ContentMeetup from './components/content/ContentMeetup';
-import { Grid, Container, CssBaseline, makeStyles, Drawer, Typography } from '@material-ui/core';
+import { Drawer, Typography } from '@material-ui/core';
 import Navbar, { NavbarItem } from './components/navbar/Navbar';
 import StackGrid, { transitions, easings } from "react-stack-grid";
 import moment from 'moment';
@@ -22,18 +20,8 @@ const Post = React.lazy(() => import('./components/drawers/Post'));
 const Meetup = React.lazy(() => import('./components/drawers/Meetup'));
 
 const columnWidth = 350;
-const useStyles = makeStyles((theme) => ({
-    root: {
-        padding: 0,
-    },
-    gridElement: {
-        height: 250,
-        width: columnWidth,
-    }
-}));
 
 export default function App() {
-    const styles = useStyles();
     // loading
     const [loadingPostModel, setLoadingPostModel] = useState<boolean>(true);
     const [, setReplicatingProgress] = useState<number>(0);
@@ -49,7 +37,7 @@ export default function App() {
     const [newMeetup, openNewMeetup] = useState<boolean>(false);
     const [posts, setPosts] = useState<IPostInfo[]>([] as any);
     const [openPost, setOpenPost] = useState<IPostInfo>();
-    const [meetups, setMeetups] = useState<[IMeetupInfo]>([] as any);
+    // const [meetups, setMeetups] = useState<[IMeetupInfo]>([] as any);
     const [openMeetup, setOpenMeetup] = useState<IMeetupInfo>();
 
     useEffect(() => {
@@ -74,7 +62,7 @@ export default function App() {
                 (progress) => console.log(progress),
                 (progress) => setReplicatingProgress(progress),
             );
-            meetupM.subscribe(() => setMeetups(meetupM.records));
+            // meetupM.subscribe(() => setMeetups(meetupM.records));
             meetupsDb.load();
             setLoadingPostModel(false);
             setPostModel(postM);

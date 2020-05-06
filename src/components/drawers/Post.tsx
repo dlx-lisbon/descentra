@@ -1,26 +1,13 @@
 import moment from 'moment';
 import React from 'react';
 import { IPostInfo } from '../../interfaces';
-import { Card, CardHeader, Avatar, Typography, CardContent, makeStyles } from '@material-ui/core';
+import { Card, Typography, CardContent } from '@material-ui/core';
 import { ethers } from 'ethers';
 
 interface IPostProps {
     content: IPostInfo;
 }
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        width: '100%',
-        maxWidth: '36ch',
-        backgroundColor: theme.palette.background.paper,
-    },
-    inline: {
-        display: 'inline',
-    },
-}));
-
 export default function Post(props: IPostProps) {
-    const classes = useStyles()
     const authorAddress = ethers.utils.verifyMessage(props.content.slug, props.content.author);
 
     return (
