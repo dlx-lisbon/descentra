@@ -17,6 +17,7 @@ import {
     ChevronLeft as ChevronLeftIcon,
     ChevronRight as ChevronRightIcon,
 } from '@material-ui/icons';
+import makeBlockie from 'ethereum-blockies-base64';
 
 
 const drawerWidth = 240;
@@ -109,7 +110,9 @@ export default function Navbar(props: NavbarProps) {
         event.preventDefault();
     };
 
-    const userAvatarSrc = 'img/unknown_user.svg';
+    const userAvatarSrc = (window as any).ethereum === undefined
+        ? 'img/unknown_user.svg'
+        : makeBlockie((window as any).ethereum.selectedAddress);
     return (
         <AppBar
             position="fixed"
