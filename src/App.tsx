@@ -153,7 +153,7 @@ export default function App() {
                             <Typography variant="overline" display="block" gutterBottom style={{ color: 'grey' }}>
                                 by {authorAddress.substr(0, 7)}...{authorAddress.substr(35, 42)}, {moment(c.date).fromNow()}
                             </Typography>
-                            <Typography variant="body2" gutterBottom>{c.content}</Typography>
+                            <Typography variant="body2" gutterBottom>{c.content.slice(0, c.content.indexOf('.') + 1)}</Typography>
                         </div>
                     })}
 

@@ -10,6 +10,7 @@ interface IPostProps {
 export default function Post(props: IPostProps) {
     const authorAddress = ethers.utils.verifyMessage(props.content.slug, props.content.author);
 
+    const contentParagraphs = props.content.content.split('\n');
     return (
         <Card>
             <CardContent>
@@ -26,7 +27,20 @@ export default function Post(props: IPostProps) {
                 <Typography variant="overline" display="block" gutterBottom style={{ color: 'grey' }}>
                     by {authorAddress.substr(0, 7)}...{authorAddress.substr(35, 42)}, {moment(props.content.date).fromNow()}
                 </Typography>
-                <Typography variant="body2" gutterBottom>{props.content.content}</Typography>
+                <div>
+                    {
+                        contentParagraphs
+                            .filter((paragraph) => paragraph.length > 0)
+                            .map((paragraph, index) => <Typography
+                                key={index}
+                                variant="body2"
+                                gutterBottom
+                            >
+                                {paragraph}
+                            </Typography>
+                            )
+                    }
+                </div>
             </CardContent>
         </Card>
     );
