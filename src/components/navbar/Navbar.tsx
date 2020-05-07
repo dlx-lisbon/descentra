@@ -110,9 +110,18 @@ export default function Navbar(props: NavbarProps) {
         event.preventDefault();
     };
 
-    const userAvatarSrc = (window as any).ethereum === undefined
-        ? 'img/unknown_user.svg'
-        : makeBlockie((window as any).ethereum.selectedAddress);
+    const userAvatarSrc = () => {
+        let result = 'img/unknown_user.svg';
+        try {
+            if ((window as any).ethereum !== undefined &&
+                (window as any).ethereum.selectedAddress !== null) {
+                result = makeBlockie((window as any).ethereum.selectedAddress);
+            }
+        } catch (error) {
+            //
+        }
+        return result;
+    }
     return (
         <AppBar
             position="fixed"
@@ -150,7 +159,7 @@ export default function Navbar(props: NavbarProps) {
                     </IconButton>
                 </div>
                 <div className={classes.grow} />
-                <Avatar onClick={props.onAvatarClick} src={userAvatarSrc} />
+                <Avatar onClick={props.onAvatarClick} src={userAvatarSrc()} />
             </Toolbar>
             <Drawer
                 className={classes.drawer}
