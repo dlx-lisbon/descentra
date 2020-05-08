@@ -2,10 +2,10 @@ import React, { useEffect, useState, Suspense } from 'react';
 import { startIpfsInstance } from './helpers/ipfsFactory';
 import PostModel from './helpers/orbitdb/PostModel';
 import { store } from './helpers/orbitdb/store';
-import { IMeetupInfo, IPostInfo } from './interfaces';
+import { IMeetupInfo, IPostInfo, INavbarItem } from './interfaces';
 import MeetupModel from './helpers/orbitdb/MeetupModel';
 import { Drawer, Typography } from '@material-ui/core';
-import Navbar, { NavbarItem } from './components/navbar/Navbar';
+import Navbar from './components/navbar/Navbar';
 import StackGrid, { transitions, easings } from "react-stack-grid";
 import moment from 'moment';
 import 'moment/locale/pt';
@@ -71,9 +71,10 @@ export default function App() {
         fetchData();
     }, []);
 
-    const navbarItems: NavbarItem[] = [
+    const navbarItems: INavbarItem[] = [
         {
             key: 'novo-conteudo',
+            loginRequired: true,
             onClick: () => openNewPost(true),
             children: (<>
                 <span role="img" aria-label="memo">📝</span>
@@ -82,6 +83,7 @@ export default function App() {
         },
         {
             key: 'novo-meetup',
+            loginRequired: true,
             onClick: () => openNewMeetup(true),
             children: (<>
                 <span role="img" aria-label="memo">🤖</span>
@@ -90,6 +92,7 @@ export default function App() {
         },
         {
             key: 'praticar',
+            loginRequired: true,
             onClick: () => openPractice(true),
             children: (<>
                 <span role="img" aria-label="flexed-biceps">💪</span>
@@ -98,6 +101,7 @@ export default function App() {
         },
         {
             key: 'kudos',
+            loginRequired: true,
             onClick: () => openKudos(true),
             children: (<>
                 <span role="img" aria-label="hatching-chick">🐣</span>

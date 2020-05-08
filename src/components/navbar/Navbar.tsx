@@ -11,13 +11,19 @@ import {
     ListItemText
 } from "@material-ui/core";
 import React from "react";
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import {
+    makeStyles,
+    useTheme,
+} from '@material-ui/core/styles';
 import {
     Menu as MenuIcon,
     ChevronLeft as ChevronLeftIcon,
     ChevronRight as ChevronRightIcon,
 } from '@material-ui/icons';
 import makeBlockie from 'ethereum-blockies-base64';
+import {
+    INavbarItem,
+} from "../../interfaces";
 
 
 const drawerWidth = 240;
@@ -81,15 +87,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export interface NavbarItem {
-    key: string;
-    onClick: () => void
-    children: React.ReactNode
-}
-
 export interface NavbarProps {
-    items: NavbarItem[]
-    onAvatarClick: () => void
+    items: INavbarItem[];
+    onAvatarClick: () => void;
 }
 
 export default function Navbar(props: NavbarProps) {
@@ -137,7 +137,7 @@ export default function Navbar(props: NavbarProps) {
                         alt="some clown fish"
                         onClick={closeAll}
                     />
-                    {props.items.map((navItem: NavbarItem) => (
+                    {props.items.map((navItem: INavbarItem) => (
                         <Button
                             key={navItem.key}
                             style={{ textTransform: 'none' }}
@@ -176,7 +176,7 @@ export default function Navbar(props: NavbarProps) {
                 </div>
                 <Divider />
                 <List>
-                    {props.items.map((navItem: NavbarItem) => (
+                    {props.items.map((navItem: INavbarItem) => (
                         <ListItem button key={navItem.key}>
                             <ListItemText primary={navItem.children} onClick={navItem.onClick} />
                         </ListItem>
