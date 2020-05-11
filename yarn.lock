@@ -1526,17 +1526,17 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
-"@material-ui/core@4.9.11":
-  version "4.9.11"
-  resolved "https://registry.yarnpkg.com/@material-ui/core/-/core-4.9.11.tgz#02f45f4dbea6db191fdc0d993323d64cfae613fd"
-  integrity sha512-S2Ha9GpTxzl29XMeMc8dQX2pj97yApNzuhe/23If53fMdg5Fmd3SgbE1bMbyXeKhxwtXZjOFxd0vU+W/sez8Ew==
+"@material-ui/core@4.9.12":
+  version "4.9.12"
+  resolved "https://registry.yarnpkg.com/@material-ui/core/-/core-4.9.12.tgz#0156d87c8b5db5a8aad992d6883a081a32684e2e"
+  integrity sha512-JtRm1iNw3PRg+bzULS1uRKhdIJ2jhKO3/5ptO6kTADARsv5KmhzMbM+PYmVS09qm9Yu3ilwka4dYrtjqea53Lw==
   dependencies:
     "@babel/runtime" "^7.4.4"
-    "@material-ui/react-transition-group" "^4.2.0"
+    "@material-ui/react-transition-group" "^4.3.0"
     "@material-ui/styles" "^4.9.10"
     "@material-ui/system" "^4.9.10"
     "@material-ui/types" "^5.0.1"
-    "@material-ui/utils" "^4.9.6"
+    "@material-ui/utils" "^4.9.12"
     "@types/react-transition-group" "^4.2.0"
     clsx "^1.0.4"
     hoist-non-react-statics "^3.3.2"
@@ -1564,7 +1564,7 @@
     react-transition-group "^4.0.0"
     rifm "^0.7.0"
 
-"@material-ui/react-transition-group@^4.2.0":
+"@material-ui/react-transition-group@^4.3.0":
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/@material-ui/react-transition-group/-/react-transition-group-4.3.0.tgz#92529142addb5cc179dbf42d246c7e3fe4d6104b"
   integrity sha512-CwQ0aXrlUynUTY6sh3UvKuvye1o92en20VGAs6TORnSxUYeRmkX8YeTUN3lAkGiBX1z222FxLFO36WWh6q73rQ==
@@ -1610,7 +1610,7 @@
   resolved "https://registry.yarnpkg.com/@material-ui/types/-/types-5.0.1.tgz#c4954063cdc196eb327ee62c041368b1aebb6d61"
   integrity sha512-wURPSY7/3+MAtng3i26g+WKwwNE3HEeqa/trDBR5+zWKmcjO+u9t7Npu/J1r+3dmIa/OeziN9D/18IrBKvKffw==
 
-"@material-ui/utils@^4.9.6":
+"@material-ui/utils@^4.9.12", "@material-ui/utils@^4.9.6":
   version "4.9.12"
   resolved "https://registry.yarnpkg.com/@material-ui/utils/-/utils-4.9.12.tgz#0d639f1c1ed83fffb2ae10c21d15a938795d9e65"
   integrity sha512-/0rgZPEOcZq5CFA4+4n6Q6zk7fi8skHhH2Bcra8R3epoJEYy5PL55LuMazPtPH1oKeRausDV/Omz4BbgFsn1HQ==
@@ -1851,7 +1851,7 @@
     "@types/istanbul-lib-coverage" "*"
     "@types/istanbul-lib-report" "*"
 
-"@types/node@*":
+"@types/node@*", "@types/node@13.13.4":
   version "13.13.4"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-13.13.4.tgz#1581d6c16e3d4803eb079c87d4ac893ee7501c2c"
   integrity sha512-x26ur3dSXgv5AwKS0lNfbjpCakGIduWU1DU91Zz58ONRWrIKGunmZBNv4P7N+e27sJkiGDsw/3fT4AtsqQBrBA==
@@ -1860,11 +1860,6 @@
   version "10.12.18"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.18.tgz#1d3ca764718915584fcd9f6344621b7672665c67"
   integrity sha512-fh+pAqt4xRzPfqA6eh3Z2y6fyZavRIumvjhaCL753+TVkGKGhpPeyrJG2JftD0T9q4GF00KjefsQ+PQNDdWQaQ==
-
-"@types/node@13.13.0":
-  version "13.13.0"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-13.13.0.tgz#30d2d09f623fe32cde9cb582c7a6eda2788ce4a8"
-  integrity sha512-WE4IOAC6r/yBZss1oQGM5zs2D7RuKR6Q+w+X2SouPofnWn+LbCqClRyhO3ZE7Ix8nmFgo/oVuuE01cJT2XB13A==
 
 "@types/parse-json@^4.0.0":
   version "4.0.0"
@@ -1881,10 +1876,10 @@
   resolved "https://registry.yarnpkg.com/@types/q/-/q-1.5.2.tgz#690a1475b84f2a884fd07cd797c00f5f31356ea8"
   integrity sha512-ce5d3q03Ex0sy4R14722Rmt6MT07Ua+k4FwDfdcToYJcMKNtRVQvJ6JCAPdAmAnbRb6CsX6aYb9m96NGod9uTw==
 
-"@types/react-dom@16.9.6":
-  version "16.9.6"
-  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-16.9.6.tgz#9e7f83d90566521cc2083be2277c6712dcaf754c"
-  integrity sha512-S6ihtlPMDotrlCJE9ST1fRmYrQNNwfgL61UB4I1W7M6kPulUKx9fXAleW5zpdIjUQ4fTaaog8uERezjsGUj9HQ==
+"@types/react-dom@16.9.8":
+  version "16.9.8"
+  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-16.9.8.tgz#fe4c1e11dfc67155733dfa6aa65108b4971cb423"
+  integrity sha512-ykkPQ+5nFknnlU6lDd947WbQ6TE3NNzbQAkInC2EKY1qeYdTKp7onFusmYZb+ityzx2YviqT6BXSu+LyWWJwcA==
   dependencies:
     "@types/react" "*"
 
@@ -1895,10 +1890,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@16.9.34":
-  version "16.9.34"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.34.tgz#f7d5e331c468f53affed17a8a4d488cd44ea9349"
-  integrity sha512-8AJlYMOfPe1KGLKyHpflCg5z46n0b5DbRfqDksxBLBTUpB75ypDBAO9eCUcjNwE6LCUslwTz00yyG/X9gaVtow==
+"@types/react@*", "@types/react@16.9.35":
+  version "16.9.35"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.35.tgz#a0830d172e8aadd9bd41709ba2281a3124bbd368"
+  integrity sha512-q0n0SsWcGc8nDqH2GJfWQWUOmZSJhXV64CjVN5SvcNti3TdEaA3AH0D8DwNmMdzjMAC/78tB8nAZIlV8yTz+zQ==
   dependencies:
     "@types/prop-types" "*"
     csstype "^2.2.0"
@@ -5379,22 +5374,7 @@ ethereumjs-util@^6.0.0:
     rlp "^2.2.3"
     secp256k1 "^3.0.1"
 
-ethers@4.0.46:
-  version "4.0.46"
-  resolved "https://registry.yarnpkg.com/ethers/-/ethers-4.0.46.tgz#13cd3ed099487f43ece00194b89a8a8781f71507"
-  integrity sha512-/dPMzzpInhtiip4hKFvsDiJKeRk64IhyA+Po7CtNXneQFSOCYXg8eBFt+jXbxUQyApgWnWOtYxWdfn9+CvvxDA==
-  dependencies:
-    aes-js "3.0.0"
-    bn.js "^4.4.0"
-    elliptic "6.5.2"
-    hash.js "1.1.3"
-    js-sha3 "0.5.7"
-    scrypt-js "2.0.4"
-    setimmediate "1.0.4"
-    uuid "2.0.1"
-    xmlhttprequest "1.8.0"
-
-ethers@^4.0.20:
+ethers@4.0.47, ethers@^4.0.20:
   version "4.0.47"
   resolved "https://registry.yarnpkg.com/ethers/-/ethers-4.0.47.tgz#91b9cd80473b1136dd547095ff9171bd1fc68c85"
   integrity sha512-hssRYhngV4hiDNeZmVU/k5/E8xmLG8UpcNUzg6mb7lqhgpFPH/t7nuv20RjRrEf0gblzvi2XwR5Te+V3ZFc9pQ==
@@ -12727,6 +12707,7 @@ pull-utf8-decoder@^1.0.2:
 
 pull-ws@hugomrdias/pull-ws#fix/bundle-size:
   version "3.3.1"
+  uid "8e2ce0bb3b1cd6804828316e937fff8e0bef6225"
   resolved "https://codeload.github.com/hugomrdias/pull-ws/tar.gz/8e2ce0bb3b1cd6804828316e937fff8e0bef6225"
   dependencies:
     iso-url "^0.4.4"
@@ -14934,10 +14915,10 @@ typeforce@^1.11.3, typeforce@^1.11.5:
   resolved "https://registry.yarnpkg.com/typeforce/-/typeforce-1.18.0.tgz#d7416a2c5845e085034d70fcc5b6cc4a90edbfdc"
   integrity sha512-7uc1O8h1M1g0rArakJdf0uLRSSgFcYexrVoKo+bzJd32gd4gDy2L/Z+8/FjPnU9ydY3pEnVPtr9FyscYY60K1g==
 
-typescript@3.4.5:
-  version "3.4.5"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.4.5.tgz#2d2618d10bb566572b8d7aad5180d84257d70a99"
-  integrity sha512-YycBxUb49UUhdNMU5aJ7z5Ej2XGmaIBL0x34vZ82fn3hGvD+bgrMrVDpatgz2f7YxUMJxMkbWxJZeAvDxVe7Vw==
+typescript@3.8.3:
+  version "3.8.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.8.3.tgz#409eb8544ea0335711205869ec458ab109ee1061"
+  integrity sha512-MYlEfn5VrLNsgudQTVJeNaQFUAI7DkhnOjdpAp4T+ku1TfQClewlbSuTVHiA+8skNBgaf02TL/kLOvig4y3G8w==
 
 typical@^6.0.0:
   version "6.0.0"
