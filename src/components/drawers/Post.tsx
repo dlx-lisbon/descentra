@@ -3,14 +3,14 @@ import React from 'react';
 import { IPostInfo } from '../../interfaces';
 import { Card, Typography, CardContent } from '@material-ui/core';
 import { ethers } from 'ethers';
+import showdown from 'showdown';
 
 interface IPostProps {
     content: IPostInfo;
 }
 export default function Post(props: IPostProps) {
     const authorAddress = ethers.utils.verifyMessage(props.content.slug, props.content.author);
-
-    const contentParagraphs = props.content.content.split('\n');
+    const converter = new showdown.Converter();
     return (
         <Card>
             <CardContent>
@@ -27,20 +27,13 @@ export default function Post(props: IPostProps) {
                 <Typography variant="overline" display="block" gutterBottom style={{ color: 'grey' }}>
                     by {authorAddress.substr(0, 7)}...{authorAddress.substr(35, 42)}, {moment(props.content.date).fromNow()}
                 </Typography>
-                <div>
-                    {
-                        contentParagraphs
-                            .filter((paragraph) => paragraph.length > 0)
-                            .map((paragraph, index) => <Typography
-                                key={index}
-                                variant="body2"
-                                gutterBottom
-                            >
-                                {paragraph}
-                            </Typography>
-                            )
-                    }
-                </div>
+                {/** As we want to render string html into a component */}
+                {/** we are using *dangerouslySetInnerHTML* and using the */}
+                {/** same classes so we can have the same style */}
+                <div
+                    className="MuiTypography-root MuiTypography-gutterBottom MuiTypography-body2"
+                    dangerouslySetInnerHTML={{ __html: converter.makeHtml(props.content.content) }}
+                />
             </CardContent>
         </Card>
     );
