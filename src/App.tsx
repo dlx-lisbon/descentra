@@ -75,6 +75,7 @@ export default function App() {
         {
             key: 'novo-conteudo',
             loginRequired: true,
+            onlyAdmin: true,
             onClick: () => openNewPost(true),
             children: (<>
                 <span role="img" aria-label="memo">📝</span>
@@ -84,6 +85,7 @@ export default function App() {
         {
             key: 'novo-meetup',
             loginRequired: true,
+            onlyAdmin: true,
             onClick: () => openNewMeetup(true),
             children: (<>
                 <span role="img" aria-label="memo">🤖</span>
@@ -92,7 +94,8 @@ export default function App() {
         },
         {
             key: 'praticar',
-            loginRequired: true,
+            loginRequired: false,
+            onlyAdmin: false,
             onClick: () => openPractice(true),
             children: (<>
                 <span role="img" aria-label="flexed-biceps">💪</span>
@@ -102,6 +105,7 @@ export default function App() {
         {
             key: 'kudos',
             loginRequired: true,
+            onlyAdmin: false,
             onClick: () => openKudos(true),
             children: (<>
                 <span role="img" aria-label="hatching-chick">🐣</span>
@@ -164,7 +168,7 @@ export default function App() {
                 </StackGrid>
             </div>
             {
-                loadingPostModel && <Typography variant="overline" display="block" gutterBottom>Loading....</Typography>
+                loadingPostModel && <Typography variant="overline" display="block" gutterBottom>A carregar....</Typography>
             }
             {/* <Grid item xs={12} sm={12} md={6}>
                 {posts.map((c) => <ContentPost key={c._id} content={c} onClick={(id) => setOpenPost(
@@ -176,14 +180,14 @@ export default function App() {
                     meetups.find(el => el._id === id)
                 )} />)}
             </Grid> */}
-            <Suspense fallback={<div>A carregar...</div>}>
+            <Suspense fallback={<Typography variant="overline" display="block" gutterBottom>A carregar....</Typography>}>
                 <NewPost
                     show={newPost}
                     setShow={openNewPost}
                     postModel={postModel}
                 />
             </Suspense>
-            <Suspense fallback={<div>A carregar...</div>}>
+            <Suspense fallback={<Typography variant="overline" display="block" gutterBottom>A carregar....</Typography>}>
                 <NewMeetup
                     show={newMeetup}
                     setShow={openNewMeetup}
@@ -194,22 +198,22 @@ export default function App() {
                 Em construção
             </Drawer>
             <Drawer anchor="bottom" open={profile} onClose={() => openProfile(false)}>
-                <Suspense fallback={<div>A carregar...</div>}>
+                <Suspense fallback={<Typography variant="overline" display="block" gutterBottom>A carregar....</Typography>}>
                     <Profile />
                 </Suspense>
             </Drawer>
             <Drawer anchor="bottom" open={practice} onClose={() => openPractice(false)}>
-                <Suspense fallback={<div>A carregar...</div>}>
+                <Suspense fallback={<Typography variant="overline" display="block" gutterBottom>A carregar....</Typography>}>
                     <Practice />
                 </Suspense>
             </Drawer>
             <Drawer anchor="bottom" open={!!openPost || false} onClose={() => setOpenPost(undefined)}>
-                <Suspense fallback={<div>A carregar...</div>}>
+                <Suspense fallback={<Typography variant="overline" display="block" gutterBottom>A carregar....</Typography>}>
                     {!!openPost && <Post content={openPost as IPostInfo} />}
                 </Suspense>
             </Drawer>
             <Drawer anchor="bottom" open={!!openMeetup || false} onClose={() => setOpenMeetup(undefined)}>
-                <Suspense fallback={<div>A carregar...</div>}>
+                <Suspense fallback={<Typography variant="overline" display="block" gutterBottom>A carregar....</Typography>}>
                     {!!openMeetup && <Meetup content={openMeetup as IMeetupInfo} />}
                 </Suspense>
             </Drawer>

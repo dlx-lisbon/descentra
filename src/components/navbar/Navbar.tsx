@@ -10,7 +10,7 @@ import {
     ListItem,
     ListItemText
 } from "@material-ui/core";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
     makeStyles,
     useTheme,
@@ -95,7 +95,26 @@ export interface NavbarProps {
 export default function Navbar(props: NavbarProps) {
     const classes = useStyles();
     const theme = useTheme();
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState<boolean>(false);
+    const [loggedin, setLoggedin] = useState<boolean>(false);
+    const [isAdmin, setIsAdmin] = useState<boolean>(false);
+    const [userBlockie, setUserBlockie] = useState<string>('img/unknown_user.svg');
+
+    useEffect(() => {
+        const verifyLoggedIn = () => {
+            try {
+                if ((window as any).ethereum !== undefined &&
+                    (window as any).ethereum.selectedAddress !== null) {
+                    setUserBlockie(makeBlockie((window as any).ethereum.selectedAddress));
+                    setLoggedin(true);
+                    setIsAdmin(true); // TODO: check if is admin
+                }
+            } catch (error) {
+                //
+            }
+        }
+        verifyLoggedIn();
+    }, []);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -110,18 +129,11 @@ export default function Navbar(props: NavbarProps) {
         event.preventDefault();
     };
 
-    const userAvatarSrc = () => {
-        let result = 'img/unknown_user.svg';
-        try {
-            if ((window as any).ethereum !== undefined &&
-                (window as any).ethereum.selectedAddress !== null) {
-                result = makeBlockie((window as any).ethereum.selectedAddress);
-            }
-        } catch (error) {
-            //
-        }
-        return result;
-    }
+    const navItems = props.items.filter(
+        (item) => (item.loginRequired === false || (item.loginRequired === true && loggedin)) &&
+            (item.onlyAdmin === false || (item.onlyAdmin === true && isAdmin === true))
+    );
+
     return (
         <AppBar
             position="fixed"
@@ -137,7 +149,7 @@ export default function Navbar(props: NavbarProps) {
                         alt="some clown fish"
                         onClick={closeAll}
                     />
-                    {props.items.map((navItem: INavbarItem) => (
+                    {navItems.map((navItem: INavbarItem) => (
                         <Button
                             key={navItem.key}
                             style={{ textTransform: 'none' }}
@@ -159,7 +171,7 @@ export default function Navbar(props: NavbarProps) {
                     </IconButton>
                 </div>
                 <div className={classes.grow} />
-                <Avatar onClick={props.onAvatarClick} src={userAvatarSrc()} />
+                <Avatar onClick={props.onAvatarClick} src={userBlockie} />
             </Toolbar>
             <Drawer
                 className={classes.drawer}
@@ -176,7 +188,7 @@ export default function Navbar(props: NavbarProps) {
                 </div>
                 <Divider />
                 <List>
-                    {props.items.map((navItem: INavbarItem) => (
+                    {navItems.map((navItem: INavbarItem) => (
                         <ListItem button key={navItem.key}>
                             <ListItemText primary={navItem.children} onClick={navItem.onClick} />
                         </ListItem>

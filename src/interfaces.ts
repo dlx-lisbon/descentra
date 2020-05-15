@@ -21,6 +21,7 @@ export interface IMeetupInfo extends IContentInfo {
 export interface INavbarItem {
     key: string;
     loginRequired: boolean;
+    onlyAdmin: boolean;
     onClick: () => void
     children: React.ReactNode
 }

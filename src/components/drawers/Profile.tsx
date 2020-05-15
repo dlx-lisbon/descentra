@@ -10,9 +10,13 @@ export default function Profile() {
     useEffect(() => {
         const getUserAddress = async () => {
             if ((window as any).ethereum !== undefined) {
-                const provider = new ethers.providers.Web3Provider((window as any).ethereum);
-                const signer = provider.getSigner();
-                setUserAddress(await signer.getAddress());
+                try  {
+                    const provider = new ethers.providers.Web3Provider((window as any).ethereum);
+                    const signer = provider.getSigner();
+                    setUserAddress(await signer.getAddress());
+                } catch (error) {
+                    // not loggedin yet
+                }
             }
         }
         getUserAddress();
