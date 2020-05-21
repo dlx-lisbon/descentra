@@ -11,64 +11,92 @@ import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import 'date-fns';
 import React, { useState } from 'react';
+import slug from 'slug';
+import { ethers } from 'ethers';
 
-import PostModel from '../../helpers/orbitdb/PostModel';
-import { IPostInfo } from '../../interfaces';
+import PostModel from '../../../helpers/orbitdb/PostModel';
+import { IPostInfo } from '../../../interfaces';
 
-interface INewContent {
+interface INewPost {
+    slug: string;
     author: string;
     date: Date;
     description: string;
     title: string;
+    coverImage: string;
 }
 
-interface INewContentProps {
+interface INewPostProps {
     show: boolean;
     setShow: React.Dispatch<React.SetStateAction<boolean>>;
-    postModel: PostModel;
+    postModel?: PostModel;
 }
 
-export default function NewContent(props: INewContentProps) {
+export default function NewPost(props: INewPostProps) {
     const emptyForm = {
+        slug: '',
         author: '',
         date: new Date(),
         description: '',
         title: '',
+        coverImage: '',
     }
-    const [newContentForm, setNewContentForm] = useState<INewContent>(emptyForm);
+    const [newContentForm, setNewPostForm] = useState<INewPost>(emptyForm);
 
-    const postNewContent = (event: React.SyntheticEvent<Element, Event>) => {
-        const newPost: IPostInfo = {
-            author: newContentForm.author,
-            content: newContentForm.description,
-            date: newContentForm.date.getTime(),
-            title: newContentForm.title
+    const postNewPost = (event: React.SyntheticEvent<Element, Event>) => {
+        console.log(props.postModel);
+        if (props.postModel === undefined) {
+            console.log('1');
+            // TODO: show error!
+        } else {
+            // TODO: gerar slug utilizando timestamp e o titulo e assinar com web3 wallet
+            // guardar também assinatura. Ao guardar assinatura, o autor passa a ser o endereço
+            // de sem assinou o post.
+            const postSlug = `${(new Date()).getTime().toString()}-${slug(newContentForm.title, { lower: true })}`
+            console.log(postSlug);
+            const provider = new ethers.providers.Web3Provider((window as any).ethereum);
+            const signer = provider.getSigner();
+            console.log(postSlug);
+            signer.signMessage(postSlug)
+                .then((signature) => {
+                    const newPost: IPostInfo = {
+                        author: signature,
+                        content: newContentForm.description,
+                        date: newContentForm.date.getTime(),
+                        title: newContentForm.title,
+                        slug: postSlug,
+                    }
+                    if (newContentForm.coverImage.length > 0) {
+                        newPost.coverImage = newContentForm.coverImage;
+                    }
+                    props.postModel!.add(newPost).then(() => {
+                        props.setShow(false)
+                        setNewPostForm(emptyForm)
+                    });
+                });
+
         }
-        props.postModel.add(newPost).then(() => {
-            props.setShow(false)
-            setNewContentForm(emptyForm)
-        });
         event.preventDefault();
     };
 
     const handleInputContentChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         switch (event.target.name) {
             case 'description':
-                setNewContentForm({
+                setNewPostForm({
                     ...newContentForm,
                     description: event.target.value,
                 });
                 break;
             case 'title':
-                setNewContentForm({
+                setNewPostForm({
                     ...newContentForm,
                     title: event.target.value,
                 });
                 break;
-            case 'author':
-                setNewContentForm({
+            case 'coverImage':
+                setNewPostForm({
                     ...newContentForm,
-                    author: event.target.value,
+                    coverImage: event.target.value,
                 });
                 break;
         }
@@ -77,7 +105,7 @@ export default function NewContent(props: INewContentProps) {
 
     const handleInputDateContentChange = (date: MaterialUiPickersDate) => {
         if (date !== null) {
-            setNewContentForm({
+            setNewPostForm({
                 ...newContentForm,
                 date: new Date(date.getTime()),
             });
@@ -92,7 +120,7 @@ export default function NewContent(props: INewContentProps) {
             maxWidth="sm"
             aria-labelledby="form-dialog-title"
         >
-            <DialogTitle id="form-dialog-title">Novo Conteudo</DialogTitle>
+            <DialogTitle id="form-dialog-title">Nova Publicação</DialogTitle>
             <DialogContent>
                 <TextField
                     value={newContentForm.title}
@@ -100,6 +128,7 @@ export default function NewContent(props: INewContentProps) {
                     name="title"
                     label="Titulo"
                     variant="outlined"
+                    required={true}
                 /><br /><br />
                 <TextField
                     value={newContentForm.description}
@@ -107,6 +136,7 @@ export default function NewContent(props: INewContentProps) {
                     name="description"
                     label="Descricao"
                     variant="outlined"
+                    required={true}
                     multiline={true}
                     rows="4"
                     rowsMax="8"
@@ -116,16 +146,17 @@ export default function NewContent(props: INewContentProps) {
                         label="Data"
                         name="date"
                         inputVariant="outlined"
+                        required={true}
                         value={newContentForm.date}
                         onChange={handleInputDateContentChange}
                     />
                 </MuiPickersUtilsProvider>
                 <br /><br />
                 <TextField
-                    value={newContentForm.author}
+                    value={newContentForm.coverImage}
                     onChange={handleInputContentChange}
-                    name="author"
-                    label="Autor"
+                    name="coverImage"
+                    label="Imagem de apresentação"
                     variant="outlined"
                 /><br />
             </DialogContent>
@@ -133,7 +164,7 @@ export default function NewContent(props: INewContentProps) {
                 <Button onClick={() => props.setShow(false)} color="primary">
                     Cancel
                 </Button>
-                <Button onClick={postNewContent} color="primary">
+                <Button onClick={postNewPost} color="primary">
                     Post
                 </Button>
             </DialogActions>

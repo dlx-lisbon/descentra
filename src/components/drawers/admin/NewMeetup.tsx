@@ -12,16 +12,17 @@ import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import 'date-fns';
 import React, { useState } from 'react';
 
-import MeetupModel from '../../helpers/orbitdb/MeetupModel';
-import {IMeetupInfo} from '../../interfaces';
+import MeetupModel from '../../../helpers/orbitdb/MeetupModel';
+import {IMeetupInfo} from '../../../interfaces';
 
 interface INewContentProps {
     show: boolean;
     setShow: React.Dispatch<React.SetStateAction<boolean>>;
-    meetupModel: MeetupModel;
+    meetupModel?: MeetupModel;
 }
 export default function NewContent(props: INewContentProps) {
     const emptyForm = {
+        slug: '',
         author: '',
         date: (new Date()).getTime(),
         description: '',
@@ -32,10 +33,14 @@ export default function NewContent(props: INewContentProps) {
     const [newMeetupForm, setNewMeetupForm] = useState<IMeetupInfo>(emptyForm);
 
     const postNewContent = (event: React.SyntheticEvent<Element, Event>) => {
-        props.meetupModel.add(newMeetupForm).then(() => {
-            props.setShow(false)
-            setNewMeetupForm(emptyForm)
-        });
+        if (props.meetupModel === undefined) {
+            // TODO: sow error
+        } else {
+            props.meetupModel.add(newMeetupForm).then(() => {
+                props.setShow(false)
+                setNewMeetupForm(emptyForm)
+            });
+        }
         event.preventDefault();
     };
 

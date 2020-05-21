@@ -11,18 +11,23 @@ update_configs:
           dependency_name: "@date-io/core"
           version_requirement: "^1.3.6"
       - match:
+          dependency_name: "@date-io/date-fns"
+          version_requirement: "1.x"
+      - match:
           dependency_name: "prop-types"
           version_requirement: "^13.6.0"
       - match:
-          dependency_name: "react-scripts"
-      - match:
           dependency_name: "ipfs"
-          version_requirement: "~0.40.0"
+      - match:
+          dependency_name: "multicodec"
       - match:
           dependency_name: "orbit-db"
       - match:
-          dependency_name: "@date-io/date-fns"
-          version_requirement: "1.x"
+          dependency_name: "react-scripts"
+      - match:
+          dependency_name: "typescript"
+      - match:
+          dependency_name: "eslint"
     automerged_updates:
       - match:
           dependency_type: "development"

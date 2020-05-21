@@ -7,3 +7,4 @@ declare module 'ipfs';
 declare module 'react-emoji-render';
 declare module 'date-format';
 declare module 'orbit-db';
+declare module 'react-stack-grid';
