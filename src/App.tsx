@@ -209,7 +209,7 @@ export default function App() {
             </Drawer>
             <Drawer anchor="bottom" open={!!openPost || false} onClose={() => setOpenPost(undefined)}>
                 <Suspense fallback={<Typography variant="overline" display="block" gutterBottom>A carregar....</Typography>}>
-                    {!!openPost && <Post content={openPost as IPostInfo} />}
+                    {!!openPost && <Post close={() => setOpenPost(undefined)} content={openPost as IPostInfo} />}
                 </Suspense>
             </Drawer>
             <Drawer anchor="bottom" open={!!openMeetup || false} onClose={() => setOpenMeetup(undefined)}>
