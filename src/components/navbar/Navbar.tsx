@@ -137,7 +137,6 @@ export default function Navbar(props: NavbarProps) {
     return (
         <AppBar
             position="fixed"
-            className={classes.appBar}
             color="default"
             elevation={0}
         >

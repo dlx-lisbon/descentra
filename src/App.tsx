@@ -82,16 +82,16 @@ export default function App() {
                 &nbsp;Novo Conteúdo
             </>),
         },
-        {
-            key: 'novo-meetup',
-            loginRequired: true,
-            onlyAdmin: true,
-            onClick: () => openNewMeetup(true),
-            children: (<>
-                <span role="img" aria-label="memo">🤖</span>
-                &nbsp;Novo Meetup
-            </>),
-        },
+        // {
+        //     key: 'novo-meetup',
+        //     loginRequired: true,
+        //     onlyAdmin: true,
+        //     onClick: () => openNewMeetup(true),
+        //     children: (<>
+        //         <span role="img" aria-label="memo">🤖</span>
+        //         &nbsp;Novo Meetup
+        //     </>),
+        // },
         {
             key: 'praticar',
             loginRequired: false,
@@ -123,9 +123,12 @@ export default function App() {
     return (
         <React.Fragment>
             <Navbar items={navbarItems} onAvatarClick={() => openProfile(true)} />
-            <div style={{ textAlign: 'center' }}>
-                <img alt="loading fish" src="img/sardy.webp" style={{ maxWidth: '100%', margin: '6% 0px' }} />
-            </div>
+            {!loadingPostModel && <div style={{
+                textAlign: 'center',
+                margin: '100px 10% 5% 10%'
+            }}>
+                <h1 style={{ fontFamily: 'Caveat', fontWeight: 'lighter', fontSize: '5em' }}>Bem-vindo ao dlx</h1>
+            </div>}
             <div>
                 <StackGrid
                     duration={480}
@@ -161,15 +164,19 @@ export default function App() {
                             <Typography variant="overline" display="block" gutterBottom style={{ color: 'grey' }}>
                                 by {authorAddress.substr(0, 7)}...{authorAddress.substr(35, 42)}, {moment(c.date).fromNow()}
                             </Typography>
-                            <Typography variant="body2" gutterBottom>{c.content.slice(0, c.content.indexOf('.') + 1)}</Typography>
+                            <Typography variant="body2" gutterBottom>{c.content.slice(0, c.content.indexOf('\n') + 1)}</Typography>
                         </div>
                     })}
 
                 </StackGrid>
             </div>
-            {
-                loadingPostModel && <Typography variant="overline" display="block" gutterBottom>A carregar....</Typography>
-            }
+            {loadingPostModel && <div style={{ textAlign: 'center', margin: '10%' }}>
+                <img alt="loading fish" src="img/sardy.webp" style={{ maxWidth: '50%' }} />
+                <Typography variant="h5" component="h5" gutterBottom>
+                    dlx é um meetup sobre blockchain ⛓️. Maioritariamente ethereum ⛏️. E as outras coisas todas 🥞 ...
+                </Typography>
+                <Typography variant="overline" display="block" gutterBottom>A carregar....</Typography>
+            </div>}
             {/* <Grid item xs={12} sm={12} md={6}>
                 {posts.map((c) => <ContentPost key={c._id} content={c} onClick={(id) => setOpenPost(
                     posts.find(el => el._id === id)
@@ -180,14 +187,14 @@ export default function App() {
                     meetups.find(el => el._id === id)
                 )} />)}
             </Grid> */}
-            <Suspense fallback={<Typography variant="overline" display="block" gutterBottom>A carregar....</Typography>}>
+            <Suspense fallback={''}>
                 <NewPost
                     show={newPost}
                     setShow={openNewPost}
                     postModel={postModel}
                 />
             </Suspense>
-            <Suspense fallback={<Typography variant="overline" display="block" gutterBottom>A carregar....</Typography>}>
+            <Suspense fallback={''}>
                 <NewMeetup
                     show={newMeetup}
                     setShow={openNewMeetup}
@@ -202,16 +209,12 @@ export default function App() {
                     <Profile />
                 </Suspense>
             </Drawer>
-            <Drawer anchor="bottom" open={practice} onClose={() => openPractice(false)}>
-                <Suspense fallback={<Typography variant="overline" display="block" gutterBottom>A carregar....</Typography>}>
-                    <Practice />
-                </Suspense>
-            </Drawer>
-            <Drawer anchor="bottom" open={!!openPost || false} onClose={() => setOpenPost(undefined)}>
-                <Suspense fallback={<Typography variant="overline" display="block" gutterBottom>A carregar....</Typography>}>
-                    {!!openPost && <Post close={() => setOpenPost(undefined)} content={openPost as IPostInfo} />}
-                </Suspense>
-            </Drawer>
+            <Suspense fallback={''}>
+                {practice && <Practice close={() => openPractice(false)} />}
+            </Suspense>
+            <Suspense fallback={''}>
+                {!!openPost && <Post close={() => setOpenPost(undefined)} content={openPost as IPostInfo} />}
+            </Suspense>
             <Drawer anchor="bottom" open={!!openMeetup || false} onClose={() => setOpenMeetup(undefined)}>
                 <Suspense fallback={<Typography variant="overline" display="block" gutterBottom>A carregar....</Typography>}>
                     {!!openMeetup && <Meetup content={openMeetup as IMeetupInfo} />}
