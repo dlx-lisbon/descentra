@@ -117,7 +117,7 @@ export default function NewPost(props: INewPostProps) {
             open={props.show}
             onClose={() => props.setShow(false)}
             fullWidth={true}
-            maxWidth="sm"
+            maxWidth="lg"
             aria-labelledby="form-dialog-title"
         >
             <DialogTitle id="form-dialog-title">Nova Publicação</DialogTitle>
@@ -125,6 +125,7 @@ export default function NewPost(props: INewPostProps) {
                 <TextField
                     value={newContentForm.title}
                     onChange={handleInputContentChange}
+                    style={{ width: '100%' }}
                     name="title"
                     label="Titulo"
                     variant="outlined"
@@ -133,13 +134,14 @@ export default function NewPost(props: INewPostProps) {
                 <TextField
                     value={newContentForm.description}
                     onChange={handleInputContentChange}
+                    style={{ width: '100%' }}
                     name="description"
                     label="Descricao"
                     variant="outlined"
                     required={true}
                     multiline={true}
-                    rows="4"
-                    rowsMax="8"
+                    rows="15"
+
                 /><br /><br />
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <DateTimePicker
@@ -155,6 +157,7 @@ export default function NewPost(props: INewPostProps) {
                 <TextField
                     value={newContentForm.coverImage}
                     onChange={handleInputContentChange}
+                    style={{ width: '100%' }}
                     name="coverImage"
                     label="Imagem de apresentação"
                     variant="outlined"
