@@ -31,6 +31,41 @@ Para começar a fazer alterações e testar, é necessário preencher o `.env` (
 
 Recomendamos que utilize `yarn` para instalar dependências.
 
+### libp2p-webrtc-star
+
+Este website requer uma instância de [libp2p-webrtc-star](https://github.com/libp2p/js-libp2p-webrtc-star). Para executar localmente é apenas necessário executar o libp2p como indicado [aqui](https://github.com/libp2p/js-libp2p-webrtc-star#rendezvous-server-aka-signalling-server). Para hospedar num servidor externo, com ssl é necessária alguma configuração extra.
+
+
+Exemplo de configuração nginx:
+
+```yml
+server {
+    listen 80;
+    listen [::]:80;
+    server_name (HOST-NAME);
+    return 301 https://(HOST-NAME)$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    server_name (HOST-NAME);
+
+    ssl_certificate /etc/letsencrypt/live/(HOST-NAME)/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/(HOST-NAME)/privkey.pem;
+
+    location / {
+        proxy_pass http://127.0.0.1:9090;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade ‘Websocket’;
+        proxy_set_header Connection ‘Upgrade’;
+        proxy_set_header Host (HOST-NAME);
+    }
+}
+```
+
+**NOTA**: Substituir *(HOST-NAME)* pelo hostname utilizado.
+
 ## Licença
 [GNU General Public License v3](LICENSE)
 
