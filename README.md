@@ -39,6 +39,10 @@ Este website requer uma instância de [libp2p-webrtc-star](https://github.com/li
 Exemplo de configuração nginx:
 
 ```yml
+upstream websocket {
+   server 127.0.0.1:9090;
+}
+
 server {
     listen 80;
     listen [::]:80;
@@ -55,10 +59,10 @@ server {
     ssl_certificate_key /etc/letsencrypt/live/(HOST-NAME)/privkey.pem;
 
     location / {
-        proxy_pass http://127.0.0.1:9090;
+        proxy_pass http://websocket;
         proxy_http_version 1.1;
-        proxy_set_header Upgrade ‘Websocket’;
-        proxy_set_header Connection ‘Upgrade’;
+        proxy_set_header Upgrade 'Websocket';
+        proxy_set_header Connection 'Upgrade';
         proxy_set_header Host (HOST-NAME);
     }
 }
