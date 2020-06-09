@@ -46,29 +46,28 @@ upstream websocket {
 server {
     listen 80;
     listen [::]:80;
-    server_name (HOST-NAME);
-    return 301 https://(HOST-NAME)$request_uri;
+    return 301 https://$host$request_uri;
 }
 
 server {
     listen 443 ssl;
     listen [::]:443 ssl;
-    server_name (HOST-NAME);
 
-    ssl_certificate /etc/letsencrypt/live/(HOST-NAME)/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/(HOST-NAME)/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/(FOLDER-FROM-CERTBOT)/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/(FOLDER-FROM-CERTBOT)/privkey.pem;
 
     location / {
         proxy_pass http://websocket;
         proxy_http_version 1.1;
-        proxy_set_header Upgrade 'Websocket';
-        proxy_set_header Connection 'Upgrade';
-        proxy_set_header Host (HOST-NAME);
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
     }
 }
 ```
 
-**NOTA**: Substituir *(HOST-NAME)* pelo hostname utilizado.
+**NOTA**: Substituir *(FOLDER-FROM-CERTBOT)* pelo caminho completo, dado ao gerar os certificados.
 
 ## Licença
 [GNU General Public License v3](LICENSE)
