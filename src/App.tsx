@@ -79,7 +79,7 @@ export default function App() {
             onClick: () => openNewPost(true),
             children: (<>
                 <span role="img" aria-label="memo">📝</span>
-                &nbsp;Novo Conteúdo
+                &nbsp;Novo Conteudo
             </>),
         },
         // {

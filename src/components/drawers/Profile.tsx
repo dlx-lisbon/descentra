@@ -10,7 +10,7 @@ export default function Profile() {
     useEffect(() => {
         const getUserAddress = async () => {
             if ((window as any).ethereum !== undefined) {
-                try  {
+                try {
                     const provider = new ethers.providers.Web3Provider((window as any).ethereum);
                     const signer = provider.getSigner();
                     setUserAddress(await signer.getAddress());
@@ -30,7 +30,7 @@ export default function Profile() {
     }
     return (
         <>
-            <Button onClick={() => (window as any).ethereum.enable()} color="primary">
+            <Button onClick={() => { console.log((window as any).ethereum, (window as any)); (window as any).ethereum.enable(); }} color="primary">
                 Login
             </Button>
             {getUser()}
