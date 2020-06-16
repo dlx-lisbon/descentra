@@ -35,6 +35,11 @@ Recomendamos que utilize `yarn` para instalar dependências.
 
 Este website requer uma instância de [libp2p-webrtc-star](https://github.com/libp2p/js-libp2p-webrtc-star). Para executar localmente é apenas necessário executar o libp2p como indicado [aqui](https://github.com/libp2p/js-libp2p-webrtc-star#rendezvous-server-aka-signalling-server). Para hospedar num servidor externo, com ssl é necessária alguma configuração extra.
 
+Exemplo como iniciar `webrtc-star` server para este projeto:
+
+```bash
+npx run star-signal
+```
 
 Exemplo de configuração nginx:
 
