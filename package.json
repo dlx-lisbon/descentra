@@ -40,6 +40,8 @@
         "@types/showdown": "1.9.3",
         "@types/slug": "0.9.1",
         "eslint": "^5.16.0",
+        "husky": "^4.2.5",
+        "lint-staged": ">=10",
         "organize-imports-cli": "0.7.0",
         "prettier": "2.0.5",
         "react-scripts": "3.0.1",
@@ -65,6 +67,17 @@
             "last 1 chrome version",
             "last 1 firefox version",
             "last 1 safari version"
+        ]
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged --allow-empty"
+        }
+    },
+    "lint-staged": {
+        "./src/**/*.{ts,tsx}": [
+            "organize-imports-cli",
+            "prettier --write"
         ]
     }
 }
