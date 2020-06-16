@@ -1,16 +1,15 @@
-import React, { useEffect, useState, Suspense } from 'react';
-import { startIpfsInstance } from './helpers/ipfsFactory';
-import PostModel from './helpers/orbitdb/PostModel';
-import { store } from './helpers/orbitdb/store';
-import { IMeetupInfo, IPostInfo, INavbarItem } from './interfaces';
-import MeetupModel from './helpers/orbitdb/MeetupModel';
 import { Drawer, Typography } from '@material-ui/core';
-import Navbar from './components/navbar/Navbar';
-import StackGrid, { transitions, easings } from "react-stack-grid";
+import { ethers } from 'ethers';
 import moment from 'moment';
 import 'moment/locale/pt';
-import { ethers } from 'ethers';
-
+import React, { Suspense, useEffect, useState } from 'react';
+import StackGrid, { easings, transitions } from 'react-stack-grid';
+import Navbar from './components/navbar/Navbar';
+import { startIpfsInstance } from './helpers/ipfsFactory';
+import MeetupModel from './helpers/orbitdb/MeetupModel';
+import PostModel from './helpers/orbitdb/PostModel';
+import { store } from './helpers/orbitdb/store';
+import { IMeetupInfo, INavbarItem, IPostInfo } from './interfaces';
 
 const Profile = React.lazy(() => import('./components/drawers/Profile'));
 const NewPost = React.lazy(() => import('./components/drawers/admin/NewPost'));
@@ -53,14 +52,14 @@ export default function App() {
             const postM = new PostModel(
                 postsDb,
                 (progress) => console.log(progress),
-                (progress) => setReplicatingProgress(progress),
+                (progress) => setReplicatingProgress(progress)
             );
             postM.subscribe(() => setPosts(postM.records));
             postsDb.load();
             const meetupM = new MeetupModel(
                 meetupsDb,
                 (progress) => console.log(progress),
-                (progress) => setReplicatingProgress(progress),
+                (progress) => setReplicatingProgress(progress)
             );
             // meetupM.subscribe(() => setMeetups(meetupM.records));
             meetupsDb.load();
@@ -77,10 +76,14 @@ export default function App() {
             loginRequired: true,
             onlyAdmin: true,
             onClick: () => openNewPost(true),
-            children: (<>
-                <span role="img" aria-label="memo">📝</span>
-                &nbsp;Novo Conteudo
-            </>),
+            children: (
+                <>
+                    <span role="img" aria-label="memo">
+                        📝
+                    </span>
+                    &nbsp;Novo Conteudo
+                </>
+            ),
         },
         // {
         //     key: 'novo-meetup',
@@ -97,38 +100,50 @@ export default function App() {
             loginRequired: false,
             onlyAdmin: false,
             onClick: () => openPractice(true),
-            children: (<>
-                <span role="img" aria-label="flexed-biceps">💪</span>
-                &nbsp;Praticar
-            </>),
+            children: (
+                <>
+                    <span role="img" aria-label="flexed-biceps">
+                        💪
+                    </span>
+                    &nbsp;Praticar
+                </>
+            ),
         },
         {
             key: 'kudos',
             loginRequired: true,
             onlyAdmin: false,
             onClick: () => openKudos(true),
-            children: (<>
-                <span role="img" aria-label="hatching-chick">🐣</span>
-                &nbsp;Kudos
-            </>),
+            children: (
+                <>
+                    <span role="img" aria-label="hatching-chick">
+                        🐣
+                    </span>
+                    &nbsp;Kudos
+                </>
+            ),
         },
-    ]
+    ];
 
     const handleClickOpenPost = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        setOpenPost(posts.find(el => el._id === event.currentTarget.id));
+        setOpenPost(posts.find((el) => el._id === event.currentTarget.id));
         event.preventDefault();
-    }
+    };
 
     const transition = transitions['fadeDown'];
     return (
         <React.Fragment>
             <Navbar items={navbarItems} onAvatarClick={() => openProfile(true)} />
-            {!loadingPostModel && <div style={{
-                textAlign: 'center',
-                margin: '100px 10% 5% 10%'
-            }}>
-                <h1 style={{ fontFamily: 'Caveat', fontWeight: 'lighter', fontSize: '5em' }}>Bem-vindo ao dlx</h1>
-            </div>}
+            {!loadingPostModel && (
+                <div
+                    style={{
+                        textAlign: 'center',
+                        margin: '100px 10% 5% 10%',
+                    }}
+                >
+                    <h1 style={{ fontFamily: 'Caveat', fontWeight: 'lighter', fontSize: '5em' }}>Bem-vindo ao dlx</h1>
+                </div>
+            )}
             <div>
                 <StackGrid
                     duration={480}
@@ -145,38 +160,51 @@ export default function App() {
                 >
                     {posts.map((c) => {
                         const authorAddress = ethers.utils.verifyMessage(c.slug, c.author);
-                        return <div
-                            key={c._id}
-                            id={c._id}
-                            style={{ height: 250, width: columnWidth }}
-                            onClick={handleClickOpenPost}
-                        >
-                            {c.coverImage !== undefined && <div style={{
-                                background: `url("${c.coverImage}")`,
-                                backgroundRepeat: 'no-repeat',
-                                backgroundSize: `${columnWidth}px auto`,
-                                backgroundPosition: 'center',
-                                height: '200px'
-                            }} />}
-                            <Typography variant="h2" component="h2" gutterBottom>
-                                {c.title}
-                            </Typography>
-                            <Typography variant="overline" display="block" gutterBottom style={{ color: 'grey' }}>
-                                by {authorAddress.substr(0, 7)}...{authorAddress.substr(35, 42)}, {moment(c.date).fromNow()}
-                            </Typography>
-                            <Typography variant="body2" gutterBottom>{c.content.slice(0, c.content.indexOf('\n') + 1)}</Typography>
-                        </div>
+                        return (
+                            <div
+                                key={c._id}
+                                id={c._id}
+                                style={{ height: 250, width: columnWidth }}
+                                onClick={handleClickOpenPost}
+                            >
+                                {c.coverImage !== undefined && (
+                                    <div
+                                        style={{
+                                            background: `url("${c.coverImage}")`,
+                                            backgroundRepeat: 'no-repeat',
+                                            backgroundSize: `${columnWidth}px auto`,
+                                            backgroundPosition: 'center',
+                                            height: '200px',
+                                        }}
+                                    />
+                                )}
+                                <Typography variant="h2" component="h2" gutterBottom>
+                                    {c.title}
+                                </Typography>
+                                <Typography variant="overline" display="block" gutterBottom style={{ color: 'grey' }}>
+                                    by {authorAddress.substr(0, 7)}...{authorAddress.substr(35, 42)},{' '}
+                                    {moment(c.date).fromNow()}
+                                </Typography>
+                                <Typography variant="body2" gutterBottom>
+                                    {c.content.slice(0, c.content.indexOf('\n') + 1)}
+                                </Typography>
+                            </div>
+                        );
                     })}
-
                 </StackGrid>
             </div>
-            {loadingPostModel && <div style={{ textAlign: 'center', margin: '10%' }}>
-                <img alt="loading fish" src="img/sardy.webp" style={{ maxWidth: '50%' }} />
-                <Typography variant="h5" component="h5" gutterBottom>
-                    dlx é um meetup sobre blockchain ⛓️. Maioritariamente ethereum ⛏️. E as outras coisas todas 🥞 ...
-                </Typography>
-                <Typography variant="overline" display="block" gutterBottom>A carregar....</Typography>
-            </div>}
+            {loadingPostModel && (
+                <div style={{ textAlign: 'center', margin: '10%' }}>
+                    <img alt="loading fish" src="img/sardy.webp" style={{ maxWidth: '50%' }} />
+                    <Typography variant="h5" component="h5" gutterBottom>
+                        dlx é um meetup sobre blockchain ⛓️. Maioritariamente ethereum ⛏️. E as outras coisas todas 🥞
+                        ...
+                    </Typography>
+                    <Typography variant="overline" display="block" gutterBottom>
+                        A carregar....
+                    </Typography>
+                </div>
+            )}
             {/* <Grid item xs={12} sm={12} md={6}>
                 {posts.map((c) => <ContentPost key={c._id} content={c} onClick={(id) => setOpenPost(
                     posts.find(el => el._id === id)
@@ -188,35 +216,37 @@ export default function App() {
                 )} />)}
             </Grid> */}
             <Suspense fallback={''}>
-                <NewPost
-                    show={newPost}
-                    setShow={openNewPost}
-                    postModel={postModel}
-                />
+                <NewPost show={newPost} setShow={openNewPost} postModel={postModel} />
             </Suspense>
             <Suspense fallback={''}>
-                <NewMeetup
-                    show={newMeetup}
-                    setShow={openNewMeetup}
-                    meetupModel={meetupModel}
-                />
+                <NewMeetup show={newMeetup} setShow={openNewMeetup} meetupModel={meetupModel} />
             </Suspense>
             <Drawer anchor="bottom" open={kudos} onClose={() => openKudos(false)}>
                 Em construção
             </Drawer>
             <Drawer anchor="bottom" open={profile} onClose={() => openProfile(false)}>
-                <Suspense fallback={<Typography variant="overline" display="block" gutterBottom>A carregar....</Typography>}>
+                <Suspense
+                    fallback={
+                        <Typography variant="overline" display="block" gutterBottom>
+                            A carregar....
+                        </Typography>
+                    }
+                >
                     <Profile />
                 </Suspense>
             </Drawer>
-            <Suspense fallback={''}>
-                {practice && <Practice close={() => openPractice(false)} />}
-            </Suspense>
+            <Suspense fallback={''}>{practice && <Practice close={() => openPractice(false)} />}</Suspense>
             <Suspense fallback={''}>
                 {!!openPost && <Post close={() => setOpenPost(undefined)} content={openPost as IPostInfo} />}
             </Suspense>
             <Drawer anchor="bottom" open={!!openMeetup || false} onClose={() => setOpenMeetup(undefined)}>
-                <Suspense fallback={<Typography variant="overline" display="block" gutterBottom>A carregar....</Typography>}>
+                <Suspense
+                    fallback={
+                        <Typography variant="overline" display="block" gutterBottom>
+                            A carregar....
+                        </Typography>
+                    }
+                >
                     {!!openMeetup && <Meetup content={openMeetup as IMeetupInfo} />}
                 </Suspense>
             </Drawer>

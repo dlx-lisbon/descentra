@@ -40,6 +40,7 @@
         "@types/showdown": "1.9.3",
         "@types/slug": "0.9.1",
         "eslint": "^5.16.0",
+        "prettier": "2.0.5",
         "react-scripts": "3.0.1",
         "source-map-explorer": "2.4.2",
         "typescript": "3.4.5"

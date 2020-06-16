@@ -1,19 +1,11 @@
 import DateFnsUtils from '@date-io/date-fns';
-import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    TextField,
-} from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@material-ui/core';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import 'date-fns';
 import React, { useState } from 'react';
-
 import MeetupModel from '../../../helpers/orbitdb/MeetupModel';
-import {IMeetupInfo} from '../../../interfaces';
+import { IMeetupInfo } from '../../../interfaces';
 
 interface INewContentProps {
     show: boolean;
@@ -24,12 +16,12 @@ export default function NewContent(props: INewContentProps) {
     const emptyForm = {
         slug: '',
         author: '',
-        date: (new Date()).getTime(),
+        date: new Date().getTime(),
         description: '',
         title: '',
         location: '',
-        status: false
-    }
+        status: false,
+    };
     const [newMeetupForm, setNewMeetupForm] = useState<IMeetupInfo>(emptyForm);
 
     const postNewContent = (event: React.SyntheticEvent<Element, Event>) => {
@@ -37,8 +29,8 @@ export default function NewContent(props: INewContentProps) {
             // TODO: sow error
         } else {
             props.meetupModel.add(newMeetupForm).then(() => {
-                props.setShow(false)
-                setNewMeetupForm(emptyForm)
+                props.setShow(false);
+                setNewMeetupForm(emptyForm);
             });
         }
         event.preventDefault();
@@ -60,40 +52,46 @@ export default function NewContent(props: INewContentProps) {
             <DialogContent>
                 <TextField
                     value={newMeetupForm.title}
-                    onChange={e => handleInputContentChange('title', e.target.value)}
+                    onChange={(e) => handleInputContentChange('title', e.target.value)}
                     name="title"
                     label="Titulo"
                     variant="outlined"
-                /><br /><br />
+                />
+                <br />
+                <br />
                 <TextField
                     value={newMeetupForm.description}
-                    onChange={e => handleInputContentChange('description', e.target.value)}
+                    onChange={(e) => handleInputContentChange('description', e.target.value)}
                     name="description"
                     label="Descrição"
                     variant="outlined"
                     multiline={true}
                     rows="4"
                     rowsMax="8"
-                /><br /><br />
+                />
+                <br />
+                <br />
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <DateTimePicker
                         label="Data"
                         name="date"
                         inputVariant="outlined"
                         value={new Date(newMeetupForm.date)}
-                        onChange={
-                            (date: MaterialUiPickersDate) => date !== null && handleInputContentChange('date', date.getTime())
+                        onChange={(date: MaterialUiPickersDate) =>
+                            date !== null && handleInputContentChange('date', date.getTime())
                         }
                     />
                 </MuiPickersUtilsProvider>
-                <br /><br />
+                <br />
+                <br />
                 <TextField
                     value={newMeetupForm.author}
-                    onChange={e => handleInputContentChange('author', e.target.value)}
+                    onChange={(e) => handleInputContentChange('author', e.target.value)}
                     name="author"
                     label="Autor"
                     variant="outlined"
-                /><br />
+                />
+                <br />
             </DialogContent>
             <DialogActions>
                 <Button onClick={() => props.setShow(false)} color="primary">

@@ -1,22 +1,17 @@
-import React from 'react';
 import {
-    Typography,
-    Dialog,
-    DialogContent,
-    DialogActions,
     Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
     GridList,
     GridListTile,
+    GridListTileBar,
     IconButton,
-    GridListTileBar
+    Typography,
 } from '@material-ui/core';
-import {
-    Theme,
-    createStyles,
-    makeStyles
-} from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import InfoIcon from '@material-ui/icons/Info';
-
+import React from 'react';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -34,37 +29,40 @@ const useStyles = makeStyles((theme: Theme) =>
             color: theme.palette.primary.light,
         },
         titleBar: {
-            background:
-                'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
+            background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
         },
         icon: {
             color: 'rgba(255, 255, 255, 0.54)',
         },
-    }),
+    })
 );
-export default function Practice(props: { close: () => void; }) {
+export default function Practice(props: { close: () => void }) {
     const classes = useStyles();
     const externalChallenges = [
         {
             title: 'cryptozombies',
-            image: 'https://www.sdxcentral.com/wp-content/uploads/2019/03/Cisco-WiFi-Routers-Attacked-After-Code-Hack-Posted.jpg',
+            image:
+                'https://www.sdxcentral.com/wp-content/uploads/2019/03/Cisco-WiFi-Routers-Attacked-After-Code-Hack-Posted.jpg',
             url: 'https://cryptozombies.io',
         },
         {
             title: 'gitcoin quests',
-            image: 'https://www.sdxcentral.com/wp-content/uploads/2019/03/Cisco-WiFi-Routers-Attacked-After-Code-Hack-Posted.jpg',
+            image:
+                'https://www.sdxcentral.com/wp-content/uploads/2019/03/Cisco-WiFi-Routers-Attacked-After-Code-Hack-Posted.jpg',
             url: 'https://gitcoin.co/quests',
         },
         {
             title: 'ethernaut',
-            image: 'https://www.sdxcentral.com/wp-content/uploads/2019/03/Cisco-WiFi-Routers-Attacked-After-Code-Hack-Posted.jpg',
+            image:
+                'https://www.sdxcentral.com/wp-content/uploads/2019/03/Cisco-WiFi-Routers-Attacked-After-Code-Hack-Posted.jpg',
             url: 'https://ethernaut.openzeppelin.com/',
         },
     ];
     const challenges = [
         {
             title: 'Guarda conteudo',
-            image: 'https://www.sdxcentral.com/wp-content/uploads/2019/03/Cisco-WiFi-Routers-Attacked-After-Code-Hack-Posted.jpg',
+            image:
+                'https://www.sdxcentral.com/wp-content/uploads/2019/03/Cisco-WiFi-Routers-Attacked-After-Code-Hack-Posted.jpg',
             description: 'Guardar um numero, bytes e uma string num contrato. Depois, obtem esses valores do contrato.',
             url: '',
         },
@@ -97,7 +95,7 @@ export default function Practice(props: { close: () => void; }) {
                                         <IconButton
                                             aria-label={`info about ${challenge.title}`}
                                             className={classes.icon}
-                                            onClick={() => window.location.href = challenge.url}
+                                            onClick={() => (window.location.href = challenge.url)}
                                         >
                                             <InfoIcon />
                                         </IconButton>
@@ -121,7 +119,7 @@ export default function Practice(props: { close: () => void; }) {
                                         <IconButton
                                             aria-label={`info about ${externalChallenge.title}`}
                                             className={classes.icon}
-                                            onClick={() => window.location.href = externalChallenge.url}
+                                            onClick={() => (window.location.href = externalChallenge.url)}
                                         >
                                             <InfoIcon />
                                         </IconButton>

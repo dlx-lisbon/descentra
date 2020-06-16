@@ -22,6 +22,6 @@ export interface INavbarItem {
     key: string;
     loginRequired: boolean;
     onlyAdmin: boolean;
-    onClick: () => void
-    children: React.ReactNode
+    onClick: () => void;
+    children: React.ReactNode;
 }

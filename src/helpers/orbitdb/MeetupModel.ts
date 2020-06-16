@@ -1,5 +1,4 @@
-import ModelBase from './ModelBase'
 import { IMeetupInfo } from '../../interfaces';
+import ModelBase from './ModelBase';
 
-export default class MeetupModel extends ModelBase<IMeetupInfo> {
-}
+export default class MeetupModel extends ModelBase<IMeetupInfo> {}

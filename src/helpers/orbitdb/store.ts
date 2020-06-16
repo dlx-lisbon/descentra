@@ -1,6 +1,5 @@
 import OrbitDB from 'orbit-db';
 
-
 // Configuration for the database
 const dbConfig = {
     // If database doesn't exist, create it
