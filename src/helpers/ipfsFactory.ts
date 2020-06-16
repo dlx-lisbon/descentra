@@ -1,6 +1,5 @@
 import IPFS from 'ipfs';
 
-
 // Configuration for IPFS instance
 const ipfsConfig = {
     repo: process.env.REACT_APP_IPFS_REPO,

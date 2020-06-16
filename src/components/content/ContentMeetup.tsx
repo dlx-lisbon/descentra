@@ -13,9 +13,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import moment from 'moment';
 import React from 'react';
-
 import { IMeetupInfo } from '../../interfaces';
-
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -42,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
         root: {
             maxWidth: 345,
         },
-    }),
+    })
 );
 interface IContentPostProps {
     content: IMeetupInfo;
@@ -61,21 +59,16 @@ export default function ContentMeetup(props: IContentPostProps) {
             <Card className={classes.root}>
                 <CardHeader
                     avatar={
-                        <Avatar
-                            aria-label="recipe"
-                            className={classes.avatar}
-                        >
+                        <Avatar aria-label="recipe" className={classes.avatar}>
                             {props.content.author.substr(0, 2)}
                         </Avatar>
                     }
                     title={props.content.title}
                     subheader={moment(props.content.date).fromNow()}
                 />
-                {props.content.coverImage && <CardMedia
-                    className={classes.media}
-                    image={props.content.coverImage}
-                    title={props.content.title}
-                />}
+                {props.content.coverImage && (
+                    <CardMedia className={classes.media} image={props.content.coverImage} title={props.content.title} />
+                )}
                 <CardContent>
                     <Typography variant="body2" color="textSecondary" component="p">
                         {props.content.description}

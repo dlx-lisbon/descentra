@@ -1,8 +1,7 @@
+import { Grid } from '@material-ui/core';
 import { ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
 import { KudosInstance } from '../../helpers/contracts/types/index';
-import {Grid} from '@material-ui/core';
-
 
 interface IKudosProps {
     kudosCore: ethers.Contract & KudosInstance;
@@ -50,7 +49,11 @@ export default function Kudos(props: IKudosProps) {
     const renderKudos = () => {
         return (
             <>
-                {kudos.map((k, i) => <Grid container key={i} className="show-grid">{k.map((k1) => kudosSpace(k1))}</Grid>)}
+                {kudos.map((k, i) => (
+                    <Grid container key={i} className="show-grid">
+                        {k.map((k1) => kudosSpace(k1))}
+                    </Grid>
+                ))}
             </>
         );
     };

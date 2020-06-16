@@ -9,11 +9,7 @@ export default class ModelBase<T> {
     // may not even be worth separating this logic
     // out, but we do this to demonstrate one way to
     // separate out parts of your application.
-    constructor(
-        db: any,
-        loading: (progress: number) => void,
-        replicating: (progress: number) => void,
-    ) {
+    constructor(db: any, loading: (progress: number) => void, replicating: (progress: number) => void) {
         this.readyOrReplicated = false;
         this.db = db;
         this.records = [] as any;
@@ -44,7 +40,8 @@ export default class ModelBase<T> {
             (address: string, hash: string, entry: any, progress: number, have: number) => {
                 console.log('replicate.progress', address, hash, entry, progress, have);
                 replicating((progress / have) * 100);
-            });
+            }
+        );
         // Emitted before loading the database.
         this.db.events.on('load', (dbname: string) => {
             loading(0);
@@ -59,7 +56,8 @@ export default class ModelBase<T> {
             (address: string, hash: string, entry: any, progress: number, total: number) => {
                 console.log('load.progress', address, hash, entry, progress, total);
                 loading((progress / total) * 100);
-            });
+            }
+        );
         // Emitted when a new peer connects via ipfs pubsub.
         // * peer is a string containing the id of the new peer
         this.db.events.on('peer', (peer: string) => console.log('peer', peer));
@@ -77,14 +75,16 @@ export default class ModelBase<T> {
 
     public async inform() {
         this.getAll();
-        this.onChanges.forEach((cb: any) => { cb(); });
+        this.onChanges.forEach((cb: any) => {
+            cb();
+        });
     }
 
     // tslint:disable-next-line: variable-name
     public async add(model: T) {
-        const result = await this.db.put({ 
+        const result = await this.db.put({
             _id: this.uuid(),
-            ...model 
+            ...model,
         });
         this.inform();
         return result;
@@ -107,13 +107,12 @@ export default class ModelBase<T> {
         let uuid = '';
 
         for (i = 0; i < 32; i++) {
-            random = Math.random() * 16 | 0;
+            random = (Math.random() * 16) | 0;
             if (i === 8 || i === 12 || i === 16 || i === 20) {
                 uuid += '-';
             }
             // eslint-disable-next-line no-mixed-operators
-            uuid += (i === 12 ? 4 : (i === 16 ? (random & 3 | 8) : random))
-                .toString(16);
+            uuid += (i === 12 ? 4 : i === 16 ? (random & 3) | 8 : random).toString(16);
         }
 
         return uuid;

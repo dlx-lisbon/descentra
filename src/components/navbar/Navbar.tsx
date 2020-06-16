@@ -1,35 +1,25 @@
 import {
     AppBar,
-    Toolbar,
     Avatar,
-    IconButton,
     Button,
-    Drawer,
     Divider,
+    Drawer,
+    IconButton,
     List,
     ListItem,
-    ListItemText
-} from "@material-ui/core";
-import React, { useState, useEffect } from "react";
-import {
-    makeStyles,
-    useTheme,
-} from '@material-ui/core/styles';
-import {
-    Menu as MenuIcon,
-    ChevronLeft as ChevronLeftIcon,
-    ChevronRight as ChevronRightIcon,
-} from '@material-ui/icons';
+    ListItemText,
+    Toolbar,
+} from '@material-ui/core';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon, Menu as MenuIcon } from '@material-ui/icons';
 import makeBlockie from 'ethereum-blockies-base64';
-import {
-    INavbarItem,
-} from "../../interfaces";
-
+import React, { useEffect, useState } from 'react';
+import { INavbarItem } from '../../interfaces';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
     root: {
-        position: "absolute",
+        position: 'absolute',
         right: 0,
     },
     grow: {
@@ -37,10 +27,10 @@ const useStyles = makeStyles((theme) => ({
     },
     logo: {
         height: 60,
-        paddingRight: '1rem'
+        paddingRight: '1rem',
     },
     toolbar: {
-        flexWrap: "wrap",
+        flexWrap: 'wrap',
     },
     toolbarTitle: {
         flexGrow: 1,
@@ -103,8 +93,7 @@ export default function Navbar(props: NavbarProps) {
     useEffect(() => {
         const verifyLoggedIn = () => {
             try {
-                if ((window as any).ethereum !== undefined &&
-                    (window as any).ethereum.selectedAddress !== null) {
+                if ((window as any).ethereum !== undefined && (window as any).ethereum.selectedAddress !== null) {
                     setUserBlockie(makeBlockie((window as any).ethereum.selectedAddress));
                     setLoggedin(true);
                     setIsAdmin(true); // TODO: check if is admin
@@ -112,7 +101,7 @@ export default function Navbar(props: NavbarProps) {
             } catch (error) {
                 //
             }
-        }
+        };
         verifyLoggedIn();
     }, []);
 
@@ -130,30 +119,18 @@ export default function Navbar(props: NavbarProps) {
     };
 
     const navItems = props.items.filter(
-        (item) => (item.loginRequired === false || (item.loginRequired === true && loggedin)) &&
+        (item) =>
+            (item.loginRequired === false || (item.loginRequired === true && loggedin)) &&
             (item.onlyAdmin === false || (item.onlyAdmin === true && isAdmin === true))
     );
 
     return (
-        <AppBar
-            position="fixed"
-            color="default"
-            elevation={0}
-        >
+        <AppBar position="fixed" color="default" elevation={0}>
             <Toolbar>
                 <div className={classes.sectionDesktop}>
-                    <img
-                        className={classes.logo}
-                        src="img/clown-fish.svg"
-                        alt="some clown fish"
-                        onClick={closeAll}
-                    />
+                    <img className={classes.logo} src="img/clown-fish.svg" alt="some clown fish" onClick={closeAll} />
                     {navItems.map((navItem: INavbarItem) => (
-                        <Button
-                            key={navItem.key}
-                            style={{ textTransform: 'none' }}
-                            onClick={navItem.onClick}
-                        >
+                        <Button key={navItem.key} style={{ textTransform: 'none' }} onClick={navItem.onClick}>
                             {navItem.children}
                         </Button>
                     ))}
