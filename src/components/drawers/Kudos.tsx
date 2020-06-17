@@ -1,10 +1,9 @@
 import { Grid } from '@material-ui/core';
 import { ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
-import { KudosInstance } from '../../helpers/contracts/types/index';
 
 interface IKudosProps {
-    kudosCore: ethers.Contract & KudosInstance;
+    kudosCore: ethers.Contract;
     userSigner: ethers.providers.JsonRpcSigner;
     ipfs: any;
 }
