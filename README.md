@@ -66,8 +66,27 @@ server {
     }
 }
 ```
-
 **NOTA**: Substituir *(FOLDER-FROM-CERTBOT)* pelo caminho completo, dado ao gerar os certificados.
+
+Para adicionar um *daemon service* no servidor linux onde estiver a executar o *webrtc-star* pode usar a seguinte configuração.
+```bash
+[Unit]
+Description=WebRTC service.
+
+[Service]
+Type=simple
+PIDFile=/run/webrtc.pid
+ExecStart=/usr/bin/webrtc-star --port=9090 --host=0.0.0.0
+RemainAfterExit=no
+Restart=on-failure
+RestartSec=5s
+
+
+[Install]
+WantedBy=multi-user.target
+```
+Exemplos de como fazer isso podem ser encontrados [aqui](https://www.linode.com/docs/quick-answers/linux/start-service-at-boot/) e [aqui](https://singlebrook.com/2017/10/23/auto-restart-crashed-service-systemd/).
+
 
 ## Licença
 [GNU General Public License v3](LICENSE)
