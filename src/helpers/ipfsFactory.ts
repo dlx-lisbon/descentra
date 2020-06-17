@@ -1,5 +1,3 @@
-import IPFS from 'ipfs';
-
 // Configuration for IPFS instance
 const ipfsConfig = {
     repo: process.env.REACT_APP_IPFS_REPO,
@@ -27,7 +25,7 @@ const ipfsConfig = {
 export async function startIpfsInstance(): Promise<any> {
     return new Promise((resolve, reject) => {
         // Create IPFS instance
-        const ipfs = new IPFS(ipfsConfig);
+        const ipfs = new (window as any).Ipfs(ipfsConfig);
 
         ipfs.on('error', (e: any) => reject(e));
         ipfs.on('ready', async () => resolve(ipfs));

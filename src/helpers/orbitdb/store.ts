@@ -1,5 +1,3 @@
-import OrbitDB from 'orbit-db';
-
 // Configuration for the database
 const dbConfig = {
     // If database doesn't exist, create it
@@ -19,7 +17,7 @@ export async function store(ipfs: any, namespace: string): Promise<any> {
     return new Promise(async (resolve, reject) => {
         try {
             // Create an OrbitDB instance
-            const orbitdb = await OrbitDB.createInstance(ipfs);
+            const orbitdb = await (window as any).OrbitDB.createInstance(ipfs);
             // Open (or create) database
             const postsDb = await orbitdb.docs(`${namespace}.posts`, dbConfig);
             const meetupsDb = await orbitdb.docs(`${namespace}.meetups`, dbConfig);
