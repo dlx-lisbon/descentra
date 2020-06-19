@@ -13,8 +13,9 @@ import {
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon, Menu as MenuIcon } from '@material-ui/icons';
 import makeBlockie from 'ethereum-blockies-base64';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { INavbarItem } from '../../interfaces';
+import { AuthContext } from '../../contexts/Auth';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -83,27 +84,20 @@ export interface NavbarProps {
 }
 
 export default function Navbar(props: NavbarProps) {
+    const unknownUserImage = 'img/unknown_user.svg';
+    const { address } = useContext(AuthContext);
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = useState<boolean>(false);
     const [loggedin, setLoggedin] = useState<boolean>(false);
     const [isAdmin, setIsAdmin] = useState<boolean>(false);
-    const [userBlockie, setUserBlockie] = useState<string>('img/unknown_user.svg');
+    const [userBlockie, setUserBlockie] = useState<string>(unknownUserImage);
 
     useEffect(() => {
-        const verifyLoggedIn = () => {
-            try {
-                if ((window as any).ethereum !== undefined && (window as any).ethereum.selectedAddress !== null) {
-                    setUserBlockie(makeBlockie((window as any).ethereum.selectedAddress));
-                    setLoggedin(true);
-                    setIsAdmin(true); // TODO: check if is admin
-                }
-            } catch (error) {
-                //
-            }
-        };
-        verifyLoggedIn();
-    }, []);
+        setUserBlockie(address ? makeBlockie(address) : unknownUserImage);
+        setLoggedin(!!address);
+        setIsAdmin(!!address); // TODO: check if is admin
+    }, [address]);
 
     const handleDrawerOpen = () => {
         setOpen(true);
