@@ -10,6 +10,7 @@ import MeetupModel from './helpers/orbitdb/MeetupModel';
 import PostModel from './helpers/orbitdb/PostModel';
 import { store } from './helpers/orbitdb/store';
 import { IMeetupInfo, INavbarItem, IPostInfo } from './interfaces';
+import { AuthProvider } from './contexts/Auth';
 
 const Profile = React.lazy(() => import('./components/drawers/Profile'));
 const NewPost = React.lazy(() => import('./components/drawers/admin/NewPost'));
@@ -132,7 +133,7 @@ export default function App() {
 
     const transition = transitions['fadeDown'];
     return (
-        <React.Fragment>
+        <AuthProvider>
             <Navbar items={navbarItems} onAvatarClick={() => openProfile(true)} />
             {!loadingPostModel && (
                 <div
@@ -260,6 +261,6 @@ export default function App() {
             }}>
                 DLX 2020 <span role="img" aria-label="ok-hand">👌</span>
             </Container> */}
-        </React.Fragment>
+        </AuthProvider>
     );
 }
