@@ -2,6 +2,8 @@ import React, { createContext, useReducer, useState, useEffect } from 'react';
 
 import WalletConnect from '@walletconnect/client';
 import QRCodeModal from '@walletconnect/qrcode-modal';
+import { convertUtf8ToHex } from '@walletconnect/utils';
+import { Dialog, DialogTitle, DialogContent } from '@material-ui/core';
 
 type SessionStateType = {
     connected: boolean;
@@ -10,29 +12,19 @@ type SessionStateType = {
     address: string | null;
 };
 
-const initialState = {
+const sessionInitialState = {
     connected: false,
     chainId: null,
     accounts: [],
     address: null,
 };
 
-export const AuthContext = createContext<{
-    address: string | null;
-    handleLogin: () => void;
-    handleLogout: () => void;
-}>({
-    address: null,
-    handleLogin: () => null,
-    handleLogout: () => null,
-});
-
-type Action =
+type SessionActionType =
     | { type: 'CONNECT'; accounts: string[]; chainId: number; address: string }
     | { type: 'UPDATE'; accounts: string[]; chainId: number; address: string }
     | { type: 'DISCONNECT' };
 
-const reducer = (state: SessionStateType, action: Action) => {
+const sessionReducer = (state: SessionStateType, action: SessionActionType) => {
     switch (action.type) {
         case 'CONNECT': {
             const { accounts, chainId, address } = action;
@@ -43,46 +35,63 @@ const reducer = (state: SessionStateType, action: Action) => {
             return { ...state, accounts, chainId };
         }
         case 'DISCONNECT': {
-            return { ...initialState };
+            return { ...sessionInitialState };
         }
         default:
             return state;
     }
 };
 
-const walletConnector = new WalletConnect({
-    bridge: 'https://bridge.walletconnect.org',
-    qrcodeModal: QRCodeModal,
+export const AuthContext = createContext<{
+    address: string | null;
+    handleLogin: () => void;
+    handleLogout: () => void;
+    handleSignMessage: (message: string) => Promise<string | undefined>;
+}>({
+    address: null,
+    handleLogin: () => null,
+    handleLogout: () => null,
+    handleSignMessage: () => Promise.resolve(undefined),
 });
 
+const createWalletConnector = () =>
+    new WalletConnect({
+        bridge: 'https://bridge.walletconnect.org',
+        qrcodeModal: QRCodeModal,
+    });
+
 export const AuthProvider: React.FC = ({ children }) => {
-    const [state, dispatch] = useReducer(reducer, initialState);
-    const [connector, setConnector] = useState<WalletConnect>(walletConnector);
+    const [connector, setConnector] = useState<WalletConnect>(createWalletConnector());
+    const [sessionState, sessionDispatch] = useReducer(sessionReducer, sessionInitialState);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         if (connector.connected) {
             const { chainId, accounts } = connector;
             const [address] = accounts;
-            dispatch({ type: 'CONNECT', accounts, chainId, address });
+            sessionDispatch({ type: 'CONNECT', accounts, chainId, address });
         }
-    }, [connector.connected]);
+    }, [connector, connector.connected]);
 
     const handleLogin = () => {
-        if (!connector.connected) {
-            connector.createSession();
+        // create new connector
+        const walletConnector = createWalletConnector();
+
+        if (!walletConnector.connected) {
+            walletConnector.createSession();
         }
 
-        connector.on('session_update', async (error, payload) => {
+        walletConnector.on('session_update', async (error, payload) => {
             if (error) {
                 throw error;
             }
 
             const [{ chainId, accounts }] = payload.params;
             const [address] = accounts;
-            dispatch({ type: 'UPDATE', accounts, chainId, address });
+            sessionDispatch({ type: 'UPDATE', accounts, chainId, address });
         });
 
-        connector.on('connect', (error, payload) => {
+        walletConnector.on('connect', (error, payload) => {
             console.log('onConnect');
             if (error) {
                 throw error;
@@ -90,28 +99,64 @@ export const AuthProvider: React.FC = ({ children }) => {
 
             const [{ chainId, accounts }] = payload.params;
             const [address] = accounts;
-            dispatch({ type: 'CONNECT', accounts, chainId, address });
+            sessionDispatch({ type: 'CONNECT', accounts, chainId, address });
         });
 
-        connector.on('disconnect', (error) => {
+        walletConnector.on('disconnect', (error) => {
             console.log('onDisconnect');
             if (error) {
                 throw error;
             }
 
-            dispatch({ type: 'DISCONNECT' });
+            sessionDispatch({ type: 'DISCONNECT' });
         });
 
-        setConnector(connector);
+        setConnector(walletConnector);
     };
 
     const handleLogout = () => {
         connector.killSession();
-        dispatch({ type: 'DISCONNECT' });
+        sessionDispatch({ type: 'DISCONNECT' });
+    };
+
+    const handleSignMessage = async (message: string) => {
+        if (!connector) {
+            return;
+        }
+
+        try {
+            const { address } = sessionState;
+
+            // encode message (hex)
+            const hexMsg = convertUtf8ToHex(message);
+
+            // personal_sign params
+            const msgParams = [hexMsg, address];
+
+            setIsModalOpen(true);
+
+            // send message
+            const signature = await connector.signPersonalMessage(msgParams);
+
+            setIsModalOpen(false);
+
+            return signature;
+        } catch (error) {
+            setIsModalOpen(false);
+            throw error;
+        }
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
     };
 
     return (
-        <AuthContext.Provider value={{ address: state.address, handleLogin, handleLogout }}>
+        <AuthContext.Provider value={{ address: sessionState.address, handleLogin, handleLogout, handleSignMessage }}>
+            <Dialog onClose={handleCloseModal} aria-labelledby="dialog-title" open={isModalOpen}>
+                <DialogTitle id="simple-dialog-title">Pedido de assinatura pendente</DialogTitle>
+                <DialogContent>Por favor aprove ou rejeite o pedido de assinatura em sua carteira</DialogContent>
+            </Dialog>
             {children}
         </AuthContext.Provider>
     );

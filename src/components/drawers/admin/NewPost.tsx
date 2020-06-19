@@ -3,11 +3,11 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } 
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import 'date-fns';
-import { ethers } from 'ethers';
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import slug from 'slug';
 import PostModel from '../../../helpers/orbitdb/PostModel';
 import { IPostInfo } from '../../../interfaces';
+import { AuthContext } from '../../../contexts/Auth';
 
 interface INewPost {
     slug: string;
@@ -25,6 +25,7 @@ interface INewPostProps {
 }
 
 export default function NewPost(props: INewPostProps) {
+    const { handleSignMessage } = useContext(AuthContext);
     const emptyForm = {
         slug: '',
         author: '',
@@ -45,11 +46,10 @@ export default function NewPost(props: INewPostProps) {
             // guardar também assinatura. Ao guardar assinatura, o autor passa a ser o endereço
             // de sem assinou o post.
             const postSlug = `${new Date().getTime().toString()}-${slug(newContentForm.title, { lower: true })}`;
-            console.log(postSlug);
-            const provider = new ethers.providers.Web3Provider((window as any).ethereum);
-            const signer = provider.getSigner();
-            console.log(postSlug);
-            signer.signMessage(postSlug).then((signature) => {
+            handleSignMessage(postSlug).then((signature) => {
+                if (!signature) {
+                    return;
+                }
                 const newPost: IPostInfo = {
                     author: signature,
                     content: newContentForm.description,
