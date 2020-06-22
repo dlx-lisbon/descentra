@@ -2,19 +2,19 @@
     <img style="max-width: 768px; width: 100%" src="logo.webp">
 </div>
 
-> dlx é um meetup sobre blockchain ⛓️. Maioritariamente ethereum ⛏️. E as outras coisas todas 🥞 ...
+> Descentra 🐡 é uma uma pltaforma descentralizada com artigos sobre blockchain ⛓️ (maioritariamente ethereum ⛏️), p2p 👭 e DeFi 💸. Talvez outras coisas também 🥞 ...
 
 <div align="center">
     <div>
         <a
-            href="https://travis-ci.org/dlx-lisbon/dlx-ui"><img
-                src="https://travis-ci.org/dlx-lisbon/dlx-ui.svg?branch=master" /></a>&emsp;
+            href="https://travis-ci.org/dlx-lisbon/descentra"><img
+                src="https://travis-ci.org/dlx-lisbon/descentra.svg?branch=master" /></a>&emsp;
         <a
             href="https://app.netlify.com/sites/dlx/deploys"><img
                 src="https://api.netlify.com/api/v1/badges/94c365af-2fe5-4534-bbcd-4ada0e592f61/deploy-status" /></a>&emsp;
         <a
             href="https://dependabot.com"><img
-                src="https://api.dependabot.com/badges/status?host=github&repo=dlx-lisbon/dlx-ui" /></a>&emsp;
+                src="https://api.dependabot.com/badges/status?host=github&repo=dlx-lisbon/descentra" /></a>&emsp;
     </div>
 </div>
 
