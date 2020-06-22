@@ -41,35 +41,31 @@ export default function Practice(props: { close: () => void }) {
     const externalChallenges = [
         {
             title: 'cryptozombies',
-            image:
-                'https://www.sdxcentral.com/wp-content/uploads/2019/03/Cisco-WiFi-Routers-Attacked-After-Code-Hack-Posted.jpg',
+            image: 'https://cryptozombies.io/course/static/image/preview-zombie.png',
             url: 'https://cryptozombies.io',
         },
         {
             title: 'gitcoin quests',
-            image:
-                'https://www.sdxcentral.com/wp-content/uploads/2019/03/Cisco-WiFi-Routers-Attacked-After-Code-Hack-Posted.jpg',
+            image: 'https://gitcoin.co/dynamic/kudos/134/gitcoin_minibot',
             url: 'https://gitcoin.co/quests',
         },
         {
             title: 'ethernaut',
-            image:
-                'https://www.sdxcentral.com/wp-content/uploads/2019/03/Cisco-WiFi-Routers-Attacked-After-Code-Hack-Posted.jpg',
+            image: 'https://ethernaut.openzeppelin.com/imgs/openzeppelin-logo.svg',
             url: 'https://ethernaut.openzeppelin.com/',
         },
         {
             title: 'proto.school',
-            image:
-                'https://www.sdxcentral.com/wp-content/uploads/2019/03/Cisco-WiFi-Routers-Attacked-After-Code-Hack-Posted.jpg',
+            image: 'https://pbs.twimg.com/profile_images/1080832640658362368/FsPfqA1g_400x400.jpg',
             url: 'https://proto.school/#/tutorials',
         },
     ];
     const challenges = [
         {
-            title: 'Guarda conteudo',
+            title: '<Em construção> 🚧',
             image:
                 'https://www.sdxcentral.com/wp-content/uploads/2019/03/Cisco-WiFi-Routers-Attacked-After-Code-Hack-Posted.jpg',
-            description: 'Guardar um numero, bytes e uma string num contrato. Depois, obtem esses valores do contrato.',
+            description: '',
             url: '',
         },
     ];
@@ -117,8 +113,12 @@ export default function Practice(props: { close: () => void }) {
                             </Typography>
                         </GridListTile>
                         {externalChallenges.map((externalChallenge) => (
-                            <GridListTile key={externalChallenge.title}>
-                                <img src={externalChallenge.image} alt={externalChallenge.title} />
+                            <GridListTile key={externalChallenge.title} style={{ textAlign: 'center' }}>
+                                <img
+                                    src={externalChallenge.image}
+                                    alt={externalChallenge.title}
+                                    style={{ height: '100%', width: 'auto' }}
+                                />
                                 <GridListTileBar
                                     title={externalChallenge.title}
                                     actionIcon={
