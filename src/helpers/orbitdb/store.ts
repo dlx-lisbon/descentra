@@ -22,9 +22,8 @@ export async function store(ipfs: any, namespace: string): Promise<any> {
             const orbitdb = await OrbitDB.createInstance(ipfs);
             // Open (or create) database
             const postsDb = await orbitdb.docs(`${namespace}.posts`, dbConfig);
-            const meetupsDb = await orbitdb.docs(`${namespace}.meetups`, dbConfig);
 
-            resolve({ postsDb, meetupsDb });
+            resolve({ postsDb });
         } catch (e) {
             reject(e);
         }

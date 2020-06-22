@@ -5,19 +5,16 @@ import 'moment/locale/pt';
 import React, { Suspense, useEffect, useState } from 'react';
 import StackGrid, { easings, transitions } from 'react-stack-grid';
 import Navbar from './components/navbar/Navbar';
+import { AuthProvider } from './contexts/Auth';
 import { startIpfsInstance } from './helpers/ipfsFactory';
-import MeetupModel from './helpers/orbitdb/MeetupModel';
 import PostModel from './helpers/orbitdb/PostModel';
 import { store } from './helpers/orbitdb/store';
-import { IMeetupInfo, INavbarItem, IPostInfo } from './interfaces';
-import { AuthProvider } from './contexts/Auth';
+import { INavbarItem, IPostInfo } from './interfaces';
 
 const Profile = React.lazy(() => import('./components/drawers/Profile'));
 const NewPost = React.lazy(() => import('./components/drawers/admin/NewPost'));
-const NewMeetup = React.lazy(() => import('./components/drawers/admin/NewMeetup'));
 const Practice = React.lazy(() => import('./components/drawers/Practice'));
 const Post = React.lazy(() => import('./components/drawers/Post'));
-const Meetup = React.lazy(() => import('./components/drawers/Meetup'));
 
 const columnWidth = 350;
 
@@ -28,17 +25,13 @@ export default function App() {
     // orbitdb
     const [, setIpfs] = useState<any>(undefined);
     const [postModel, setPostModel] = useState<PostModel>();
-    const [meetupModel, setMeetupModel] = useState<MeetupModel>();
     // drawers and modals
     const [kudos, openKudos] = useState<boolean>(false);
     const [profile, openProfile] = useState<boolean>(false);
     const [practice, openPractice] = useState<boolean>(false);
     const [newPost, openNewPost] = useState<boolean>(false);
-    const [newMeetup, openNewMeetup] = useState<boolean>(false);
     const [posts, setPosts] = useState<IPostInfo[]>([] as any);
     const [openPost, setOpenPost] = useState<IPostInfo>();
-    // const [meetups, setMeetups] = useState<[IMeetupInfo]>([] as any);
-    const [openMeetup, setOpenMeetup] = useState<IMeetupInfo>();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -49,7 +42,7 @@ export default function App() {
                 alert('process.env.REACT_APP_ORBITDB_POST_NAME is not defined!');
                 return;
             }
-            const { postsDb, meetupsDb } = await store(ipfsInstance, process.env.REACT_APP_ORBITDB_POST_NAME);
+            const { postsDb } = await store(ipfsInstance, process.env.REACT_APP_ORBITDB_POST_NAME);
             const postM = new PostModel(
                 postsDb,
                 (progress) => console.log(progress),
@@ -57,16 +50,8 @@ export default function App() {
             );
             postM.subscribe(() => setPosts(postM.records));
             postsDb.load();
-            const meetupM = new MeetupModel(
-                meetupsDb,
-                (progress) => console.log(progress),
-                (progress) => setReplicatingProgress(progress)
-            );
-            // meetupM.subscribe(() => setMeetups(meetupM.records));
-            meetupsDb.load();
             setLoadingPostModel(false);
             setPostModel(postM);
-            setMeetupModel(meetupM);
         };
         fetchData();
     }, []);
@@ -86,16 +71,6 @@ export default function App() {
                 </>
             ),
         },
-        // {
-        //     key: 'novo-meetup',
-        //     loginRequired: true,
-        //     onlyAdmin: true,
-        //     onClick: () => openNewMeetup(true),
-        //     children: (<>
-        //         <span role="img" aria-label="memo">🤖</span>
-        //         &nbsp;Novo Meetup
-        //     </>),
-        // },
         {
             key: 'praticar',
             loginRequired: false,
@@ -206,21 +181,8 @@ export default function App() {
                     </Typography>
                 </div>
             )}
-            {/* <Grid item xs={12} sm={12} md={6}>
-                {posts.map((c) => <ContentPost key={c._id} content={c} onClick={(id) => setOpenPost(
-                    posts.find(el => el._id === id)
-                )} />)}
-            </Grid>
-            <Grid item xs={12} sm={12} md={6}>
-                {meetups.map((c) => <ContentMeetup key={c._id} content={c} onClick={(id) => setOpenMeetup(
-                    meetups.find(el => el._id === id)
-                )} />)}
-            </Grid> */}
             <Suspense fallback={''}>
                 <NewPost show={newPost} setShow={openNewPost} postModel={postModel} />
-            </Suspense>
-            <Suspense fallback={''}>
-                <NewMeetup show={newMeetup} setShow={openNewMeetup} meetupModel={meetupModel} />
             </Suspense>
             <Drawer anchor="bottom" open={kudos} onClose={() => openKudos(false)}>
                 Em construção
@@ -240,17 +202,6 @@ export default function App() {
             <Suspense fallback={''}>
                 {!!openPost && <Post close={() => setOpenPost(undefined)} content={openPost as IPostInfo} />}
             </Suspense>
-            <Drawer anchor="bottom" open={!!openMeetup || false} onClose={() => setOpenMeetup(undefined)}>
-                <Suspense
-                    fallback={
-                        <Typography variant="overline" display="block" gutterBottom>
-                            A carregar....
-                        </Typography>
-                    }
-                >
-                    {!!openMeetup && <Meetup content={openMeetup as IMeetupInfo} />}
-                </Suspense>
-            </Drawer>
             {/* <Container maxWidth='xl' style={{
                 height: '35px',
                 backgroundColor: 'black',
