@@ -57,6 +57,12 @@ export default function Practice(props: { close: () => void }) {
                 'https://www.sdxcentral.com/wp-content/uploads/2019/03/Cisco-WiFi-Routers-Attacked-After-Code-Hack-Posted.jpg',
             url: 'https://ethernaut.openzeppelin.com/',
         },
+        {
+            title: 'proto.school',
+            image:
+                'https://www.sdxcentral.com/wp-content/uploads/2019/03/Cisco-WiFi-Routers-Attacked-After-Code-Hack-Posted.jpg',
+            url: 'https://proto.school/#/tutorials',
+        },
     ];
     const challenges = [
         {
