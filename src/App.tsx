@@ -117,7 +117,9 @@ export default function App() {
                         margin: '100px 10% 5% 10%',
                     }}
                 >
-                    <h1 style={{ fontFamily: 'Caveat', fontWeight: 'lighter', fontSize: '5em' }}>Bem-vindo ao dlx</h1>
+                    <h1 style={{ fontFamily: 'Caveat', fontWeight: 'lighter', fontSize: '5em' }}>
+                        Bem-vindo ao Descentra 🐡
+                    </h1>
                 </div>
             )}
             <div>
@@ -173,8 +175,8 @@ export default function App() {
                 <div style={{ textAlign: 'center', margin: '10%' }}>
                     <img alt="loading fish" src="img/sardy.webp" style={{ maxWidth: '50%' }} />
                     <Typography variant="h5" component="h5" gutterBottom>
-                        dlx é um meetup sobre blockchain ⛓️. Maioritariamente ethereum ⛏️. E as outras coisas todas 🥞
-                        ...
+                        Descentra 🐡 é uma uma pltaforma descentralizada com artigos sobre blockchain ⛓️
+                        (maioritariamente ethereum ⛏️), p2p 👭 e DeFi 💸. Talvez outras coisas também 🥞 ...
                     </Typography>
                     <Typography variant="overline" display="block" gutterBottom>
                         A carregar....
@@ -210,7 +212,7 @@ export default function App() {
                 bottom: 0,
                 position: 'fixed',
             }}>
-                DLX 2020 <span role="img" aria-label="ok-hand">👌</span>
+                Descentra 2020 <span role="img" aria-label="ok-hand">👌</span>
             </Container> */}
         </AuthProvider>
     );
